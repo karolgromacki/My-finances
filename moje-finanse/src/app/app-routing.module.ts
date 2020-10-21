@@ -3,20 +3,24 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: '', redirectTo: 'categories', pathMatch: 'full'
+    path: '', redirectTo: 'main', pathMatch: 'full'
   },
   {
-    path: 'categories',
-    loadChildren: () => import('./categories/categories.module').then(m => m.CategoriesPageModule)
+    path: 'main',
+    loadChildren: './main/main.module#MainPageModule'
   },
-  {
-    path: 'transactions',
-    loadChildren: () => import('./transactions/transactions.module').then(m => m.TransactionsPageModule)
-  },
-  {
-    path: 'accounts',
-    loadChildren: () => import('./accounts/accounts.module').then(m => m.AccountsPageModule)
-  },
+  // {
+  //   path: 'categories',
+  //   loadChildren: () => import('./main/categories/categories.module').then(m => m.CategoriesPageModule)
+  // },
+  // {
+  //   path: 'transactions',
+  //   loadChildren: () => import('./main/transactions/transactions.module').then(m => m.TransactionsPageModule)
+  // },
+  // {
+  //   path: 'accounts',
+  //   loadChildren: () => import('./main/accounts/accounts.module').then(m => m.AccountsPageModule)
+  // },
 
 ];
 
