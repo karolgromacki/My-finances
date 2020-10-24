@@ -1,3 +1,46 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-menu side="start">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>My finances</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-list>
+        <ion-item>
+          <ion-icon name="earth" slot="start" lines="none"></ion-icon>
+          <ion-label>Language</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="invert-mode" slot="start" lines="none"></ion-icon>
+          <ion-label>Theme</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="logo-usd" slot="start" lines="none"></ion-icon>
+          <ion-label>Currency</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="calendar" slot="start" lines="none"></ion-icon>
+          <ion-label>First day of the week</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="wallet" slot="start" lines="none"></ion-icon>
+          <ion-label>Budget mode</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="star" slot="start" lines="none"></ion-icon>
+          <ion-label>Achivments</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="download" slot="start" lines="none"></ion-icon>
+          <ion-label>Export data to CSV file</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="trash-bin" slot="start" lines="none"></ion-icon>
+          <ion-label>Clear data</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+  <ion-router-outlet main></ion-router-outlet>
 </ion-app>
