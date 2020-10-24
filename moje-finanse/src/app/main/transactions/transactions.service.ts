@@ -14,5 +14,9 @@ export class TransactionsService {
   get transactions() {
     return [...this._transactions]
   }
+
+  getTransaction(id: string) {
+    return { ...this._transactions.find(t => t.id === id) };
+  }
   constructor() { }
 }
