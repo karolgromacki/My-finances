@@ -37,6 +37,14 @@ const routes: Routes = [
             loadChildren: './transactions/transactions.module#TransactionsPageModule'
           },
           {
+            path: 'new',
+            loadChildren: './transactions/new-transaction/new-transaction.module#NewTransactionPageModule'
+          },
+          {
+            path: 'edit/:transactionId',
+            loadChildren: './transactions/edit-transaction/edit-transaction.module#EditTransactionPageModule'
+          },
+          {
             path: ':transactionId',
             loadChildren: './transactions/transaction-detail/transaction-detail.module#TransactionDetailPageModule'
           },

@@ -15,6 +15,14 @@ const routes: Routes = [
   {
     path: 'transfer',
     loadChildren: () => import('./transfer/transfer.module').then( m => m.TransferPageModule)
+  },
+  {
+    path: 'edit',
+    loadChildren: () => import('./edit-transaction/edit-transaction.module').then( m => m.EditTransactionPageModule)
+  },
+  {
+    path: 'new',
+    loadChildren: () => import('./new-transaction/new-transaction.module').then( m => m.NewTransactionPageModule)
   }
 ];
 

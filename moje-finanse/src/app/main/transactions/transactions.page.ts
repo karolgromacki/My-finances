@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Transaction } from './transaction.model';
+import { TransactionsService } from './transactions.service';
 
 @Component({
   selector: 'app-transactions',
@@ -6,10 +8,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./transactions.page.scss'],
 })
 export class TransactionsPage implements OnInit {
+  color = 'primary'
+  loadedTransactions: Transaction[];
 
-  constructor() { }
+  constructor(private transactionsService: TransactionsService) { }
 
   ngOnInit() {
+    this.loadedTransactions = this.transactionsService.transactions;
   }
 
 }
