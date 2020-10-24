@@ -10,7 +10,7 @@ import { TransactionsService } from '../transactions.service';
   styleUrls: ['./edit-transaction.page.scss'],
 })
 export class EditTransactionPage implements OnInit {
-  
+
   transaction: Transaction;
 
   constructor(private route: ActivatedRoute, private navCtrl: NavController, private transactionsService: TransactionsService) { }
@@ -24,5 +24,5 @@ export class EditTransactionPage implements OnInit {
       this.transaction = this.transactionsService.getTransaction(paramMap.get('transactionId'));
     });
   }
-
+  
 }

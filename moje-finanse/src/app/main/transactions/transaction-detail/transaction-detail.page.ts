@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NavController } from '@ionic/angular';
+import { ModalController, NavController } from '@ionic/angular';
+import { EditTransactionPage } from '../edit-transaction/edit-transaction.page';
 import { Transaction } from '../transaction.model';
 import { TransactionsService } from '../transactions.service';
 
@@ -24,4 +25,5 @@ export class TransactionDetailPage implements OnInit {
       this.transaction = this.transactionsService.getTransaction(paramMap.get('transactionId'));
     });
   }
+
 }

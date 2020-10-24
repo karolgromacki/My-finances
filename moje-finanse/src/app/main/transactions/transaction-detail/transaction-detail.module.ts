@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { TransactionDetailPageRoutingModule } from './transaction-detail-routing.module';
 
 import { TransactionDetailPage } from './transaction-detail.page';
+import { EditTransactionPage } from '../edit-transaction/edit-transaction.page';
 
 @NgModule({
   imports: [

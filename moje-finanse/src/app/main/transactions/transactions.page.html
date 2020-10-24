@@ -4,6 +4,9 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-buttons slot="primary">
+      <!-- MODAL FUNCTION -->
+      <!-- <ion-button (click)="onNewTransaction()"> -->
+      <!-- MODAL FUNCTION -->
       <ion-button routerLink="/main/tabs/transactions/new">
         <ion-icon name="add" slot="icon-only"></ion-icon>
       </ion-button>
@@ -13,48 +16,63 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+  <ion-segment value="all" (ionChange)="onFilterUpdate($event)">
+    <ion-segment-button value="all">All</ion-segment-button>
+    <ion-segment-button value="deposit">Deposit</ion-segment-button>
+    <ion-segment-button value="expense">Expense</ion-segment-button>
+  </ion-segment>
   <ion-grid>
     <!-- <ion-row>
       <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
         <ion-card>
           <ion-card-header>
             <ion-card-title>
-              {{loadedTransactions[0].title}}
+              {{relevantTransactions[0].title}}
             </ion-card-title>
             <ion-card-subtitle>
-              {{loadedTransactions[0].amount | currency}}
+              {{relevantTransactions[0].amount | currency}}
             </ion-card-subtitle>
           </ion-card-header>
-          <ion-img [src]="loadedTransactions[0].imageUrl"></ion-img>
+          <ion-img [src]="relevantTransactions[0].imageUrl"></ion-img>
           <ion-card-content>
-            <p>{{loadedTransactions[0].category}}</p>
+            <p>{{relevantTransactions[0].category}}</p>
           </ion-card-content>
         </ion-card>
       </ion-col>
     </ion-row> -->
     <ion-row>
       <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
-        <ion-list>
-          <ion-item *ngFor="let transaction of loadedTransactions"
-            [routerLink]="['/','main','tabs','transactions', transaction.id]" routerDirection="forward" detail>
-            <!-- <ion-thumbnail slot="start">
+        <ion-virtual-scroll [items]="relevantTransactions" approxItemHeight="70px">
+          <ion-item-sliding  #slidingItem *virtualItem="let transaction">
+            <ion-item routerDirection="forward"
+              detail [routerLink]="['/','main','tabs','transactions', transaction.id]">
+              <!-- <ion-thumbnail slot="start">
               <ion-img [src]="transaction.imageUrl"></ion-img>
             </ion-thumbnail> -->
-            <ion-avatar slot="start">
-              <ion-img [src]="transaction?.imageUrl"></ion-img>
-            </ion-avatar>
-            <ion-label>
-              <h2>{{transaction?.title}}</h2>
-              <p>{{transaction?.category}}</p>
-            </ion-label>
-            <!-- DO ZMIANY -->
-            <ion-label slot="end" class="ion-text-right"
-              [attr.color]="(transaction?.type === 'expense')? 'danger': 'success'">
-              <p>{{transaction.amount | currency}}</p>
-            </ion-label>
-            <!-- DO ZMIANY -->
-          </ion-item>
-        </ion-list>
+              <ion-avatar slot="start">
+                <ion-img [src]="transaction?.imageUrl"></ion-img>
+              </ion-avatar>
+              <ion-label>
+                <h2>{{transaction?.title}}</h2>
+                <p>{{transaction?.category}}</p>
+              </ion-label>
+              <!-- DO ZMIANY -->
+              <ion-label slot="end" class="ion-text-right"
+                [attr.color]="(transaction?.type === 'expense')? 'danger': 'success'">
+                <p>{{transaction.amount | currency}}</p>
+              </ion-label>
+              <!-- DO ZMIANY -->
+            </ion-item>
+            <ion-item-options side="end">
+              <ion-item-option side="start" color="warning" (click)="onEdit(transaction.id, slidingItem)">
+                <ion-icon name="create" slot="icon-only"></ion-icon>
+              </ion-item-option>
+              <ion-item-option side="start" color="danger" (click)="onEdit(transaction.id, slidingItem)">
+                <ion-icon name="trash" slot="icon-only"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        </ion-virtual-scroll>
       </ion-col>
     </ion-row>
   </ion-grid>

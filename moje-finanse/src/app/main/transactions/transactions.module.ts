@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { TransactionsPageRoutingModule } from './transactions-routing.module';
 
 import { TransactionsPage } from './transactions.page';
+import { NewTransactionPage } from './new-transaction/new-transaction.page';
 
 @NgModule({
   imports: [
@@ -15,6 +16,9 @@ import { TransactionsPage } from './transactions.page';
     IonicModule,
     TransactionsPageRoutingModule
   ],
-  declarations: [TransactionsPage]
+  declarations: [TransactionsPage,
+    // NewTransactionPage
+  ],
+  // entryComponents: [NewTransactionPage]
 })
-export class TransactionsPageModule {}
+export class TransactionsPageModule { }
