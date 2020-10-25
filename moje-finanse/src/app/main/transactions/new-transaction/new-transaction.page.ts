@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { LoadingController } from '@ionic/angular';
 import { TransactionsService } from '../transactions.service';
 
 @Component({
@@ -11,7 +12,7 @@ import { TransactionsService } from '../transactions.service';
 export class NewTransactionPage implements OnInit {
   form: FormGroup;
 
-  constructor(private transactionService: TransactionsService, private router: Router) { }
+  constructor(private transactionService: TransactionsService, private router: Router, private loadingCtrl: LoadingController) { }
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -28,15 +29,25 @@ export class NewTransactionPage implements OnInit {
     if (!this.form.valid) {
       return;
     }
-    this.transactionService.addTransaction(
-      this.form.value.type,
-      this.form.value.title,
-      this.form.value.note,
-      this.form.value.category,
-      this.form.value.account,
-      this.form.value.amount,
-      new Date(this.form.value.date), '');
-    this.form.reset();
-    this.router.navigate(['/','main','tabs','transactions'])
+    this.loadingCtrl.create({
+      message: 'Creating transaction...'
+    }).then(loadingEl => {
+      loadingEl.present();
+      this.transactionService.addTransaction(
+        this.form.value.type,
+        this.form.value.title,
+        this.form.value.note,
+        this.form.value.category,
+        this.form.value.account,
+        this.form.value.amount,
+        new Date(this.form.value.date), '').subscribe(() => {
+          loadingEl.dismiss();
+          this.form.reset();
+          this.router.navigate(['/', 'main', 'tabs', 'transactions']);
+        });
+    });
+
+    
+
   }
 }

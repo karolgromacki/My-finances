@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Transaction } from './transaction.model';
 import * as moment from 'moment';
 import { BehaviorSubject } from 'rxjs';
-import { take, map } from 'rxjs/operators';
+import { take, map, tap, delay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -37,9 +37,34 @@ export class TransactionsService {
     date: Date,
     imageUrl: string,) {
     const newTransaction = new Transaction(Math.random().toString(), type, title, note, category, account, amount, date, imageUrl);
-    this._transactions.pipe(take(1)).subscribe(transactions => {
+    return this._transactions.pipe(take(1), tap(transactions => {
       this._transactions.next(transactions.concat(newTransaction));
-    });
+    }));
+  }
 
+  updateTransaction(
+    transactionId: string,
+    title: string,
+    note: string,
+    category: string,
+    account: string,
+    amount: number,
+    date: Date) {
+    return this.transactions.pipe(take(1), tap(transactions => {
+      const updatedTransactionsIndex = transactions.findIndex(tr => tr.id === transactionId);
+      const updatedTransactions = [...transactions];
+      const oldTransaction = updatedTransactions[updatedTransactionsIndex]
+      updatedTransactions[updatedTransactionsIndex] = new Transaction(
+        oldTransaction.id, oldTransaction.type, title, note,
+        category, account, amount, date, oldTransaction.imageUrl);
+    }));
+  }
+  deleteTransaction(transactionId: string) {
+    return this._transactions.pipe(
+      take(1),
+      tap(transactions => {
+        this._transactions.next(transactions.filter(t => t.id !== transactionId));
+      })
+    )
   }
 }

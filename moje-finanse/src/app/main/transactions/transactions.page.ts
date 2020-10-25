@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonItemSliding, ModalController } from '@ionic/angular';
+import { IonItemSliding, LoadingController, ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 // import { NewTransactionPage } from './new-transaction/new-transaction.page';
 import { Transaction } from './transaction.model';
@@ -14,14 +14,15 @@ import { SegmentChangeEventDetail } from '@ionic/core';
   styleUrls: ['./transactions.page.scss'],
 })
 export class TransactionsPage implements OnInit {
-  color = 'primary'
+  private segment = "all";
   relevantTransactions: Transaction[];
   loadedTransactions: Transaction[];
-  private transactionsSub: Subscription
+  private transactionsSub: Subscription;
 
   constructor(
     private transactionsService: TransactionsService,
-    private router: Router
+    private router: Router,
+    private loadingCtrl: LoadingController
     // private modalCtrl: ModalController
   ) { }
 
@@ -30,7 +31,18 @@ export class TransactionsPage implements OnInit {
       this.loadedTransactions = transactions;
       this.relevantTransactions = this.loadedTransactions;
     });
+  }
+  ionViewWillEnter() {
+    this.transactionsSub = this.transactionsService.transactions.subscribe(transactions => {
+      this.loadedTransactions = transactions;
+      if (this.segment === 'deposit')
+        this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === 'deposit');
+      else if (this.segment === 'expense')
+        this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === 'expense');
+      else
+        this.relevantTransactions = this.loadedTransactions;
 
+    });
   }
   ngOnDestroy() {
     if (this.transactionsSub) {
@@ -46,16 +58,29 @@ export class TransactionsPage implements OnInit {
     slidingItem.close();
     this.router.navigate(['/', 'main', 'tabs', 'transactions', 'edit', transactionId])
   }
+  onDelete(transactionId: string, slidingItem: IonItemSliding) {
+    slidingItem.close();
+    this.loadingCtrl.create({
+      message: 'Deleting transaction...'
+    }).then(loadingEl => {
+      loadingEl.present();
+      this.transactionsService.deleteTransaction(transactionId).subscribe(() => {
+        loadingEl.dismiss();
+      });
+    });
+  }
   onFilterUpdate(event: CustomEvent<SegmentChangeEventDetail>) {
-    if (event.detail.value === 'all') {
-      this.relevantTransactions = this.loadedTransactions;
+    if (event.detail.value === 'deposit') {
+      this.segment = 'deposit';
+      this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === 'deposit');
     }
     else if (event.detail.value === 'expense') {
+      this.segment = 'expense';
       this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === 'expense');
     }
     else {
-      this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === 'deposit');
+      this.segment = 'all';
+      this.relevantTransactions = this.loadedTransactions;
     }
-
   }
 }

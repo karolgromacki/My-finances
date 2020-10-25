@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { NavController } from '@ionic/angular';
+import { ActivatedRoute, Router } from '@angular/router';
+import { LoadingController, NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Transaction } from '../transaction.model';
 import { TransactionsService } from '../transactions.service';
@@ -15,7 +15,7 @@ export class EditTransactionPage implements OnInit {
   form: FormGroup;
   transaction: Transaction;
   private transactionSub: Subscription;
-  constructor(private route: ActivatedRoute, private navCtrl: NavController, private transactionsService: TransactionsService) { }
+  constructor(private route: ActivatedRoute, private navCtrl: NavController, private transactionsService: TransactionsService, private loadingCtrl: LoadingController, private router: Router) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
@@ -39,7 +39,7 @@ export class EditTransactionPage implements OnInit {
     });
   }
   ngOnDestroy() {
-    if(this.transactionSub){
+    if (this.transactionSub) {
       this.transactionSub.unsubscribe();
     }
   }
@@ -47,7 +47,24 @@ export class EditTransactionPage implements OnInit {
     if (!this.form.valid) {
       return;
     }
-    console.log(this.form);
-  }
+    this.loadingCtrl.create({
+      message: 'Updating transaction...'
+    }).then(loadingEl => {
+      loadingEl.present();
+      this.transactionsService.updateTransaction(
+        this.transaction.id,
+        this.form.value.title,
+        this.form.value.note,
+        this.form.value.category,
+        this.form.value.account,
+        this.form.value.amount,
+        this.form.value.date
+      ).subscribe(() => {
+        loadingEl.dismiss();
+        this.form.reset();
+        this.router.navigate(['/', 'main', 'tabs', 'transactions']);
+      });
+    })
 
+  }
 }
