@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ModalController, NavController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { EditTransactionPage } from '../edit-transaction/edit-transaction.page';
 import { Transaction } from '../transaction.model';
 import { TransactionsService } from '../transactions.service';
@@ -11,9 +12,8 @@ import { TransactionsService } from '../transactions.service';
   styleUrls: ['./transaction-detail.page.scss'],
 })
 export class TransactionDetailPage implements OnInit {
-
   transaction: Transaction;
-
+  private transactionSub: Subscription;
   constructor(private route: ActivatedRoute, private navCtrl: NavController, private transactionsService: TransactionsService) { }
 
   ngOnInit() {
@@ -22,8 +22,13 @@ export class TransactionDetailPage implements OnInit {
         this.navCtrl.navigateBack('/main/tabs/transactions');
         return;
       }
-      this.transaction = this.transactionsService.getTransaction(paramMap.get('transactionId'));
+
+      this.transactionSub = this.transactionsService.getTransaction(paramMap.get('transactionId')).subscribe(transaction => this.transaction = transaction);
     });
   }
-
+  ngOnDestroy() {
+    if (this.transactionSub) {
+      this.transactionSub.unsubscribe()
+    }
+  }
 }

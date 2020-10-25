@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonItemSliding, ModalController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 // import { NewTransactionPage } from './new-transaction/new-transaction.page';
 import { Transaction } from './transaction.model';
 import { TransactionsService } from './transactions.service';
-import {SegmentChangeEventDetail} from '@ionic/core';
+import { SegmentChangeEventDetail } from '@ionic/core';
+
 
 @Component({
   selector: 'app-transactions',
@@ -15,6 +17,7 @@ export class TransactionsPage implements OnInit {
   color = 'primary'
   relevantTransactions: Transaction[];
   loadedTransactions: Transaction[];
+  private transactionsSub: Subscription
 
   constructor(
     private transactionsService: TransactionsService,
@@ -23,8 +26,17 @@ export class TransactionsPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.loadedTransactions = this.transactionsService.transactions;
-    this.relevantTransactions = this.loadedTransactions.reverse();
+    this.transactionsSub = this.transactionsService.transactions.subscribe(transactions => {
+      this.loadedTransactions = transactions;
+      this.relevantTransactions = this.loadedTransactions;
+    });
+
+  }
+  ngOnDestroy() {
+    if (this.transactionsSub) {
+      this.transactionsSub.unsubscribe();
+    }
+
   }
   //CREATE MODAL
   // onNewTransaction(){
@@ -34,11 +46,11 @@ export class TransactionsPage implements OnInit {
     slidingItem.close();
     this.router.navigate(['/', 'main', 'tabs', 'transactions', 'edit', transactionId])
   }
-  onFilterUpdate(event: CustomEvent<SegmentChangeEventDetail>) { 
+  onFilterUpdate(event: CustomEvent<SegmentChangeEventDetail>) {
     if (event.detail.value === 'all') {
       this.relevantTransactions = this.loadedTransactions;
     }
-    else if(event.detail.value === 'expense'){
+    else if (event.detail.value === 'expense') {
       this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === 'expense');
     }
     else {

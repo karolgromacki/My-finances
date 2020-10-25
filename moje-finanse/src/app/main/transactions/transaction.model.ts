@@ -3,8 +3,11 @@ export class Transaction {
         public id: string,
         public type: string,
         public title: string,
+        public note: string,
         public category: string,
+        public account: string,
         public amount: number,
-        public imageUrl: string
+        public date: Date,
+        public imageUrl: string,
     ) { }
 }

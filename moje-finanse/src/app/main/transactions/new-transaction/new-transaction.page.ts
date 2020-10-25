@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { TransactionsService } from '../transactions.service';
 
 @Component({
   selector: 'app-new-transaction',
@@ -9,7 +11,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class NewTransactionPage implements OnInit {
   form: FormGroup;
 
-  constructor() { }
+  constructor(private transactionService: TransactionsService, private router: Router) { }
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -20,9 +22,21 @@ export class NewTransactionPage implements OnInit {
       date: new FormControl(new Date(Date.now()).toISOString(), { updateOn: 'change', validators: [Validators.required] }),
       account: new FormControl(null, { updateOn: 'change', validators: [Validators.required] }),
       category: new FormControl(null, { updateOn: 'change', validators: [Validators.required] }),
-    })
+    });
   }
-  onCreateOffer() {
-    console.log(this.form);
+  onCreateTransaction() {
+    if (!this.form.valid) {
+      return;
+    }
+    this.transactionService.addTransaction(
+      this.form.value.type,
+      this.form.value.title,
+      this.form.value.note,
+      this.form.value.category,
+      this.form.value.account,
+      this.form.value.amount,
+      new Date(this.form.value.date), '');
+    this.form.reset();
+    this.router.navigate(['/','main','tabs','transactions'])
   }
 }
