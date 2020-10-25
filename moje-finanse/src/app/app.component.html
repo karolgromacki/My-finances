@@ -29,14 +29,23 @@
         <ion-item>
           <ion-icon name="earth" slot="start" lines="none"></ion-icon>
           <ion-label>Language</ion-label>
+          <ion-select value="english">
+            <ion-select-option value="english">English</ion-select-option>
+            <ion-select-option value="polish">Polski</ion-select-option>
+          </ion-select>
         </ion-item>
         <ion-item>
           <ion-icon name="invert-mode" slot="start" lines="none"></ion-icon>
           <ion-label>Theme</ion-label>
+          <ion-toggle disabled></ion-toggle>
         </ion-item>
         <ion-item>
           <ion-icon name="logo-usd" slot="start" lines="none"></ion-icon>
           <ion-label>Currency</ion-label>
+          <ion-select value="dollar">
+            <ion-select-option value="dollar">USD</ion-select-option>
+            <ion-select-option value="złoty">PLN</ion-select-option>
+          </ion-select>
         </ion-item>
         <ion-item>
           <ion-icon name="calendar" slot="start" lines="none"></ion-icon>
@@ -45,8 +54,9 @@
         <ion-item>
           <ion-icon name="wallet" slot="start" lines="none"></ion-icon>
           <ion-label>Budget mode</ion-label>
+          <ion-toggle disabled></ion-toggle>
         </ion-item>
-        <ion-item>
+        <ion-item detail>
           <ion-icon name="star" slot="start" lines="none"></ion-icon>
           <ion-label>Achivments</ion-label>
         </ion-item>
