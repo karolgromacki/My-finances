@@ -30,6 +30,9 @@ export class AccountsPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    
+  }
+  ionViewWillEnter(){
     let sum;
     this.sum = 0;
     this.accountsSub = this.accountsService.accounts.subscribe(accounts => {
@@ -47,6 +50,7 @@ export class AccountsPage implements OnInit {
             }
           });
           account.amount = sum;
+          this.sum += account.amount;
         });
         console.log(this.sum)
       });
