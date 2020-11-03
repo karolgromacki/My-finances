@@ -43,10 +43,7 @@ export class NewTransactionPage implements OnInit {
     if (!this.form.valid) {
       return;
     }
-    if (this.form.value.type === 'deposit' && this.form.value.category !== '') {
-      this.form.value.category = 'deposit';
-    }
-    if (this.form.value.category !== '') {
+    if (this.form.value.type === 'deposit' || this.form.value.category === '') {
       this.form.value.category = 'deposit';
     }
 

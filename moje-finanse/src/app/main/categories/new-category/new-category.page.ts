@@ -13,7 +13,7 @@ import { Category } from '../category.model';
 })
 export class NewCategoryPage implements OnInit {
   icons;
-  selectedIcon='add';
+  selectedIcon='document-outline';
   form: FormGroup;
   loadedCategories: Category[];
   constructor(private categoriesService: CategoriesService, private router: Router, private loadingCtrl: LoadingController) { }

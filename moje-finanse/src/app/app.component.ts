@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Renderer2 } from '@angular/core';
 
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -13,9 +13,18 @@ export class AppComponent {
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar
+    private statusBar: StatusBar,
+    private renderer: Renderer2
   ) {
+    this.renderer.setAttribute(document.body, 'color-theme', 'dark');
     this.initializeApp();
+  }
+  onToggleColorTheme(event) {
+    if (event.detail.checked) {
+      this.renderer.setAttribute(document.body, 'color-theme', 'dark');
+    }
+    else { this.renderer.setAttribute(document.body, 'color-theme', 'light'); }
+
   }
 
   initializeApp() {
