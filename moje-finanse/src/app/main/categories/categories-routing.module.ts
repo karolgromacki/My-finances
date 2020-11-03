@@ -15,6 +15,10 @@ const routes: Routes = [
   {
     path: 'edit-category',
     loadChildren: () => import('./edit-category/edit-category.module').then( m => m.EditCategoryPageModule)
+  },
+  {
+    path: 'category-detail',
+    loadChildren: () => import('./category-detail/category-detail.module').then( m => m.CategoryDetailPageModule)
   }
 ];
 

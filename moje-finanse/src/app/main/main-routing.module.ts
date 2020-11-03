@@ -65,6 +65,10 @@ const routes: Routes = [
             path: 'edit/:categoryId',
             loadChildren: './categories/edit-category/edit-category.module#EditCategoryPageModule'
           },
+          {
+            path: ':categoryId',
+            loadChildren: './categories/category-detail/category-detail.module#CategoryDetailPageModule'
+          },
         ]
       },
       {

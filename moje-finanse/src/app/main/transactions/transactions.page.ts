@@ -14,7 +14,8 @@ import { SegmentChangeEventDetail } from '@ionic/core';
   styleUrls: ['./transactions.page.scss'],
 })
 export class TransactionsPage implements OnInit {
-  private segment = "all";
+  segment = "all";
+  sum: number;
   relevantTransactions: Transaction[];
   loadedTransactions: Transaction[];
   private transactionsSub: Subscription;
@@ -30,6 +31,15 @@ export class TransactionsPage implements OnInit {
     this.transactionsSub = this.transactionsService.transactions.subscribe(transactions => {
       this.loadedTransactions = transactions;
       this.relevantTransactions = this.loadedTransactions;
+      this.sum = 0;
+      this.relevantTransactions.forEach((transaction) => {
+        if (transaction.type === 'deposit') {
+          this.sum += transaction.amount;
+        }
+        else if (transaction.type === 'expense') {
+          this.sum -= transaction.amount;
+        }
+      });
     });
   }
   ionViewWillEnter() {
@@ -73,14 +83,31 @@ export class TransactionsPage implements OnInit {
     if (event.detail.value === 'deposit') {
       this.segment = 'deposit';
       this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === 'deposit');
+      this.sum = 0;
+      this.relevantTransactions.forEach((transaction) => {
+        this.sum += transaction.amount;
+      });
     }
     else if (event.detail.value === 'expense') {
       this.segment = 'expense';
       this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === 'expense');
+      this.sum = 0;
+      this.relevantTransactions.forEach((transaction) => {
+        this.sum -= transaction.amount;
+      });
     }
     else {
       this.segment = 'all';
       this.relevantTransactions = this.loadedTransactions;
+      this.sum = 0;
+      this.relevantTransactions.forEach((transaction) => {
+        if (transaction.type === 'deposit') {
+          this.sum += transaction.amount;
+        }
+        else if (transaction.type === 'expense') {
+          this.sum -= transaction.amount;
+        }
+      });
     }
   }
 }
