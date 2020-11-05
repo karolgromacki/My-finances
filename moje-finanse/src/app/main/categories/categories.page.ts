@@ -11,9 +11,8 @@ import { Category } from './category.model';
   styleUrls: ['./categories.page.scss'],
 })
 export class CategoriesPage implements OnInit {
-
+  a;
   relevantCategories: Category[];
-  loadedCategories: Category[];
   private categoriesSub: Subscription;
 
   constructor(
@@ -24,11 +23,16 @@ export class CategoriesPage implements OnInit {
     // private modalCtrl: ModalController
   ) { }
   onCategory(categoryId) {
-
-    console.log(categoryId)
     this.actionSheetCtrl.create({
       header: 'Choose an Action',
       buttons: [
+        {
+          text: 'Detail',
+          icon: 'list',
+          handler: () => {
+            this.router.navigate(['/', 'main', 'tabs', 'categories', categoryId]);
+          }
+        },
         {
           text: 'Edit',
           icon: 'create-outline',
@@ -53,18 +57,16 @@ export class CategoriesPage implements OnInit {
   }
   ngOnInit() {
     this.categoriesSub = this.categoriesService.categories.subscribe(categories => {
-      this.loadedCategories = categories;
-      this.relevantCategories = this.loadedCategories;
+      this.relevantCategories = categories;
     });
   }
   onDelete(categoryId: string) {
     this.categoriesService.deleteCategory(categoryId).subscribe(() => {
-
     });
   }
   ionViewWillEnter() {
     this.categoriesSub = this.categoriesService.categories.subscribe(categories => {
-      this.loadedCategories = categories;
+      this.relevantCategories = categories;
     });
   }
   ngOnDestroy() {

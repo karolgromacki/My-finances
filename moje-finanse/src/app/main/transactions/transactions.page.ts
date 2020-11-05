@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { Transaction } from './transaction.model';
 import { TransactionsService } from './transactions.service';
 import { SegmentChangeEventDetail } from '@ionic/core';
+import { CategoriesService } from '../categories/categories.service';
 
 
 @Component({
@@ -19,11 +20,13 @@ export class TransactionsPage implements OnInit {
   relevantTransactions: Transaction[];
   loadedTransactions: Transaction[];
   private transactionsSub: Subscription;
+  private categoriesSub: Subscription;
 
   constructor(
     private transactionsService: TransactionsService,
     private router: Router,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private categoriesService: CategoriesService
     // private modalCtrl: ModalController
   ) { }
 
@@ -51,7 +54,6 @@ export class TransactionsPage implements OnInit {
         this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === 'expense');
       else
         this.relevantTransactions = this.loadedTransactions;
-
     });
   }
   ngOnDestroy() {

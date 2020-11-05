@@ -3,6 +3,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingController, NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { Account } from '../../accounts/account.model';
+import { AccountsService } from '../../accounts/accounts.service';
+import { CategoriesService } from '../../categories/categories.service';
+import { Category } from '../../categories/category.model';
 import { Transaction } from '../transaction.model';
 import { TransactionsService } from '../transactions.service';
 
@@ -11,11 +15,16 @@ import { TransactionsService } from '../transactions.service';
   templateUrl: './edit-transaction.page.html',
   styleUrls: ['./edit-transaction.page.scss'],
 })
+
 export class EditTransactionPage implements OnInit {
   form: FormGroup;
   transaction: Transaction;
+  loadedCategories: Category[];
+  loadedAccounts: Account[];
   private transactionSub: Subscription;
-  constructor(private route: ActivatedRoute, private navCtrl: NavController, private transactionsService: TransactionsService, private loadingCtrl: LoadingController, private router: Router) { }
+  private categoriesSub: Subscription;
+  private accountsSub: Subscription;
+  constructor(private route: ActivatedRoute, private navCtrl: NavController, private accountsService: AccountsService, private categoriesService: CategoriesService, private transactionsService: TransactionsService, private loadingCtrl: LoadingController, private router: Router) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
@@ -34,13 +43,25 @@ export class EditTransactionPage implements OnInit {
           account: new FormControl(this.transaction.account, { updateOn: 'change', validators: [Validators.required] }),
           category: new FormControl(this.transaction.category, { updateOn: 'change', validators: [Validators.required] }),
         });
+        this.accountsSub = this.accountsService.accounts.subscribe(accounts => {
+          this.loadedAccounts = accounts;
+        });
+        this.categoriesSub = this.categoriesService.categories.subscribe(categories => {
+          this.loadedCategories = categories;
+        });
       });
-
     });
   }
+
   ngOnDestroy() {
     if (this.transactionSub) {
       this.transactionSub.unsubscribe();
+    }
+    if (this.categoriesSub) {
+      this.categoriesSub.unsubscribe();
+    }
+    if (this.accountsSub) {
+      this.accountsSub.unsubscribe();
     }
   }
   onUpdateTransaction() {
@@ -50,9 +71,7 @@ export class EditTransactionPage implements OnInit {
     if (this.form.value.type === 'deposit' && this.form.value.category !== '') {
       this.form.value.category = 'deposit';
     }
-    if (this.form.value.category !== '') {
-      this.form.value.category = 'deposit';
-    }
+    let newDate;
 
     this.loadingCtrl.create({
       message: 'Updating transaction...'
@@ -65,7 +84,7 @@ export class EditTransactionPage implements OnInit {
         this.form.value.category,
         this.form.value.account,
         this.form.value.amount,
-        this.form.value.date
+        newDate = new Date(this.form.value.date)
       ).subscribe(() => {
         loadingEl.dismiss();
         this.form.reset();

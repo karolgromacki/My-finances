@@ -37,7 +37,7 @@
             {{transaction.amount}}
           </ion-label>
         </ion-item>
-        <ion-item>
+        <ion-item *ngIf="transaction.type!='deposit'">
           <ion-label>
             Category:
             {{transaction.category}}

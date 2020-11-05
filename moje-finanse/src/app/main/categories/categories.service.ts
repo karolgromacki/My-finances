@@ -9,12 +9,13 @@ import { take, map, tap, delay } from 'rxjs/operators';
 })
 export class CategoriesService {
   private _categories = new BehaviorSubject<Category[]>([
-    new Category('c1', 'Shopping', 'bag'),
+    new Category('c1', 'Shopping', 'bag-handle'),
     new Category('c2', 'Food', 'fast-food'),
     new Category('c3', 'Car', 'car'),
     new Category('c4', 'Home', 'home'),
+    new Category('c5', 'Entertaiment', 'game-controller'),
   ]);
-  private _icons = ['airplane-outline','bag','beer', 'fast-food','barbell','bed', 'bus', 'car', 'cart', 'cafe', 'construct', 'color-palette', 'earth', 'fitness', 'gift', 'home','football','glasses', 'musical-notes','paw']
+  private _icons = ['airplane-outline', 'bag-handle', 'beer', 'fast-food', 'barbell', 'bed', 'bus', 'car', 'cart', 'cafe', 'construct', 'color-palette', 'earth', 'fitness', 'gift', 'home', 'football', 'glasses', 'musical-notes', 'paw']
   get categories() {
     return this._categories.asObservable()
   }
@@ -60,5 +61,8 @@ export class CategoriesService {
         this._categories.next(categories.filter(t => t.id !== categoryId));
       })
     )
+  }
+  clearAlldata() {
+    this._categories = new BehaviorSubject<Category[]>([]);
   }
 }

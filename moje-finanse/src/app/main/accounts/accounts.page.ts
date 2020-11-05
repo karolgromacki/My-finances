@@ -52,7 +52,6 @@ export class AccountsPage implements OnInit {
           account.amount = sum;
           this.sum += account.amount;
         });
-        console.log(this.sum)
       });
     });
   }

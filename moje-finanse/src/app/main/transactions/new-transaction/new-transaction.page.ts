@@ -20,7 +20,13 @@ export class NewTransactionPage implements OnInit {
   loadedCategories: Category[];
   private accountsSub: Subscription;
   private categoriesSub: Subscription;
-  constructor(private transactionService: TransactionsService, private router: Router, private loadingCtrl: LoadingController, private accountsService: AccountsService, private categoriesService: CategoriesService) { }
+  constructor(
+    private transactionService: TransactionsService,
+    private router: Router,
+    private loadingCtrl: LoadingController,
+    private accountsService: AccountsService,
+    private categoriesService: CategoriesService
+  ) { }
 
   ngOnInit() {
     this.categoriesSub = this.categoriesService.categories.subscribe(category => {
@@ -39,6 +45,21 @@ export class NewTransactionPage implements OnInit {
       this.loadedCategories = category;
     });
   }
+
+  setUserCategoryValidators() {
+    const categoryControl = this.form.get('category');
+    this.form.get('type').valueChanges
+      .subscribe(userCategory => {
+        if (userCategory === 'expense') {
+          categoryControl.setValidators([Validators.required]);
+        }
+        if (userCategory === 'deposit') {
+          categoryControl.setValidators(null);
+        }
+        categoryControl.updateValueAndValidity();
+      });
+  }
+
   onCreateTransaction() {
     if (!this.form.valid) {
       return;
@@ -61,7 +82,6 @@ export class NewTransactionPage implements OnInit {
         this.form.value.amount,
         new Date(this.form.value.date), '').subscribe(() => {
           loadingEl.dismiss();
-          console.log(this.form.value.category)
           this.form.reset();
           this.router.navigate(['/', 'main', 'tabs', 'transactions']);
         });

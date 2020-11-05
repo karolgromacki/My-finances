@@ -81,10 +81,8 @@
         <ion-col size-sm="6" offset-sm="3">
           <ion-item>
             <ion-label position="floating">*Account</ion-label>
-            <ion-select formControlName="account">
-              <ion-select-option value="card">Card</ion-select-option>
-              <ion-select-option value="cash">Cash</ion-select-option>
-              <ion-select-option value="savings">Savings</ion-select-option>
+            <ion-select formControlName="account" #account>
+              <ion-select-option *ngFor="let account of loadedAccounts" value="{{account.title}}" >{{account.title}}</ion-select-option>
             </ion-select>
           </ion-item>
         </ion-col>
@@ -101,8 +99,7 @@
           <ion-item>
             <ion-label position="floating">Category</ion-label>
             <ion-select formControlName="category" #category>
-              <ion-select-option value="shopping">Shopping</ion-select-option>
-              <ion-select-option value="entertainment">Entertainment</ion-select-option>
+              <ion-select-option *ngFor="let category of loadedCategories" value="{{category.title}}" >{{category.title}}</ion-select-option>
             </ion-select>
           </ion-item>
         </ion-col>

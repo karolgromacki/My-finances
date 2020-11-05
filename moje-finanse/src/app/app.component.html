@@ -46,9 +46,9 @@
           <ion-icon name="download" slot="start" lines="none"></ion-icon>
           <ion-label>Export data to CSV file</ion-label>
         </ion-item>
-        <ion-item button detail="false">
-          <ion-icon name="trash-bin" slot="start" lines="none"></ion-icon>
-          <ion-label>Clear data</ion-label>
+        <ion-item button detail="false" (click)="onClearData()">
+          <ion-icon color="danger" name="trash-bin" slot="start" lines="none"></ion-icon>
+          <ion-label>Clear all data</ion-label>
         </ion-item>
       </ion-list>
     </ion-content>
