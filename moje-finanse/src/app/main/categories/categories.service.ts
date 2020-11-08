@@ -9,6 +9,7 @@ import { take, map, tap, delay } from 'rxjs/operators';
 })
 export class CategoriesService {
   private _categories = new BehaviorSubject<Category[]>([
+    new Category('deposit', 'Deposit', 'card'),
     new Category('c1', 'Shopping', 'bag-handle'),
     new Category('c2', 'Food', 'fast-food'),
     new Category('c3', 'Car', 'car'),

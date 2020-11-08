@@ -24,6 +24,8 @@ export class EditTransactionPage implements OnInit {
   private transactionSub: Subscription;
   private categoriesSub: Subscription;
   private accountsSub: Subscription;
+  icon: string;
+  selectedCategory;
   constructor(private route: ActivatedRoute, private navCtrl: NavController, private accountsService: AccountsService, private categoriesService: CategoriesService, private transactionsService: TransactionsService, private loadingCtrl: LoadingController, private router: Router) { }
 
   ngOnInit() {
@@ -47,11 +49,63 @@ export class EditTransactionPage implements OnInit {
           this.loadedAccounts = accounts;
         });
         this.categoriesSub = this.categoriesService.categories.subscribe(categories => {
-          this.loadedCategories = categories;
+          this.loadedCategories = categories.filter(category => category.title !== 'Deposit');
+          const categoryControl = this.form.get('category');
+          this.form.get('type').valueChanges
+            .subscribe(userType => {
+              if (userType === 'expense') {
+                categoryControl.setValue(null);
+                categoryControl.setValidators([Validators.required]);
+                this.form.get('category').valueChanges
+                  .subscribe(userCategory => {
+                    this.selectedCategory = this.loadedCategories.find(category => category.title === userCategory);
+                  });
+              }
+              else if (userType === 'deposit') {
+                categoryControl.setValue('deposit');
+                categoryControl.setValidators(null);
+              }
+              categoryControl.updateValueAndValidity();
+            });
         });
+
       });
     });
   }
+
+  onUpdateTransaction() {
+    if (!this.form.valid) {
+      return;
+    }
+    if (this.form.value.type === 'deposit') {
+      this.form.value.category = 'Deposit';
+      this.icon = 'card';
+    }
+    else if (this.form.value.type === 'expense') {
+      this.icon = this.selectedCategory.icon;
+    }
+    this.loadingCtrl.create({
+      message: 'Updating transaction...'
+    }).then(loadingEl => {
+      loadingEl.present();
+      this.transactionsService.updateTransaction(
+        this.transaction.id,
+        this.form.value.title,
+        this.form.value.type,
+        this.form.value.note,
+        this.form.value.category,
+        this.form.value.account,
+        this.form.value.amount,
+        new Date(this.form.value.date), this.icon
+      ).subscribe(() => {
+        loadingEl.dismiss();
+        console.log(this.categoriesService.categories)
+        this.form.reset();
+        this.router.navigate(['/', 'main', 'tabs', 'transactions']);
+      });
+    })
+  }
+
 
   ngOnDestroy() {
     if (this.transactionSub) {
@@ -63,33 +117,5 @@ export class EditTransactionPage implements OnInit {
     if (this.accountsSub) {
       this.accountsSub.unsubscribe();
     }
-  }
-  onUpdateTransaction() {
-    if (!this.form.valid) {
-      return;
-    }
-    if (this.form.value.type === 'deposit' && this.form.value.category !== '') {
-      this.form.value.category = 'deposit';
-    }
-    let newDate;
-
-    this.loadingCtrl.create({
-      message: 'Updating transaction...'
-    }).then(loadingEl => {
-      loadingEl.present();
-      this.transactionsService.updateTransaction(
-        this.transaction.id,
-        this.form.value.title,
-        this.form.value.note,
-        this.form.value.category,
-        this.form.value.account,
-        this.form.value.amount,
-        newDate = new Date(this.form.value.date)
-      ).subscribe(() => {
-        loadingEl.dismiss();
-        this.form.reset();
-        this.router.navigate(['/', 'main', 'tabs', 'transactions']);
-      });
-    })
   }
 }

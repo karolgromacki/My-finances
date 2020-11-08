@@ -51,8 +51,15 @@ export class AppComponent {
             this.transactionsService.clearAlldata();
             this.categoriesService.clearAlldata();
             this.accountsService.clearAlldata();
-            this.router.navigate(['/']);
-            this.menuCtrl.close();
+            this.categoriesService.addCategory(
+              'Deposit',
+              'card').subscribe(() => {
+                console.log(this.categoriesService.categories)
+                this.router.navigate(['/', 'main', 'tabs', 'categories']);
+                this.menuCtrl.close();
+              });
+
+            
            }
         }
       ]

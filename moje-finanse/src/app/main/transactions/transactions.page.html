@@ -69,10 +69,8 @@
               <!-- <ion-thumbnail slot="start">
               <ion-img [src]="transaction.imageUrl"></ion-img>
             </ion-thumbnail> -->
-              <ion-avatar slot="start">
-                <ion-img [src]="transaction?.imageUrl"></ion-img>
-              </ion-avatar>
-              <ion-label>
+              <ion-icon name="{{transaction?.icon}}"></ion-icon>
+              <ion-label class="ion-margin-horizontal">
                 <h2>{{transaction?.title}}</h2>
                 <p>{{transaction?.category}}</p>
               </ion-label>

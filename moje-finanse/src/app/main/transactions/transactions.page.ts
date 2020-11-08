@@ -6,7 +6,6 @@ import { Subscription } from 'rxjs';
 import { Transaction } from './transaction.model';
 import { TransactionsService } from './transactions.service';
 import { SegmentChangeEventDetail } from '@ionic/core';
-import { CategoriesService } from '../categories/categories.service';
 
 
 @Component({
@@ -20,29 +19,17 @@ export class TransactionsPage implements OnInit {
   relevantTransactions: Transaction[];
   loadedTransactions: Transaction[];
   private transactionsSub: Subscription;
-  private categoriesSub: Subscription;
 
   constructor(
     private transactionsService: TransactionsService,
     private router: Router,
-    private loadingCtrl: LoadingController,
-    private categoriesService: CategoriesService
+    private loadingCtrl: LoadingController
     // private modalCtrl: ModalController
   ) { }
 
   ngOnInit() {
     this.transactionsSub = this.transactionsService.transactions.subscribe(transactions => {
-      this.loadedTransactions = transactions;
-      this.relevantTransactions = this.loadedTransactions;
-      this.sum = 0;
-      this.relevantTransactions.forEach((transaction) => {
-        if (transaction.type === 'deposit') {
-          this.sum += transaction.amount;
-        }
-        else if (transaction.type === 'expense') {
-          this.sum -= transaction.amount;
-        }
-      });
+      this.relevantTransactions = transactions;
     });
   }
   ionViewWillEnter() {
@@ -54,6 +41,15 @@ export class TransactionsPage implements OnInit {
         this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === 'expense');
       else
         this.relevantTransactions = this.loadedTransactions;
+      this.sum = 0;
+      this.relevantTransactions.forEach((transaction) => {
+        if (transaction.type === 'deposit') {
+          this.sum += transaction.amount;
+        }
+        else if (transaction.type === 'expense') {
+          this.sum -= transaction.amount;
+        }
+      });
     });
   }
   ngOnDestroy() {
