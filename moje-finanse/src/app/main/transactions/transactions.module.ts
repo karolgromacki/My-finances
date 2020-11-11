@@ -8,6 +8,7 @@ import { TransactionsPageRoutingModule } from './transactions-routing.module';
 
 import { TransactionsPage } from './transactions.page';
 import { NewTransactionPage } from './new-transaction/new-transaction.page';
+import { GroupByPipe } from 'src/app/Pipes/groupByPipe';
 
 @NgModule({
   imports: [
@@ -16,9 +17,7 @@ import { NewTransactionPage } from './new-transaction/new-transaction.page';
     IonicModule,
     TransactionsPageRoutingModule
   ],
-  declarations: [TransactionsPage,
-    // NewTransactionPage
-  ],
-  // entryComponents: [NewTransactionPage]
+  declarations: [TransactionsPage, GroupByPipe],
+  entryComponents: [TransactionsPage]
 })
 export class TransactionsPageModule { }

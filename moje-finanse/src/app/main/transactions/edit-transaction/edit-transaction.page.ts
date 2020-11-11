@@ -78,11 +78,24 @@ export class EditTransactionPage implements OnInit {
       return;
     }
     if (this.form.value.type === 'deposit') {
-      this.form.value.category = 'Deposit';
-      this.icon = 'card';
+      if (this.form.value.category = 'Transfer')
+        this.icon = 'swap-horizontal';
+      else {
+        this.form.value.category = 'Deposit';
+        this.icon = 'card';
+      }
     }
     else if (this.form.value.type === 'expense') {
-      this.icon = this.selectedCategory.icon;
+      if (this.selectedCategory == null) {
+        if (this.form.value.category = 'Transfer')
+        this.icon = 'swap-horizontal';
+        else {
+          this.selectedCategory = this.loadedCategories.find(category => category.title === this.form.value.category);
+          this.icon = this.selectedCategory.icon;
+        }
+      }
+      else if (this.selectedCategory !== null)
+        this.icon = this.selectedCategory.icon;
     }
     this.loadingCtrl.create({
       message: 'Updating transaction...'
@@ -99,11 +112,11 @@ export class EditTransactionPage implements OnInit {
         new Date(this.form.value.date), this.icon
       ).subscribe(() => {
         loadingEl.dismiss();
-        console.log(this.categoriesService.categories)
+        console.log(this.categoriesService.categories);
         this.form.reset();
         this.router.navigate(['/', 'main', 'tabs', 'transactions']);
       });
-    })
+    });
   }
 
 

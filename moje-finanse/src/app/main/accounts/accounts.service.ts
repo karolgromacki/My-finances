@@ -57,7 +57,7 @@ export class AccountsService {
             })
         )
     }
-    clearAlldata(){
-        this._accounts = new BehaviorSubject<Account[]>([]);
+    clearAlldata() {
+        return this._accounts = new BehaviorSubject<Account[]>([]);
     }
 }

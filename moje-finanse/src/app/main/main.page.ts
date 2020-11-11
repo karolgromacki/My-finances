@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { AccountsPage } from './accounts/accounts.page';
+import { CategoriesPage } from './categories/categories.page';
+import { TransactionsPage } from './transactions/transactions.page';
 
 @Component({
   selector: 'app-main',
@@ -6,7 +9,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./main.page.scss'],
 })
 export class MainPage implements OnInit {
-
+  accountsPage = AccountsPage
+  categoriesPage = CategoriesPage
+  transactionsPage = TransactionsPage
   constructor() { }
 
   ngOnInit() {

@@ -9,12 +9,12 @@ import { take, map, tap, delay } from 'rxjs/operators';
 })
 export class TransactionsService {
   private _transactions = new BehaviorSubject<Transaction[]>([
-    new Transaction('t1', 'expense', 'Biedronka', 'Notka', 'Shopping', 'Cash', 200, moment('2020-10-20', "YYYY-MM-DD").toDate(), '', 'bag-handle'),
-    new Transaction('t2', 'expense', 'Kino', '', 'Entertaiment', 'Card', 50, moment('2020-10-20', "YYYY-MM-DD").toDate(), '', 'game-controller'),
-    new Transaction('t3', 'deposit', 'Przychód', '', 'Deposit', 'Cash', 250, moment('2020-10-20', "YYYY-MM-DD").toDate(), '', 'card'),
+    new Transaction('t1', 'expense', 'Biedronka', 'Notka', 'Shopping', 'Cash', 200, moment('2020-10-20', 'YYYY-MM-DD').toDate(), '', 'bag-handle'),
+    new Transaction('t2', 'expense', 'Kino', '', 'Entertaiment', 'Card', 50, moment('2020-10-20', 'YYYY-MM-DD').toDate(), '', 'game-controller'),
+    new Transaction('t3', 'deposit', 'Przychód', '', 'Deposit', 'Cash', 250, moment('2020-10-20', 'YYYY-MM-DD').toDate(), '', 'card'),
   ]);
   get transactions() {
-    return this._transactions.asObservable()
+    return this._transactions.asObservable();
   }
   constructor() { }
 
@@ -55,7 +55,7 @@ export class TransactionsService {
     return this.transactions.pipe(take(1), tap(transactions => {
       const updatedTransactionsIndex = transactions.findIndex(tr => tr.id === transactionId);
       const updatedTransactions = [...transactions];
-      const oldTransaction = updatedTransactions[updatedTransactionsIndex]
+      const oldTransaction = updatedTransactions[updatedTransactionsIndex];
       updatedTransactions[updatedTransactionsIndex] = new Transaction(
         oldTransaction.id, type, title, note,
         category, account, amount, date, oldTransaction.imageUrl, icon);
@@ -68,7 +68,7 @@ export class TransactionsService {
       tap(transactions => {
         this._transactions.next(transactions.filter(t => t.id !== transactionId));
       })
-    )
+    );
   }
   clearAlldata() {
     return this._transactions = new BehaviorSubject<Transaction[]>([]);

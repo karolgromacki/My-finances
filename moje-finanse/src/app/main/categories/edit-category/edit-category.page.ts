@@ -41,8 +41,8 @@ export class EditCategoryPage implements OnInit {
       this.categorySub.unsubscribe();
     }
   }
-  selectIcon(icon){
-    this.selectedIcon=icon;
+  selectIcon(icon) {
+    this.selectedIcon = icon;
   }
   onUpdateCategory() {
     if (!this.form.valid) {

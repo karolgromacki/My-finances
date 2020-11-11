@@ -14,7 +14,7 @@ import { SegmentChangeEventDetail } from '@ionic/core';
   styleUrls: ['./transactions.page.scss'],
 })
 export class TransactionsPage implements OnInit {
-  segment = "all";
+  segment = 'all';
   sum: number;
   relevantTransactions: Transaction[];
   loadedTransactions: Transaction[];
@@ -24,23 +24,27 @@ export class TransactionsPage implements OnInit {
     private transactionsService: TransactionsService,
     private router: Router,
     private loadingCtrl: LoadingController
-    // private modalCtrl: ModalController
   ) { }
 
   ngOnInit() {
     this.transactionsSub = this.transactionsService.transactions.subscribe(transactions => {
       this.relevantTransactions = transactions;
+      this.relevantTransactions.sort((a, b) => b.date.valueOf() - a.date.valueOf())
     });
   }
   ionViewWillEnter() {
     this.transactionsSub = this.transactionsService.transactions.subscribe(transactions => {
       this.loadedTransactions = transactions;
-      if (this.segment === 'deposit')
+      this.loadedTransactions.sort((a, b) => b.date.valueOf() - a.date.valueOf())
+      if (this.segment === 'deposit') {
         this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === 'deposit');
-      else if (this.segment === 'expense')
+      }
+      else if (this.segment === 'expense') {
         this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === 'expense');
-      else
+      }
+      else {
         this.relevantTransactions = this.loadedTransactions;
+      }
       this.sum = 0;
       this.relevantTransactions.forEach((transaction) => {
         if (transaction.type === 'deposit') {
@@ -58,13 +62,9 @@ export class TransactionsPage implements OnInit {
     }
 
   }
-  //CREATE MODAL
-  // onNewTransaction(){
-  //   this.modalCtrl.create({component: NewTransactionPage, componentProps:{}}).then(modalEl => {modalEl.present()});
-  // }
   onEdit(transactionId: string, slidingItem: IonItemSliding) {
     slidingItem.close();
-    this.router.navigate(['/', 'main', 'tabs', 'transactions', 'edit', transactionId])
+    this.router.navigate(['/', 'main', 'tabs', 'transactions', 'edit', transactionId]);
   }
   onDelete(transactionId: string, slidingItem: IonItemSliding) {
     slidingItem.close();

@@ -1,0 +1,13 @@
+{
+  "appId": "com.my-finances.ionic-angular",
+  "appName": "Moje Finanse",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {}
+}

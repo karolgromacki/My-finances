@@ -9,11 +9,18 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { TranslateModule } from '@ngx-translate/core';
+import { HttpClientModule } from '@angular/common/http';
+import { SuperTabsModule } from '@ionic-super-tabs/angular';
+import { IonicStorageModule } from '@ionic/storage';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, TranslateModule.forRoot()],
+  imports: [BrowserModule, IonicModule.forRoot(),
+    AppRoutingModule, TranslateModule.forRoot(),
+    IonicStorageModule.forRoot(),
+    SuperTabsModule.forRoot(),
+    HttpClientModule],
   providers: [
     StatusBar,
     SplashScreen,
@@ -21,4 +28,4 @@ import { TranslateModule } from '@ngx-translate/core';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

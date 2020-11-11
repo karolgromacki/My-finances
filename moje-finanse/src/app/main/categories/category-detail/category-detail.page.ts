@@ -13,7 +13,6 @@ import { Category } from '../category.model';
   styleUrls: ['./category-detail.page.scss'],
 })
 export class CategoryDetailPage implements OnInit {
-  segment = "all";
   category: Category;
   private categoriesSub: Subscription;
   sum: number;
@@ -49,7 +48,7 @@ export class CategoryDetailPage implements OnInit {
   }
   onEdit(transactionId: string, slidingItem: IonItemSliding) {
     slidingItem.close();
-    this.router.navigate(['/', 'main', 'tabs', 'transactions', 'edit', transactionId])
+    this.router.navigate(['/', 'main', 'tabs', 'transactions', 'edit', transactionId]);
   }
   onDelete(transactionId: string, slidingItem: IonItemSliding) {
     slidingItem.close();

@@ -48,19 +48,25 @@ export class AppComponent {
         {
           text: 'Delete',
           handler: () => {
-            this.transactionsService.clearAlldata();
-            this.categoriesService.clearAlldata();
-            this.accountsService.clearAlldata();
+            this.transactionsService.clearAlldata().subscribe(() => {
+            });
+            this.categoriesService.clearAlldata()
+            this.accountsService.clearAlldata().subscribe(() => {
+            });
+            this.categoriesService.addCategory(
+              'Transfer',
+              'swap-horizontal').subscribe(() => {
+              });
             this.categoriesService.addCategory(
               'Deposit',
               'card').subscribe(() => {
-                console.log(this.categoriesService.categories)
-                this.router.navigate(['/', 'main', 'tabs', 'categories']);
+                if (this.router.url == '/main/tabs/categories')
+                  this.router.navigateByUrl('/main/tabs/transactions');
+                else
+                  this.router.navigateByUrl('/main/tabs/categories');
                 this.menuCtrl.close();
               });
-
-            
-           }
+          }
         }
       ]
     }).then(alertEl => {

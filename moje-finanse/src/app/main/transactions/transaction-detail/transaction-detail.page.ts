@@ -22,7 +22,6 @@ export class TransactionDetailPage implements OnInit {
         this.navCtrl.navigateBack('/main/tabs/transactions');
         return;
       }
-
       this.transactionSub = this.transactionsService.getTransaction(paramMap.get('transactionId')).subscribe(transaction => this.transaction = transaction);
     });
   }

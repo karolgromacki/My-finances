@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { CategoriesService } from '../categories.service';
 import { Category } from '../category.model';
@@ -13,19 +13,19 @@ import { Category } from '../category.model';
 })
 export class NewCategoryPage implements OnInit {
   icons;
-  selectedIcon='document-outline';
+  selectedIcon = 'document-outline';
   form: FormGroup;
   loadedCategories: Category[];
-  constructor(private categoriesService: CategoriesService, private router: Router, private loadingCtrl: LoadingController) { }
+  constructor(private navCtrl: NavController ,private categoriesService: CategoriesService, private router: Router, private loadingCtrl: LoadingController) { }
 
   ngOnInit() {
-      this.icons = this.categoriesService.icons;
-      this.form = new FormGroup({
-        title: new FormControl(null, { updateOn: 'change', validators: [Validators.required, Validators.maxLength(20)] })
-      });
+    this.icons = this.categoriesService.icons;
+    this.form = new FormGroup({
+      title: new FormControl(null, { updateOn: 'change', validators: [Validators.required, Validators.maxLength(20)] })
+    });
   }
-  selectIcon(icon){
-    this.selectedIcon=icon;
+  selectIcon(icon) {
+    this.selectedIcon = icon;
   }
   onCreateTransaction() {
     if (!this.form.valid) {
@@ -48,7 +48,7 @@ export class NewCategoryPage implements OnInit {
         this.selectedIcon).subscribe(() => {
           loadingEl.dismiss();
           this.form.reset();
-          this.router.navigate(['/', 'main', 'tabs', 'categories']);
+          this.navCtrl.back();
         });
     });
 

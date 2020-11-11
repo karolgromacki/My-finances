@@ -20,6 +20,10 @@ const routes: Routes = [
             loadChildren: './accounts/new-account/new-account.module#NewAccountPageModule'
           },
           {
+            path: 'transfer',
+            loadChildren: './transactions/transfer/transfer.module#TransferPageModule'
+          },
+          {
             path: 'edit/:accountId',
             loadChildren: './accounts/edit-account/edit-account.module#EditAccountPageModule'
           },
@@ -39,6 +43,18 @@ const routes: Routes = [
           {
             path: 'new',
             loadChildren: './transactions/new-transaction/new-transaction.module#NewTransactionPageModule'
+          },
+          {
+            path: 'new-account',
+            loadChildren: './accounts/new-account/new-account.module#NewAccountPageModule'
+          },
+          {
+            path: 'new-category',
+            loadChildren: './categories/new-category/new-category.module#NewCategoryPageModule'
+          },
+          {
+            path: 'transfer',
+            loadChildren: './transactions/transfer/transfer.module#TransferPageModule'
           },
           {
             path: 'edit/:transactionId',

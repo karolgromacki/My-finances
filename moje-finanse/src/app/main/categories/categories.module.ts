@@ -17,6 +17,7 @@ import { ChartsModule } from 'ng2-charts';
     CategoriesPageRoutingModule,
     ChartsModule
   ],
-  declarations: [CategoriesPage]
+  declarations: [CategoriesPage],
+  entryComponents: [CategoriesPage]
 })
 export class CategoriesPageModule {}

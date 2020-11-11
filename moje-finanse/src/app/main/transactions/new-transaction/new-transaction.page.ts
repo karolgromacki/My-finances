@@ -21,7 +21,7 @@ export class NewTransactionPage implements OnInit {
   private accountsSub: Subscription;
   private categoriesSub: Subscription;
   categoryIcon: Category;
-  icon = '';
+  icon;
   constructor(
     private transactionService: TransactionsService,
     private router: Router,
@@ -38,7 +38,7 @@ export class NewTransactionPage implements OnInit {
           title: new FormControl(null, { updateOn: 'change', validators: [Validators.required, Validators.maxLength(20)] }),
           amount: new FormControl(null, { updateOn: 'change', validators: [Validators.required, Validators.min(0.01)] }),
           note: new FormControl(null, { updateOn: 'blur' }),
-          date: new FormControl(new Date(Date.now()).toISOString(), { updateOn: 'change', validators: [Validators.required] }),
+          date: new FormControl(new Date(Date.now()).toDateString(), { updateOn: 'change', validators: [Validators.required] }),
           account: new FormControl(null, { updateOn: 'change', validators: [Validators.required] }),
           category: new FormControl(null, { updateOn: 'change', validators: [Validators.required] })
         });
@@ -48,25 +48,26 @@ export class NewTransactionPage implements OnInit {
     });
 
   }
-  ionViewWillEnter(){
+  ionViewWillEnter() {
     this.form.get('category').valueChanges
-    .subscribe(userCategory => {
-      if (this.form.value.type === 'expense')
-        this.categoryIcon = this.loadedCategories.find(category => category.title === userCategory);
-    });
-  const categoryControl = this.form.get('category');
-  this.form.get('type').valueChanges
-    .subscribe(userType => {
-      if (userType === 'expense') {
-        categoryControl.setValue(null);
-        categoryControl.setValidators([Validators.required]);
-      }
-      else if (userType === 'deposit') {
-        this.form.value.category = 'Deposit';
-        categoryControl.setValidators(null);
-      }
-      categoryControl.updateValueAndValidity();
-    });
+      .subscribe(userCategory => {
+        if (this.form.value.type === 'expense') {
+          this.categoryIcon = this.loadedCategories.find(category => category.title === userCategory);
+        }
+      });
+    const categoryControl = this.form.get('category');
+    this.form.get('type').valueChanges
+      .subscribe(userType => {
+        if (userType === 'expense') {
+          categoryControl.setValue(null);
+          categoryControl.setValidators([Validators.required]);
+        }
+        else if (userType === 'deposit') {
+          this.form.value.category = 'Deposit';
+          categoryControl.setValidators(null);
+        }
+        categoryControl.updateValueAndValidity();
+      });
   }
 
   onCreateTransaction() {
@@ -75,7 +76,7 @@ export class NewTransactionPage implements OnInit {
     }
     else if (this.form.value.type === 'deposit') {
       this.form.value.category = 'Deposit';
-      this.icon = 'card'
+      this.icon = 'card';
     }
     else if (this.form.value.type === 'expense') {
       this.icon = this.loadedCategories.find(category => category.title === this.form.value.category).icon;

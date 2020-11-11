@@ -15,7 +15,6 @@ import { Transaction } from '../transactions/transaction.model';
 })
 export class AccountsPage implements OnInit {
   sum: number;
-  segment = "all";
   relevantAccounts: Account[];
   relevantTransactions: Transaction[];
   private accountsSub: Subscription;
@@ -30,12 +29,12 @@ export class AccountsPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    
+
   }
-  ionViewWillEnter(){
-    let sum;
-    this.sum = 0;
+  ionViewWillEnter() {
     this.accountsSub = this.accountsService.accounts.subscribe(accounts => {
+      let sum;
+      this.sum = 0;
       this.transactionsSub = this.transactionsService.transactions.subscribe(transactions => {
         this.relevantTransactions = transactions;
         this.relevantAccounts = accounts;
@@ -43,10 +42,12 @@ export class AccountsPage implements OnInit {
           sum = account.baseAmount;
           this.relevantTransactions.forEach((transaction) => {
             if (transaction.account === account.title) {
-              if (transaction.type === 'expense')
+              if (transaction.type === 'expense') {
                 sum -= transaction.amount;
-              else if (transaction.type === 'deposit')
+              }
+              else if (transaction.type === 'deposit') {
                 sum += transaction.amount;
+              }
             }
           });
           account.amount = sum;
@@ -62,13 +63,9 @@ export class AccountsPage implements OnInit {
     }
 
   }
-  //CREATE MODAL
-  // onNewTransaction(){
-  //   this.modalCtrl.create({component: NewTransactionPage, componentProps:{}}).then(modalEl => {modalEl.present()});
-  // }
   onEdit(accountId: string, slidingItem: IonItemSliding) {
     slidingItem.close();
-    this.router.navigate(['/', 'main', 'tabs', 'accounts', 'edit', accountId])
+    this.router.navigate(['/', 'main', 'tabs', 'accounts', 'edit', accountId]);
   }
   onDelete(accountId: string, slidingItem: IonItemSliding) {
     slidingItem.close();
@@ -81,11 +78,4 @@ export class AccountsPage implements OnInit {
       });
     });
   }
-  onFilterUpdate(event: CustomEvent<SegmentChangeEventDetail>) {
-    if (event.detail.value === 'deposit') {
-      // this.relevantTransactions = this.loadedTransactions.filter(account => account.type === 'deposit');
-    }
-
-  }
-
 }

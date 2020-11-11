@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, NavController } from '@ionic/angular';
 import { AccountsService } from '../accounts.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { AccountsService } from '../accounts.service';
 export class NewAccountPage implements OnInit {
   form: FormGroup;
 
-  constructor(private accountService: AccountsService, private router: Router, private loadingCtrl: LoadingController) { }
+  constructor(private navCtrl: NavController, private accountService: AccountsService, private router: Router, private loadingCtrl: LoadingController) { }
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -36,7 +36,7 @@ export class NewAccountPage implements OnInit {
         this.form.value.amount).subscribe(() => {
           loadingEl.dismiss();
           this.form.reset();
-          this.router.navigate(['/', 'main', 'tabs', 'accounts']);
+          this.navCtrl.back();
         });
     });
 

@@ -27,7 +27,7 @@ export class EditAccountPage implements OnInit {
         this.account = account;
         this.form = new FormGroup({
           title: new FormControl(this.account.title, { updateOn: 'change', validators: [Validators.required, Validators.maxLength(20)] }),
-          baseAmount: new FormControl(this.account.baseAmount, { updateOn: 'change', validators: [Validators.required]}),
+          baseAmount: new FormControl(this.account.baseAmount, { updateOn: 'change', validators: [Validators.required] }),
           note: new FormControl(this.account.note, { updateOn: 'blur' }),
         });
       });
