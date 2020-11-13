@@ -5,5 +5,6 @@ export class Account {
         public note: string,
         public amount: number,
         public baseAmount: number,
+        public userId: string,
     ) { }
 }

@@ -64,6 +64,7 @@ export class EditTransactionPage implements OnInit {
               if (userType === 'expense') {
                 categoryControl.setValue(null);
                 categoryControl.setValidators([Validators.required]);
+
                 this.form.get('category').valueChanges
                   .subscribe(userCategory => {
                     this.selectedCategory = this.loadedCategories.find(category => category.title === userCategory);
@@ -82,11 +83,12 @@ export class EditTransactionPage implements OnInit {
   }
 
   onUpdateTransaction() {
+    console.log(this.form.value.category, this.form.value.type, this.selectedCategory)
     if (!this.form.valid) {
       return;
     }
     if (this.form.value.type === 'deposit') {
-      if (this.form.value.category = 'Transfer')
+      if (this.form.value.category == 'Transfer')
         this.icon = 'swap-horizontal';
       else {
         this.form.value.category = 'Deposit';
@@ -95,7 +97,7 @@ export class EditTransactionPage implements OnInit {
     }
     else if (this.form.value.type === 'expense') {
       if (this.selectedCategory == null) {
-        if (this.form.value.category = 'Transfer')
+        if (this.form.value.category == 'Transfer')
           this.icon = 'swap-horizontal';
         else {
           this.selectedCategory = this.loadedCategories.find(category => category.title === this.form.value.category);

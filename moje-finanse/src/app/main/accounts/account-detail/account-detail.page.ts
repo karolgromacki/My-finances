@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { LoadingController, NavController, ToastController } from '@ionic/angular';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { AccountsService } from '../accounts.service';
 import { Account } from '../account.model';
@@ -10,10 +10,12 @@ import { Account } from '../account.model';
   styleUrls: ['./account-detail.page.scss'],
 })
 export class AccountDetailPage implements OnInit {
-
+  isLoading = false;
   account: Account;
   private accountSub: Subscription;
   constructor(
+    private alertCtrl: AlertController,
+    private router: Router,
     private toastController: ToastController,
     private route: ActivatedRoute,
     private navCtrl: NavController,
@@ -27,9 +29,32 @@ export class AccountDetailPage implements OnInit {
         this.navCtrl.navigateBack('/main/tabs/accounts');
         return;
       }
-      this.accountSub = this.accountsService.getAccount(paramMap.get('accountId')).subscribe(account => this.account = account);
+      this.isLoading = true;
+      this.accountSub = this.accountsService.getAccount(paramMap.get('accountId')).subscribe(account => {
+        this.account = account
+        this.isLoading = false;
+      },
+        error => {
+          this.alertCtrl
+            .create({
+              header: 'An error occurred!',
+              message: 'Account could not be fetched. Please try again later.',
+              buttons: [
+                {
+                  text: 'Okay',
+                  handler: () => {
+                    this.router.navigate(['/main/tabs/accounts']);
+                  }
+                }
+              ]
+            })
+            .then(alertEl => {
+              alertEl.present();
+            });
+        });
     });
   }
+
   ngOnDestroy() {
     if (this.accountSub) {
       this.accountSub.unsubscribe()

@@ -19,7 +19,7 @@ export class AccountsPage implements OnInit {
   relevantTransactions: Transaction[];
   private accountsSub: Subscription;
   private transactionsSub: Subscription;
-
+  isLoading = false;
   constructor(
     private toastController: ToastController,
     private accountsService: AccountsService,
@@ -30,18 +30,15 @@ export class AccountsPage implements OnInit {
   ) { }
 
   ngOnInit() {
-
-  }
-  ionViewWillEnter() {
     this.accountsSub = this.accountsService.accounts.subscribe(accounts => {
       let sum;
       this.sum = 0;
       this.transactionsSub = this.transactionsService.transactions.subscribe(transactions => {
         this.relevantTransactions = transactions;
         this.relevantAccounts = accounts;
-        this.relevantAccounts.forEach((account) => {
+        this.relevantAccounts?.forEach((account) => {
           sum = account.baseAmount;
-          this.relevantTransactions.forEach((transaction) => {
+          this.relevantTransactions?.forEach((transaction) => {
             if (transaction.account === account.title) {
               if (transaction.type === 'expense') {
                 sum -= transaction.amount;
@@ -55,6 +52,12 @@ export class AccountsPage implements OnInit {
           this.sum += account.amount;
         });
       });
+    });
+  }
+  ionViewWillEnter() {
+    this.isLoading = true;
+    this.accountsService.fetchAccounts().subscribe(()=>{
+      this.isLoading = false;
     });
   }
 

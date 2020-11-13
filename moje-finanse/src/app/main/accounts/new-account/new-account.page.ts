@@ -38,7 +38,7 @@ export class NewAccountPage implements OnInit {
       this.accountService.addAccount(
         this.form.value.title,
         this.form.value.note,
-        this.form.value.amount).subscribe(() => {
+        +this.form.value.amount).subscribe(() => {
           loadingEl.dismiss();
           this.presentToast();
           this.form.reset();
