@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoadingController, NavController } from '@ionic/angular';
+import { LoadingController, NavController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Account } from '../../accounts/account.model';
 import { AccountsService } from '../accounts.service';
@@ -15,7 +15,14 @@ export class EditAccountPage implements OnInit {
   form: FormGroup;
   account: Account;
   private accountSub: Subscription;
-  constructor(private route: ActivatedRoute, private navCtrl: NavController, private accountsService: AccountsService, private loadingCtrl: LoadingController, private router: Router) { }
+  constructor(
+    private toastController: ToastController,
+    private route: ActivatedRoute,
+    private navCtrl: NavController,
+    private accountsService: AccountsService,
+    private loadingCtrl: LoadingController,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
@@ -54,10 +61,18 @@ export class EditAccountPage implements OnInit {
         this.form.value.baseAmount,
       ).subscribe(() => {
         loadingEl.dismiss();
+        this.presentToast();
         this.form.reset();
         this.router.navigate(['/', 'main', 'tabs', 'accounts']);
       });
     });
   }
 
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: `Account '${this.account.title}' has been modified <ion-icon name="checkmark"></ion-icon>`,
+      duration: 2000
+    });
+    toast.present();
+  }
 }

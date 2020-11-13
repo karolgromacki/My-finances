@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoadingController, NavController } from '@ionic/angular';
+import { LoadingController, NavController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Account } from '../../accounts/account.model';
 import { AccountsService } from '../../accounts/accounts.service';
@@ -26,7 +26,15 @@ export class EditTransactionPage implements OnInit {
   private accountsSub: Subscription;
   icon: string;
   selectedCategory;
-  constructor(private route: ActivatedRoute, private navCtrl: NavController, private accountsService: AccountsService, private categoriesService: CategoriesService, private transactionsService: TransactionsService, private loadingCtrl: LoadingController, private router: Router) { }
+  constructor(
+    private toastController: ToastController,
+    private route: ActivatedRoute,
+    private navCtrl: NavController,
+    private accountsService: AccountsService,
+    private categoriesService: CategoriesService,
+    private transactionsService: TransactionsService,
+    private loadingCtrl: LoadingController,
+    private router: Router) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
@@ -88,7 +96,7 @@ export class EditTransactionPage implements OnInit {
     else if (this.form.value.type === 'expense') {
       if (this.selectedCategory == null) {
         if (this.form.value.category = 'Transfer')
-        this.icon = 'swap-horizontal';
+          this.icon = 'swap-horizontal';
         else {
           this.selectedCategory = this.loadedCategories.find(category => category.title === this.form.value.category);
           this.icon = this.selectedCategory.icon;
@@ -112,13 +120,19 @@ export class EditTransactionPage implements OnInit {
         new Date(this.form.value.date), this.icon
       ).subscribe(() => {
         loadingEl.dismiss();
-        console.log(this.categoriesService.categories);
+        this.presentToast();
         this.form.reset();
         this.router.navigate(['/', 'main', 'tabs', 'transactions']);
       });
     });
   }
-
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: `Transaction '${this.transaction.title}' has been modified <ion-icon name="checkmark"></ion-icon>`,
+      duration: 2000
+    });
+    toast.present();
+  }
 
   ngOnDestroy() {
     if (this.transactionSub) {

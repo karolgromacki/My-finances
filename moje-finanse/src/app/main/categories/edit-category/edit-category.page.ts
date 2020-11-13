@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoadingController, NavController } from '@ionic/angular';
+import { LoadingController, NavController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { CategoriesService } from '../categories.service';
 import { Category } from '../category.model';
@@ -17,7 +17,7 @@ export class EditCategoryPage implements OnInit {
   form: FormGroup;
   category: Category;
   private categorySub: Subscription;
-  constructor(private route: ActivatedRoute, private navCtrl: NavController, private categoriesService: CategoriesService, private loadingCtrl: LoadingController, private router: Router) { }
+  constructor(public toastController: ToastController, private route: ActivatedRoute, private navCtrl: NavController, private categoriesService: CategoriesService, private loadingCtrl: LoadingController, private router: Router) { }
 
   ngOnInit() {
     this.icons = this.categoriesService.icons;
@@ -58,9 +58,17 @@ export class EditCategoryPage implements OnInit {
         this.selectedIcon
       ).subscribe(() => {
         loadingEl.dismiss();
+        this.presentToast();
         this.form.reset();
         this.router.navigate(['/', 'main', 'tabs', 'categories']);
       });
     });
+  }
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: `Category '${this.category.title}' has been modified <ion-icon name="checkmark"></ion-icon>`,
+      duration: 2000
+    });
+    toast.present();
   }
 }

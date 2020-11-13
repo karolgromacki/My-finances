@@ -5,7 +5,7 @@ import { LoadingController, NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { CategoriesService } from '../categories.service';
 import { Category } from '../category.model';
-
+import { ToastController } from '@ionic/angular';
 @Component({
   selector: 'app-new-category',
   templateUrl: './new-category.page.html',
@@ -16,7 +16,7 @@ export class NewCategoryPage implements OnInit {
   selectedIcon = 'document-outline';
   form: FormGroup;
   loadedCategories: Category[];
-  constructor(private navCtrl: NavController ,private categoriesService: CategoriesService, private router: Router, private loadingCtrl: LoadingController) { }
+  constructor(public toastController: ToastController, private navCtrl: NavController, private categoriesService: CategoriesService, private router: Router, private loadingCtrl: LoadingController) { }
 
   ngOnInit() {
     this.icons = this.categoriesService.icons;
@@ -47,13 +47,18 @@ export class NewCategoryPage implements OnInit {
         this.form.value.title,
         this.selectedIcon).subscribe(() => {
           loadingEl.dismiss();
+          this.presentToast();
           this.form.reset();
           this.navCtrl.back();
         });
     });
-
-
-
+  }
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: `Created '${this.form.value.title}' category <ion-icon name="checkmark"></ion-icon>`,
+      duration: 2000
+    });
+    toast.present();
   }
 
 }

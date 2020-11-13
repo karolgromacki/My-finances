@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonItemSliding, LoadingController } from '@ionic/angular';
+import { IonItemSliding, LoadingController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { AccountsService } from './accounts.service';
 import { Account } from './account.model';
@@ -21,6 +21,7 @@ export class AccountsPage implements OnInit {
   private transactionsSub: Subscription;
 
   constructor(
+    private toastController: ToastController,
     private accountsService: AccountsService,
     private router: Router,
     private loadingCtrl: LoadingController,
@@ -67,7 +68,7 @@ export class AccountsPage implements OnInit {
     slidingItem.close();
     this.router.navigate(['/', 'main', 'tabs', 'accounts', 'edit', accountId]);
   }
-  onDelete(accountId: string, slidingItem: IonItemSliding) {
+  onDelete(accountId: string, accountTitle: string, slidingItem: IonItemSliding) {
     slidingItem.close();
     this.loadingCtrl.create({
       message: 'Deleting account...'
@@ -75,7 +76,15 @@ export class AccountsPage implements OnInit {
       loadingEl.present();
       this.accountsService.deleteAccount(accountId).subscribe(() => {
         loadingEl.dismiss();
+        this.presentToast(accountTitle);
       });
     });
+  }
+  async presentToast(accountTitle) {
+    const toast = await this.toastController.create({
+      message: `Account '${accountTitle}' has been deleted <ion-icon name="checkmark"></ion-icon>`,
+      duration: 2000
+    });
+    toast.present();
   }
 }

@@ -16,11 +16,13 @@ import { IonicStorageModule } from '@ionic/storage';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(),
+  imports: [
+    BrowserModule, IonicModule.forRoot(),
     AppRoutingModule, TranslateModule.forRoot(),
     IonicStorageModule.forRoot(),
     SuperTabsModule.forRoot(),
-    HttpClientModule],
+    HttpClientModule
+  ],
   providers: [
     StatusBar,
     SplashScreen,

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonItemSliding, LoadingController, NavController } from '@ionic/angular';
+import { IonItemSliding, LoadingController, NavController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Transaction } from '../../transactions/transaction.model';
 import { TransactionsService } from '../../transactions/transactions.service';
@@ -20,7 +20,7 @@ export class CategoryDetailPage implements OnInit {
   loadedTransactions: Transaction[];
   private transactionsSub: Subscription;
 
-  constructor(private route: ActivatedRoute, private navCtrl: NavController, private categoriesService: CategoriesService, private transactionsService: TransactionsService, private loadingCtrl: LoadingController, private router: Router) { }
+  constructor(private toastController: ToastController, private route: ActivatedRoute, private navCtrl: NavController, private categoriesService: CategoriesService, private transactionsService: TransactionsService, private loadingCtrl: LoadingController, private router: Router) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
@@ -58,7 +58,15 @@ export class CategoryDetailPage implements OnInit {
       loadingEl.present();
       this.transactionsService.deleteTransaction(transactionId).subscribe(() => {
         loadingEl.dismiss();
+        this.presentToast()
       });
     });
+  }
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: `New transfer has been created <ion-icon name="checkmark"></ion-icon>`,
+      duration: 2000,
+    });
+    toast.present();
   }
 }

@@ -1,0 +1,29 @@
+<ion-header no-border>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button color='primary' (click)="startApp()" [hidden]="!showSkip">Skip</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen="true">
+  <ion-slides #slides (ionSlideWillChange)="onSlideChangeStart($event)" pager="false">
+    <ion-slide>
+      <img src="" class="slide-image" />
+      <h2 class="slide-title">
+        Welcome to
+        <b>My finances</b>
+      </h2>
+      <p><b>My Finances</b> is a multiplatform ionic application.</p>
+    </ion-slide>
+
+    <ion-slide>
+      <img src="" class="slide-image" />
+      <h2 class="slide-title">Ready to Start?</h2>
+      <ion-button fill="clear" (click)="startApp()">
+        Continue
+        <ion-icon slot="end" name="arrow-forward"></ion-icon>
+      </ion-button>
+    </ion-slide>
+  </ion-slides>
+</ion-content>

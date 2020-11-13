@@ -29,9 +29,9 @@ export class AccountsService {
         title: string,
         note: string,
         amount: number) {
-        const newTransaction = new Account(Math.random().toString(), title, note, amount, amount);
+        const newAccount = new Account(Math.random().toString(), title, note, amount, amount);
         return this._accounts.pipe(take(1), tap(accounts => {
-            this._accounts.next(accounts.concat(newTransaction));
+            this._accounts.next(accounts.concat(newAccount));
         }));
     }
 
@@ -41,12 +41,12 @@ export class AccountsService {
         note: string,
         amount: number) {
         return this.accounts.pipe(take(1), tap(accounts => {
-            const updatedTransactionsIndex = accounts.findIndex(tr => tr.id === accountId);
-            const updatedTransactions = [...accounts];
-            const oldTransaction = updatedTransactions[updatedTransactionsIndex]
-            updatedTransactions[updatedTransactionsIndex] = new Account(
-                oldTransaction.id, title, note, amount, amount);
-            this._accounts.next(updatedTransactions);
+            const updatedAccountsIndex = accounts.findIndex(tr => tr.id === accountId);
+            const updatedAccounts = [...accounts];
+            const oldAccount = updatedAccounts[updatedAccountsIndex]
+            updatedAccounts[updatedAccountsIndex] = new Account(
+                oldAccount.id, title, note, amount, amount);
+            this._accounts.next(updatedAccounts);
         }));
     }
     deleteAccount(accountId: string) {

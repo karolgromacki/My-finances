@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoadingController, NavController } from '@ionic/angular';
+import { LoadingController, NavController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 import { AccountsService } from '../../accounts/accounts.service';
@@ -19,6 +19,7 @@ export class TransferPage implements OnInit {
   private categoriesSub: Subscription;
   icon;
   constructor(
+    private toastController: ToastController,
     private navCtrl: NavController,
     private transactionService: TransactionsService,
     private router: Router,
@@ -34,7 +35,8 @@ export class TransferPage implements OnInit {
         amount: new FormControl(null, { updateOn: 'change', validators: [Validators.required, Validators.min(0.01)] }),
         note: new FormControl(null, { updateOn: 'blur' }),
         accountTo: new FormControl(null, { updateOn: 'change', validators: [Validators.required] }),
-        accountFrom: new FormControl(null, { updateOn: 'change', validators: [Validators.required] })
+        accountFrom: new FormControl(null, { updateOn: 'change', validators: [Validators.required] }),
+        date: new FormControl(new Date(Date.now()).toDateString(), { updateOn: 'change', validators: [Validators.required] })
       });
       this.loadedAccounts = account;
 
@@ -55,7 +57,7 @@ export class TransferPage implements OnInit {
         'Transfer',
         this.form.value.accountFrom,
         this.form.value.amount,
-        new Date(new Date(Date.now()).toDateString()), '', 'swap-horizontal').subscribe(() => {
+        new Date(this.form.value.date), '', 'swap-horizontal').subscribe(() => {
         });
       this.transactionService.addTransaction(
         'deposit',
@@ -64,12 +66,20 @@ export class TransferPage implements OnInit {
         'Transfer',
         this.form.value.accountTo,
         this.form.value.amount,
-        new Date(new Date(Date.now()).toDateString()), '', 'swap-horizontal').subscribe(() => {
+        new Date(this.form.value.date), '', 'swap-horizontal').subscribe(() => {
           loadingEl.dismiss();
+          this.presentToast();
           this.form.reset();
           this.navCtrl.back();
         });
     });
+  }
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: `New transfer has been created <ion-icon name="checkmark"></ion-icon>`,
+      duration: 2000,
+    });
+    toast.present();
   }
 
 }

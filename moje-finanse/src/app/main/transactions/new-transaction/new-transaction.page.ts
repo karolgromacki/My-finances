@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { AccountsService } from '../../accounts/accounts.service';
 import { TransactionsService } from '../transactions.service';
@@ -23,6 +23,7 @@ export class NewTransactionPage implements OnInit {
   categoryIcon: Category;
   icon;
   constructor(
+    private toastController: ToastController,
     private transactionService: TransactionsService,
     private router: Router,
     private loadingCtrl: LoadingController,
@@ -96,12 +97,17 @@ export class NewTransactionPage implements OnInit {
         this.form.value.amount,
         new Date(this.form.value.date), '', this.icon).subscribe(() => {
           loadingEl.dismiss();
+          this.presentToast();
           this.form.reset();
           this.router.navigate(['/', 'main', 'tabs', 'transactions']);
         });
     });
-
-
-
+  }
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: `Created transaction '${this.form.value.title}' <ion-icon name="checkmark"></ion-icon>`,
+      duration: 2000
+    });
+    toast.present();
   }
 }

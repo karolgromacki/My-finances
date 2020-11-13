@@ -7,6 +7,8 @@ import { AccountsService } from './main/accounts/accounts.service';
 import { TransactionsService } from './main/transactions/transactions.service';
 import { CategoriesService } from './main/categories/categories.service';
 import { Router } from '@angular/router';
+import { Storage } from '@ionic/storage';
+import { AuthService } from './auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +16,11 @@ import { Router } from '@angular/router';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
+  theme;
+  checked = false;
   constructor(
+    private authService: AuthService,
+    private storage: Storage,
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
@@ -26,14 +32,24 @@ export class AppComponent {
     private router: Router,
     private menuCtrl: MenuController
   ) {
-    this.renderer.setAttribute(document.body, 'color-theme', 'dark');
+
+    this.storage.get('theme').then((val) => {
+      if (val == null)
+        this.renderer.setAttribute(document.body, 'color-theme', 'dark');
+      if (val == 'dark')
+        this.checked = true;
+    });
     this.initializeApp();
   }
   onToggleColorTheme(event) {
     if (event.detail.checked) {
       this.renderer.setAttribute(document.body, 'color-theme', 'dark');
+      this.storage.set('theme', 'dark');
     }
-    else { this.renderer.setAttribute(document.body, 'color-theme', 'light'); }
+    else {
+      this.renderer.setAttribute(document.body, 'color-theme', 'light');
+      this.storage.set('theme', 'light');
+    }
 
   }
   onClearData() {
@@ -79,5 +95,15 @@ export class AppComponent {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });
+  }
+
+  openTutorial() {
+    this.router.navigateByUrl('main/tutorial');
+  }
+  onLogout() {
+    this.menuCtrl.close();
+    this.authService.logout();
+    this.router.navigateByUrl('/auth')
+
   }
 }

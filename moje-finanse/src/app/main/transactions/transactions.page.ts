@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonItemSliding, LoadingController, ModalController } from '@ionic/angular';
+import { IonItemSliding, LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 // import { NewTransactionPage } from './new-transaction/new-transaction.page';
 import { Transaction } from './transaction.model';
@@ -21,6 +21,7 @@ export class TransactionsPage implements OnInit {
   private transactionsSub: Subscription;
 
   constructor(
+    private toastController: ToastController,
     private transactionsService: TransactionsService,
     private router: Router,
     private loadingCtrl: LoadingController
@@ -66,7 +67,7 @@ export class TransactionsPage implements OnInit {
     slidingItem.close();
     this.router.navigate(['/', 'main', 'tabs', 'transactions', 'edit', transactionId]);
   }
-  onDelete(transactionId: string, slidingItem: IonItemSliding) {
+  onDelete(transactionId: string, transactionTitle: string, slidingItem: IonItemSliding) {
     slidingItem.close();
     this.loadingCtrl.create({
       message: 'Deleting transaction...'
@@ -74,6 +75,7 @@ export class TransactionsPage implements OnInit {
       loadingEl.present();
       this.transactionsService.deleteTransaction(transactionId).subscribe(() => {
         loadingEl.dismiss();
+        this.presentToast(transactionTitle);
       });
     });
   }
@@ -107,5 +109,12 @@ export class TransactionsPage implements OnInit {
         }
       });
     }
+  }
+  async presentToast(transactionTitle: string) {
+    const toast = await this.toastController.create({
+      message: `Transaction '${transactionTitle}' has been deleted <ion-icon name="checkmark"></ion-icon>`,
+      duration: 2000,
+    });
+    toast.present();
   }
 }
