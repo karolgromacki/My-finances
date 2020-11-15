@@ -33,7 +33,7 @@ export class EditAccountPage implements OnInit {
         this.navCtrl.navigateBack('/main/tabs/accounts');
         return;
       }
-      this.accountId = paramMap.get('placeId');
+      this.accountId = paramMap.get('accountId');
       this.isLoading = true;
       this.accountSub = this.accountsService.getAccount(paramMap.get('accountId')).subscribe(account => {
         this.account = account;

@@ -15,6 +15,7 @@ const routes: Routes = [
     loadChildren: './main/main.module#MainPageModule',
     canLoad: [AuthGuard]
   },
+
 ];
 
 @NgModule({

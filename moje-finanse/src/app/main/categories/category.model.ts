@@ -3,5 +3,6 @@ export class Category {
         public id: string,
         public title: string,
         public icon: string,
+        public userId: string
     ) { }
 }

@@ -19,7 +19,7 @@ export class TransactionsPage implements OnInit {
   relevantTransactions: Transaction[];
   loadedTransactions: Transaction[];
   private transactionsSub: Subscription;
-
+  isLoading = false;
   constructor(
     private toastController: ToastController,
     private transactionsService: TransactionsService,
@@ -29,14 +29,7 @@ export class TransactionsPage implements OnInit {
 
   ngOnInit() {
     this.transactionsSub = this.transactionsService.transactions.subscribe(transactions => {
-      this.relevantTransactions = transactions;
-      this.relevantTransactions.sort((a, b) => b.date.valueOf() - a.date.valueOf())
-    });
-  }
-  ionViewWillEnter() {
-    this.transactionsSub = this.transactionsService.transactions.subscribe(transactions => {
-      this.loadedTransactions = transactions;
-      this.loadedTransactions.sort((a, b) => b.date.valueOf() - a.date.valueOf())
+      this.loadedTransactions = transactions.sort((a, b) => b.date.valueOf() - a.date.valueOf());
       if (this.segment === 'deposit') {
         this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === 'deposit');
       }
@@ -57,6 +50,13 @@ export class TransactionsPage implements OnInit {
       });
     });
   }
+  ionViewWillEnter() {
+    this.isLoading = true;
+    this.transactionsService.fetchTransactions().subscribe(() => {
+      this.isLoading = false;
+    });
+  }
+
   ngOnDestroy() {
     if (this.transactionsSub) {
       this.transactionsSub.unsubscribe();

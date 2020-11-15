@@ -9,6 +9,7 @@ export class Transaction {
         public amount: number,
         public date: Date,
         public imageUrl: string,
-        public icon: string
+        public icon: string,
+        public userId: string
     ) { }
 }

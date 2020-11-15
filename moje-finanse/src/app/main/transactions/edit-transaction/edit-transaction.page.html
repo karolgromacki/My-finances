@@ -1,11 +1,11 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-back-button [defaultHref]="'/main/tabs/transactions/'+transaction.id"></ion-back-button>
+      <ion-back-button [defaultHref]="'/main/tabs/transactions/'+transaction?.id"></ion-back-button>
     </ion-buttons>
-    <ion-title>Edit {{transaction.title}}</ion-title>
+    <ion-title>Edit {{transaction?.title}}</ion-title>
     <ion-buttons slot="primary">
-      <ion-button (click)="onUpdateTransaction()" [disabled]="!form.valid">
+      <ion-button (click)="onUpdateTransaction()" [disabled]="!form?.valid">
         <ion-icon name="checkmark" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -26,7 +26,7 @@
           </ion-item>
         </ion-col>
       </ion-row>
-      <ion-row *ngIf="!form.get('type').valid && form.get('type').touched">
+      <ion-row *ngIf="!form?.get('type').valid && form?.get('type').touched">
         <ion-col size-sm="6" offset-sm="3">
           <ion-label color="danger">*Type must be selected</ion-label>
         </ion-col>
@@ -46,13 +46,13 @@
         </ion-col>
       </ion-row>
       <ion-row
-        *ngIf="!form.get('amount').valid && form.get('amount').touched || !form.get('title').valid && form.get('title').touched">
+        *ngIf="!form?.get('amount').valid && form?.get('amount').touched || !form?.get('title').valid && form?.get('title').touched">
         <ion-col size="8" size-sm="3" offset-sm="3">
-          <ion-label *ngIf="!form.get('title').valid && form.get('title').touched" color="danger">*This field cannot be
+          <ion-label *ngIf="!form?.get('title').valid && form?.get('title').touched" color="danger">*This field cannot be
             empty or longer than 20 characters</ion-label>
         </ion-col>
         <ion-col size="4" size-sm="3">
-          <ion-label *ngIf="!form.get('amount').valid && form.get('amount').touched" color="danger">*Amount must be
+          <ion-label *ngIf="!form?.get('amount').valid && form?.get('amount').touched" color="danger">*Amount must be
             higher than 0</ion-label>
         </ion-col>
       </ion-row>
@@ -72,7 +72,7 @@
           </ion-item>
         </ion-col>
       </ion-row>
-      <ion-row *ngIf="!form.get('date').valid && form.get('date').touched">
+      <ion-row *ngIf="!form?.get('date').valid && form?.get('date').touched">
         <ion-col size-sm="6" offset-sm="3">
           <ion-label color="danger">*This field cannot be empty</ion-label>
         </ion-col>
@@ -82,13 +82,13 @@
           <ion-item>
             <ion-label position="floating">*Account</ion-label>
             <ion-select formControlName="account" #account>
-              <ion-select-option *ngFor="let account of loadedAccounts" value="{{account.title}}">{{account.title}}
+              <ion-select-option *ngFor="let account of loadedAccounts" value="{{account.title}}">{{account?.title}}
               </ion-select-option>
             </ion-select>
           </ion-item>
         </ion-col>
       </ion-row>
-      <ion-row *ngIf="!form.get('account').valid && form.get('account').touched">
+      <ion-row *ngIf="!form?.get('account').valid && form?.get('account').touched">
         <ion-col size-sm="6" offset-sm="3">
           <ion-label color="danger">*Account must be selected</ion-label>
         </ion-col>
@@ -104,7 +104,7 @@
           </ion-item>
         </ion-col>
       </ion-row>
-      <ion-row *ngIf="type.value =='expense' && loadedCategories.length > 0">
+      <ion-row *ngIf="type.value =='expense' && loadedCategories?.length > 0">
         <ion-col size-sm="6" offset-sm="3">
           <ion-item>
             <ion-label position="floating">Category</ion-label>
@@ -115,7 +115,7 @@
           </ion-item>
         </ion-col>
       </ion-row>
-      <ion-row *ngIf="!form.get('category').valid && form.get('category').touched">
+      <ion-row *ngIf="!form?.get('category').valid && form?.get('category').touched">
         <ion-col size-sm="6" offset-sm="3">
           <ion-label color="danger">*Category must be selected</ion-label>
         </ion-col>

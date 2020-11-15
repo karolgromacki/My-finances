@@ -3,12 +3,12 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/main/tabs/transactions"></ion-back-button>
     </ion-buttons>
-    <ion-title>{{transaction.title}}</ion-title>
+    <ion-title>{{transaction?.title}}</ion-title>
     <ion-buttons slot="primary">
-      <ion-button (click)="onDelete(transaction.id)" [routerLink]="['/','main','tabs','transactions']">
+      <ion-button (click)="onDelete(transaction?.id)" [routerLink]="['/','main','tabs','transactions']">
         <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
       </ion-button>
-      <ion-button [routerLink]="['/','main','tabs','transactions','edit', transaction.id]">
+      <ion-button [routerLink]="['/','main','tabs','transactions','edit', transaction?.id]">
         <ion-icon name="create-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -22,37 +22,37 @@
         <ion-item>
           <ion-label>
             Title:
-            {{transaction.title}}
+            {{transaction?.title}}
           </ion-label>
         </ion-item>
         <ion-item>
           <ion-label>
             Date:
-            {{transaction.date | date}}
+            {{transaction?.date | date}}
           </ion-label>
         </ion-item>
         <ion-item>
           <ion-label>
             Amount:
-            {{transaction.amount}}
+            {{transaction?.amount}}
           </ion-label>
         </ion-item>
-        <ion-item *ngIf="transaction.type!='deposit'">
+        <ion-item *ngIf="transaction?.type!='deposit'">
           <ion-label>
             Category:
-            {{transaction.category}}
+            {{transaction?.category}}
           </ion-label>
         </ion-item>
         <ion-item>
           <ion-label>
             Account:
-            {{transaction.account}}
+            {{transaction?.account}}
           </ion-label>
         </ion-item>
         <ion-item>
           <ion-label>
             Note:
-            {{transaction.note}}
+            {{transaction?.note}}
           </ion-label>
         </ion-item>
       </ion-col>
@@ -60,7 +60,7 @@
     <ion-row>
       <ion-col size-sm="6" offset-sm="3">
         <ion-item>
-          <ion-img class="ion-padding" [src]="transaction.imageUrl"></ion-img>
+          <ion-img class="ion-padding" [src]="transaction?.imageUrl"></ion-img>
         </ion-item>
       </ion-col>
     </ion-row>

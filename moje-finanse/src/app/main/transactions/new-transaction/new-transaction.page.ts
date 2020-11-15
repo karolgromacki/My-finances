@@ -9,6 +9,28 @@ import { Account } from '../../accounts/account.model';
 import { CategoriesService } from '../../categories/categories.service';
 import { Category } from '../../categories/category.model';
 
+function base64toBlob(base64Data, contentType) {
+  contentType = contentType || '';
+  const sliceSize = 1024;
+  const byteCharacters = atob(base64Data);
+  const bytesLength = byteCharacters.length;
+  const slicesCount = Math.ceil(bytesLength / sliceSize);
+  const byteArrays = new Array(slicesCount);
+
+  for (var sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
+    const begin = sliceIndex * sliceSize;
+    const end = Math.min(begin + sliceSize, bytesLength);
+
+    const bytes = new Array(end - begin);
+    for (let offset = begin, i = 0; offset < end; ++i, ++offset) {
+      bytes[i] = byteCharacters[offset].charCodeAt(0);
+    }
+    byteArrays[sliceIndex] = new Uint8Array(bytes);
+  }
+  return new Blob(byteArrays, { type: contentType });
+}
+
+
 @Component({
   selector: 'app-new-transaction',
   templateUrl: './new-transaction.page.html',
@@ -32,6 +54,7 @@ export class NewTransactionPage implements OnInit {
   ) { }
 
   ngOnInit() {
+
     this.categoriesSub = this.categoriesService.categories.subscribe(categories => {
       this.accountsSub = this.accountsService.accounts.subscribe(account => {
         this.form = new FormGroup({
@@ -41,38 +64,47 @@ export class NewTransactionPage implements OnInit {
           note: new FormControl(null, { updateOn: 'blur' }),
           date: new FormControl(new Date(Date.now()).toDateString(), { updateOn: 'change', validators: [Validators.required] }),
           account: new FormControl(null, { updateOn: 'change', validators: [Validators.required] }),
-          category: new FormControl(null, { updateOn: 'change', validators: [Validators.required] })
+          category: new FormControl(null, { updateOn: 'change', validators: [Validators.required] }),
+          image: new FormControl(null, { updateOn: 'change' })
         });
+
+        const categoryControl = this.form.get('category');
+        this.form.get('type').valueChanges
+          .subscribe(userType => {
+            if (userType === 'expense') {
+              categoryControl.setValue(null);
+              categoryControl.setValidators([Validators.required]);
+              categoryControl.valueChanges
+                .subscribe(userCategory => {
+                  if (this.form.value.type === 'expense') {
+                    this.categoryIcon = this.loadedCategories.find(category => category.title === userCategory);
+                  }
+                });
+            }
+            else if (userType === 'deposit') {
+              categoryControl.setValidators(null);
+              categoryControl.setValue('Deposit');
+              this.icon = 'card';
+            }
+            categoryControl.updateValueAndValidity();
+          });
+
         this.loadedAccounts = account;
         this.loadedCategories = categories.filter(category => category.title !== 'Deposit');
       });
     });
-
   }
+
   ionViewWillEnter() {
-    this.form.get('category').valueChanges
-      .subscribe(userCategory => {
-        if (this.form.value.type === 'expense') {
-          this.categoryIcon = this.loadedCategories.find(category => category.title === userCategory);
-        }
-      });
-    const categoryControl = this.form.get('category');
-    this.form.get('type').valueChanges
-      .subscribe(userType => {
-        if (userType === 'expense') {
-          categoryControl.setValue(null);
-          categoryControl.setValidators([Validators.required]);
-        }
-        else if (userType === 'deposit') {
-          this.form.value.category = 'Deposit';
-          categoryControl.setValidators(null);
-        }
-        categoryControl.updateValueAndValidity();
-      });
+    this.accountsService.fetchAccounts().subscribe(() => {
+    });
+    this.categoriesService.fetchCategories().subscribe(() => {
+    });
   }
 
   onCreateTransaction() {
     if (!this.form.valid) {
+      console.log(this.form)
       return;
     }
     else if (this.form.value.type === 'deposit') {
@@ -82,7 +114,7 @@ export class NewTransactionPage implements OnInit {
     else if (this.form.value.type === 'expense') {
       this.icon = this.loadedCategories.find(category => category.title === this.form.value.category).icon;
     }
-
+    console.log(this.form.value);
     this.loadingCtrl.create({
       message: 'Creating transaction...'
     }).then(loadingEl => {
@@ -106,8 +138,24 @@ export class NewTransactionPage implements OnInit {
   async presentToast() {
     const toast = await this.toastController.create({
       message: `Created transaction '${this.form.value.title}' <ion-icon name="checkmark"></ion-icon>`,
-      duration: 2000
+      duration: 1500
     });
     toast.present();
+  }
+  onImagePicked(imageData: string | File) {
+    let imageFile
+    if (typeof imageData === 'string') {
+      try {
+        imageFile = base64toBlob(imageData.replace('data:image/jpeg;base64', ''), 'image/jpeg')
+      }
+      catch (error) {
+        console.log(error);
+        return;
+      }
+    }
+    else {
+      imageFile = imageData;
+    }
+    this.form.patchValue({ image: imageFile });
   }
 }

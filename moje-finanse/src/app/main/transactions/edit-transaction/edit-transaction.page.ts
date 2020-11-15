@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoadingController, NavController, ToastController } from '@ionic/angular';
+import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Account } from '../../accounts/account.model';
 import { AccountsService } from '../../accounts/accounts.service';
@@ -27,6 +27,7 @@ export class EditTransactionPage implements OnInit {
   icon: string;
   selectedCategory;
   constructor(
+    private alertCtrl: AlertController,
     private toastController: ToastController,
     private route: ActivatedRoute,
     private navCtrl: NavController,
@@ -45,27 +46,26 @@ export class EditTransactionPage implements OnInit {
       this.transactionSub = this.transactionsService.getTransaction(paramMap.get('transactionId')).subscribe(transaction => {
         this.transaction = transaction;
         this.form = new FormGroup({
-          type: new FormControl(this.transaction.type, { updateOn: 'change', validators: [Validators.required] }),
-          title: new FormControl(this.transaction.title, { updateOn: 'change', validators: [Validators.required, Validators.maxLength(20)] }),
-          amount: new FormControl(this.transaction.amount, { updateOn: 'change', validators: [Validators.required, Validators.min(0.01)] }),
-          note: new FormControl(this.transaction.note, { updateOn: 'blur' }),
-          date: new FormControl(this.transaction.date.toISOString(), { updateOn: 'change', validators: [Validators.required] }),
-          account: new FormControl(this.transaction.account, { updateOn: 'change', validators: [Validators.required] }),
-          category: new FormControl(this.transaction.category, { updateOn: 'change', validators: [Validators.required] }),
-        });
-        this.accountsSub = this.accountsService.accounts.subscribe(accounts => {
+          type: new FormControl(this.transaction?.type, { updateOn: 'change', validators: [Validators.required] }),
+          title: new FormControl(this.transaction?.title, { updateOn: 'change', validators: [Validators.required, Validators.maxLength(20)] }),
+          amount: new FormControl(this.transaction?.amount, { updateOn: 'change', validators: [Validators.required, Validators.min(0.01)] }),
+          note: new FormControl(this.transaction?.note, { updateOn: 'blur' }),
+          date: new FormControl(this.transaction?.date.toISOString(), { updateOn: 'change', validators: [Validators.required] }),
+          account: new FormControl(this.transaction?.account, { updateOn: 'change', validators: [Validators.required] }),
+          category: new FormControl(this.transaction?.category, { updateOn: 'change', validators: [Validators.required] }),
+        }); this.accountsSub = this.accountsService.accounts.subscribe(accounts => {
           this.loadedAccounts = accounts;
         });
         this.categoriesSub = this.categoriesService.categories.subscribe(categories => {
           this.loadedCategories = categories.filter(category => category.title !== 'Deposit');
-          const categoryControl = this.form.get('category');
-          this.form.get('type').valueChanges
+          const categoryControl = this.form?.get('category');
+          this.form?.get('type').valueChanges
             .subscribe(userType => {
               if (userType === 'expense') {
                 categoryControl.setValue(null);
                 categoryControl.setValidators([Validators.required]);
 
-                this.form.get('category').valueChanges
+                this.form?.get('category').valueChanges
                   .subscribe(userCategory => {
                     this.selectedCategory = this.loadedCategories.find(category => category.title === userCategory);
                   });
@@ -77,8 +77,25 @@ export class EditTransactionPage implements OnInit {
               categoryControl.updateValueAndValidity();
             });
         });
-
-      });
+      },
+        error => {
+          this.alertCtrl
+            .create({
+              header: 'An error occurred!',
+              message: 'Account could not be fetched. Please try again later.',
+              buttons: [
+                {
+                  text: 'Okay',
+                  handler: () => {
+                    this.router.navigate(['/main/tabs/accounts']);
+                  }
+                }
+              ]
+            })
+            .then(alertEl => {
+              alertEl.present();
+            });
+        });
     });
   }
 
