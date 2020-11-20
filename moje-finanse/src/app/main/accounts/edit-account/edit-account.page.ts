@@ -95,7 +95,7 @@ export class EditAccountPage implements OnInit {
   async presentToast() {
     const toast = await this.toastController.create({
       message: `Account '${this.account.title}' has been modified <ion-icon name="checkmark"></ion-icon>`,
-      duration: 2000
+      duration: 1400
     });
     toast.present();
   }

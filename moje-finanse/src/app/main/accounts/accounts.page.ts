@@ -86,7 +86,7 @@ export class AccountsPage implements OnInit {
   async presentToast(accountTitle) {
     const toast = await this.toastController.create({
       message: `Account '${accountTitle}' has been deleted <ion-icon name="checkmark"></ion-icon>`,
-      duration: 2000
+      duration: 1400
     });
     toast.present();
   }

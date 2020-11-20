@@ -44,7 +44,8 @@ export class TransactionDetailPage implements OnInit {
   async presentToast() {
     const toast = await this.toastController.create({
       message: `Transaction '${this.transaction.title}' has been deleted <ion-icon name="checkmark"></ion-icon>`,
-      duration: 2000,
+      duration: 1400,
+      position: 'top'
     });
     toast.present();
   }

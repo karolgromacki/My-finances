@@ -31,3 +31,8 @@
 .ion-valid.ion-touched ion-label{
     color: var(--ion-color-success);
 }
+ion-searchbar {
+    input {
+      border-radius: 30px !important;
+    }
+  }

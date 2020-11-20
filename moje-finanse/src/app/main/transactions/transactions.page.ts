@@ -15,7 +15,11 @@ import { SegmentChangeEventDetail } from '@ionic/core';
 })
 export class TransactionsPage implements OnInit {
   segment = 'all';
+  hide = false;
+  isSearchbarOpened = false;
   sum: number;
+  title: string = '';
+  amount: string = '';
   relevantTransactions: Transaction[];
   loadedTransactions: Transaction[];
   private transactionsSub: Subscription;
@@ -27,9 +31,28 @@ export class TransactionsPage implements OnInit {
     private loadingCtrl: LoadingController
   ) { }
 
+  onSearch() {
+    this.relevantTransactions = this.loadedTransactions.filter(transaction => {
+      if (this.segment != 'all') {
+        return this.segment || this.title || this.amount ?
+          transaction.type === this.segment && (transaction.title.toLowerCase().includes(this.title.toLowerCase()) || transaction.amount.toString().toLowerCase().includes(this.amount.toLowerCase())) :
+          true;
+      }
+      else {
+        return this.title || this.amount ?
+          transaction.title.toLowerCase().includes(this.title.toLowerCase()) || transaction.amount.toString().toLowerCase().includes(this.amount.toLowerCase()) :
+          true;
+      }
+    }
+    );
+  }
   ngOnInit() {
     this.transactionsSub = this.transactionsService.transactions.subscribe(transactions => {
-      this.loadedTransactions = transactions.sort((a, b) => b.date.valueOf() - a.date.valueOf());
+      this.loadedTransactions = transactions;
+      this.loadedTransactions = this.loadedTransactions.sort((a, b) => b.date.valueOf() - a.date.valueOf());
+      this.loadedTransactions.forEach(element => {
+        element.date = new Date(new Date(element.date).toDateString())
+      });
       if (this.segment === 'deposit') {
         this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === 'deposit');
       }
@@ -53,6 +76,7 @@ export class TransactionsPage implements OnInit {
   ionViewWillEnter() {
     this.isLoading = true;
     this.transactionsService.fetchTransactions().subscribe(() => {
+      this.loadedTransactions = this.loadedTransactions.sort((a, b) => b.date.valueOf() - a.date.valueOf());
       this.isLoading = false;
     });
   }
@@ -83,6 +107,7 @@ export class TransactionsPage implements OnInit {
     if (event.detail.value === 'deposit') {
       this.segment = 'deposit';
       this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === 'deposit');
+      this.onSearch();
       this.sum = 0;
       this.relevantTransactions.forEach((transaction) => {
         this.sum += transaction.amount;
@@ -91,6 +116,7 @@ export class TransactionsPage implements OnInit {
     else if (event.detail.value === 'expense') {
       this.segment = 'expense';
       this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === 'expense');
+      this.onSearch();
       this.sum = 0;
       this.relevantTransactions.forEach((transaction) => {
         this.sum -= transaction.amount;
@@ -99,6 +125,7 @@ export class TransactionsPage implements OnInit {
     else {
       this.segment = 'all';
       this.relevantTransactions = this.loadedTransactions;
+      this.onSearch();
       this.sum = 0;
       this.relevantTransactions.forEach((transaction) => {
         if (transaction.type === 'deposit') {
@@ -113,7 +140,8 @@ export class TransactionsPage implements OnInit {
   async presentToast(transactionTitle: string) {
     const toast = await this.toastController.create({
       message: `Transaction '${transactionTitle}' has been deleted <ion-icon name="checkmark"></ion-icon>`,
-      duration: 2000,
+      duration: 1400,
+      position: 'top'
     });
     toast.present();
   }

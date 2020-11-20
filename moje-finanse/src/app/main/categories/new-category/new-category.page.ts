@@ -56,7 +56,7 @@ export class NewCategoryPage implements OnInit {
   async presentToast() {
     const toast = await this.toastController.create({
       message: `Created '${this.form.value.title}' category <ion-icon name="checkmark"></ion-icon>`,
-      duration: 2000
+      duration: 1400
     });
     toast.present();
   }

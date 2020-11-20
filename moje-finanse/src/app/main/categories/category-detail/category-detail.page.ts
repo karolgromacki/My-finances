@@ -65,7 +65,8 @@ export class CategoryDetailPage implements OnInit {
   async presentToast() {
     const toast = await this.toastController.create({
       message: `New transfer has been created <ion-icon name="checkmark"></ion-icon>`,
-      duration: 2000,
+      duration: 1400,
+      position: 'top'
     });
     toast.present();
   }

@@ -9,6 +9,10 @@ const routes: Routes = [
     component: MainPage,
     children: [
       {
+        path: 'summary',
+        loadChildren: './summary/summary.module#SummaryPageModule'
+      },
+      {
         path: 'accounts',
         children: [
           {

@@ -62,7 +62,7 @@ export class NewTransactionPage implements OnInit {
           title: new FormControl(null, { updateOn: 'change', validators: [Validators.required, Validators.maxLength(20)] }),
           amount: new FormControl(null, { updateOn: 'change', validators: [Validators.required, Validators.min(0.01)] }),
           note: new FormControl(null, { updateOn: 'blur' }),
-          date: new FormControl(new Date(Date.now()).toDateString(), { updateOn: 'change', validators: [Validators.required] }),
+          date: new FormControl(new Date(Date.now()).toISOString(), { updateOn: 'change', validators: [Validators.required] }),
           account: new FormControl(null, { updateOn: 'change', validators: [Validators.required] }),
           category: new FormControl(null, { updateOn: 'change', validators: [Validators.required] }),
           image: new FormControl(null, { updateOn: 'change' })
@@ -138,7 +138,8 @@ export class NewTransactionPage implements OnInit {
   async presentToast() {
     const toast = await this.toastController.create({
       message: `Created transaction '${this.form.value.title}' <ion-icon name="checkmark"></ion-icon>`,
-      duration: 1500
+      duration: 1500,
+      position: 'top'
     });
     toast.present();
   }

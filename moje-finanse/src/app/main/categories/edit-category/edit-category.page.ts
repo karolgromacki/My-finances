@@ -96,7 +96,7 @@ export class EditCategoryPage implements OnInit {
   async presentToast() {
     const toast = await this.toastController.create({
       message: `Category '${this.category.title}' has been modified <ion-icon name="checkmark"></ion-icon>`,
-      duration: 2000
+      duration: 1400
     });
     toast.present();
   }

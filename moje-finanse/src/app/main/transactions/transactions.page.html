@@ -1,9 +1,13 @@
 <ion-header>
-  <ion-toolbar color="primary">
+   <ion-toolbar class="ion-text-center" class="ion-text-center" color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
+      <ion-button *ngIf="!isSearchbarOpened" (click)="isSearchbarOpened=true">
+        <ion-icon name="search" slot="icon-only"></ion-icon>
+      </ion-button>
     </ion-buttons>
-    <ion-buttons slot="primary">
+    <ion-buttons slot="primary" *ngIf="!isSearchbarOpened">
+
       <ion-button routerLink="/main/tabs/transactions/transfer">
         <ion-icon name="swap-horizontal-outline" slot="icon-only"></ion-icon>
       </ion-button>
@@ -11,11 +15,14 @@
         <ion-icon name="add" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>Transactions</ion-title>
+    <ion-title *ngIf="!isSearchbarOpened">Transactions</ion-title>
+    <ion-searchbar type="text" [(ngModel)]="title" [(ngModel)]="amount" (ngModelChange)="onSearch()" *ngIf="isSearchbarOpened"
+      showCancelButton="true" (ionCancel)="isSearchbarOpened=false; title='';amount=null;onSearch();"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding-horizontal">
+
   <ion-segment class="ion-padding" [(ngModel)]="segment" (ionChange)="onFilterUpdate($event)">
     <ion-segment-button value="all">All</ion-segment-button>
     <ion-segment-button value="deposit">Deposit</ion-segment-button>
@@ -26,7 +33,9 @@
       <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
         <div>
           <p>No transactions found! Please create one first!</p>
-          <ion-button routerLink="/main/tabs/transactions/new">Add new transaction <ion-icon name="add" slot="icon-only"></ion-icon></ion-button>
+          <ion-button routerLink="/main/tabs/transactions/new">Add new transaction <ion-icon name="add"
+              slot="icon-only"></ion-icon>
+          </ion-button>
         </div>
       </ion-col>
     </ion-row>
@@ -38,7 +47,7 @@
     <ion-row *ngIf="!isLoading && relevantTransactions?.length > 0">
       <ion-col size="12" size-sm="8" offset-sm="2">
         <ion-item>
-          <ion-text>Summarize:</ion-text>
+          <ion-text>Summary:</ion-text>
           <ion-label class="ion-text-right" slot="end" [attr.color]="(sum < 0 )? 'danger': 'success'">
             {{sum | currency}}
           </ion-label>
@@ -54,7 +63,7 @@
                 {{group.key | date: 'mediumDate'}}
               </ion-label>
             </ion-item-divider>
-            <ion-item-sliding #slidingItem *ngFor="let transaction of group?.list.reverse()">
+            <ion-item-sliding #slidingItem *ngFor="let transaction of group?.list">
               <ion-item routerDirection="forward" detail
                 [routerLink]="['/','main','tabs','transactions', transaction.id]">
                 <ion-icon name="{{transaction?.icon}}"></ion-icon>
