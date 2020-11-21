@@ -17,7 +17,7 @@
     <ion-grid>
       <ion-row *ngIf="loadedAccounts.length <= 0">
         <ion-col size-sm="6" offset-sm="3">
-          <ion-item routerLink="/main/tabs/transactions/new-account">
+          <ion-item (click)="addAccount()">
             <ion-icon color="danger" name="alert-circle-outline"></ion-icon>
             <ion-label class="ion-margin-horizontal">Add Account</ion-label>
             <ion-icon name="add" slot="end"></ion-icon>

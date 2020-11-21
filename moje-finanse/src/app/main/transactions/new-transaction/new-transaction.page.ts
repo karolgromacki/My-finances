@@ -90,7 +90,7 @@ export class NewTransactionPage implements OnInit {
           });
 
         this.loadedAccounts = account;
-        this.loadedCategories = categories.filter(category => category.title !== 'Deposit');
+        this.loadedCategories = categories?.filter(category => category.title !== 'Deposit');
       });
     });
   }

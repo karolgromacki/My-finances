@@ -42,6 +42,9 @@ export class TransferPage implements OnInit {
 
     });
   }
+  addAccount() {
+    this.router.navigateByUrl(this.router.url + '/new')
+  }
   onCreateTransfer() {
     if (!this.form.valid) {
       return;

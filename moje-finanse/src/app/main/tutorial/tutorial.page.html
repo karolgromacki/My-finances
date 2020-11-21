@@ -1,5 +1,5 @@
 <ion-header no-border>
-   <ion-toolbar class="ion-text-center">
+  <ion-toolbar class="ion-text-center">
     <ion-buttons slot="end">
       <ion-button color='primary' (click)="startApp()" [hidden]="!showSkip">Skip</ion-button>
     </ion-buttons>
@@ -7,16 +7,37 @@
 </ion-header>
 
 <ion-content fullscreen="true">
-  <ion-slides #slides (ionSlideWillChange)="onSlideChangeStart($event)" pager="false">
+  <ion-slides #slides (ionSlideWillChange)="onSlideChangeStart($event)" pager="true">
     <ion-slide>
       <img src="" class="slide-image" />
       <h2 class="slide-title">
-        Welcome to
-        <b>My finances</b>
+        Welcome to <ion-text color="primary">My finances</ion-text>
       </h2>
       <p><b>My Finances</b> is a multiplatform ionic application.</p>
+      <p>This application is a "work in progress" project.<br>
+        I hope you'll like it. </p>
+      <ion-icon name="happy-outline"></ion-icon>
     </ion-slide>
-
+    <ion-slide>
+      <img src="" class="slide-image" />
+      <h2 class="slide-title">Transactions</h2>
+      <p>Crate and monitor your expenses and deposits.</p>
+    </ion-slide>
+    <ion-slide>
+      <img src="" class="slide-image" />
+      <h2 class="slide-title">Categories</h2>
+      <p>Create your own categories of your expenses.</p>
+    </ion-slide>
+    <ion-slide>
+      <img src="" class="slide-image" />
+      <h2 class="slide-title">Accounts</h2>
+      <p>Create accounts to execute transactions and monitor your balance.</p>
+    </ion-slide>
+    <ion-slide>
+      <img src="" class="slide-image" />
+      <h2 class="slide-title">Summary</h2>
+      <p>Find out where your money goes with simple charts.</p>
+    </ion-slide>
     <ion-slide>
       <img src="" class="slide-image" />
       <h2 class="slide-title">Ready to Start?</h2>

@@ -49,10 +49,12 @@ export class TransactionsPage implements OnInit {
   ngOnInit() {
     this.transactionsSub = this.transactionsService.transactions.subscribe(transactions => {
       this.loadedTransactions = transactions;
-      this.loadedTransactions = this.loadedTransactions.sort((a, b) => b.date.valueOf() - a.date.valueOf());
-      this.loadedTransactions.forEach(element => {
-        element.date = new Date(new Date(element.date).toDateString())
-      });
+    });
+  }
+
+  ionViewWillEnter() {
+    this.isLoading = true;
+    this.transactionsService.fetchTransactions().subscribe(() => {
       if (this.segment === 'deposit') {
         this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === 'deposit');
       }
@@ -71,12 +73,9 @@ export class TransactionsPage implements OnInit {
           this.sum -= transaction.amount;
         }
       });
-    });
-  }
-  ionViewWillEnter() {
-    this.isLoading = true;
-    this.transactionsService.fetchTransactions().subscribe(() => {
-      this.loadedTransactions = this.loadedTransactions.sort((a, b) => b.date.valueOf() - a.date.valueOf());
+      this.loadedTransactions.forEach(element => {
+        element.date = new Date(new Date(element.date).toDateString())
+      });
       this.isLoading = false;
     });
   }

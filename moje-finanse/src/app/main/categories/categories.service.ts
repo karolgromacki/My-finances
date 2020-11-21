@@ -50,7 +50,7 @@ export class CategoriesService {
         return categories;
       }),
       tap(categories => {
-        this._categories.next(categories);
+        this._categories.next(categories.sort((a, b) => (a.title < b.title ? -1 : 1)));
       })
     );
   }

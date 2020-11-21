@@ -111,7 +111,7 @@ export class TransactionsService {
     type: string,
     note: string,
     category: string,
-    transaction: string,
+    account: string,
     amount: number,
     date: Date,
     icon: string) {
@@ -133,7 +133,7 @@ export class TransactionsService {
         const oldTransaction = updatedTransactions[updatedTransactionsIndex]
         updatedTransactions[updatedTransactionsIndex] = new Transaction(
           oldTransaction.id, type, title, note,
-          category, transaction, amount, date, oldTransaction.imageUrl, icon, this.authService.userId);
+          category, account, amount, date, oldTransaction.imageUrl, icon, this.authService.userId);
         return this.http.put(`https://my-finances-b77a0.firebaseio.com/transactions/${transactionId}.json`,
           { ...updatedTransactions[updatedTransactionsIndex], id: null });
       }),
