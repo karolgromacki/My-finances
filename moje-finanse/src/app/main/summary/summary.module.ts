@@ -9,6 +9,8 @@ import { SummaryPageRoutingModule } from './summary-routing.module';
 import { SummaryPage } from './summary.page';
 import { ChartsModule } from 'ng2-charts';
 import { TransactionsPageModule } from '../transactions/transactions.module';
+import { TranslateModule } from '@ngx-translate/core';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -16,7 +18,8 @@ import { TransactionsPageModule } from '../transactions/transactions.module';
     IonicModule,
     SummaryPageRoutingModule,
     ChartsModule,
-    TransactionsPageModule
+    TransactionsPageModule,
+    TranslateModule
   ],
   declarations: [SummaryPage]
 })

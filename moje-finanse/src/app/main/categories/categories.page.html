@@ -8,7 +8,7 @@
         <ion-icon name="add" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>Categories</ion-title>
+    <ion-title>{{'categories' | translate}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -17,8 +17,8 @@
     <ion-row *ngIf="!isLoading && relevantCategories?.length <= 0">
       <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
         <div>
-          <p>No categories found! Please create one first!</p>
-          <ion-button routerLink="/main/tabs/categories/new">Add new category <ion-icon name="add" slot="icon-only"></ion-icon></ion-button>
+          <p>{{'noCategories' | translate}}</p>
+          <ion-button routerLink="/main/tabs/categories/new">{{'addCategory' | translate}} <ion-icon name="add" slot="icon-only"></ion-icon></ion-button>
         </div>
       </ion-col>
     </ion-row>

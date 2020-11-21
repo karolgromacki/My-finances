@@ -9,6 +9,7 @@ import { CategoriesService } from './main/categories/categories.service';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { AuthService } from './auth/auth.service';
+import { LanguageService } from './language.service';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +19,8 @@ import { AuthService } from './auth/auth.service';
 export class AppComponent {
   theme;
   checked = false;
+  languages = [];
+  selectedLanguage = '';
   constructor(
     private authService: AuthService,
     private storage: Storage,
@@ -30,7 +33,8 @@ export class AppComponent {
     private transactionsService: TransactionsService,
     private alertCtrl: AlertController,
     private router: Router,
-    private menuCtrl: MenuController
+    private menuCtrl: MenuController,
+    private languageService: LanguageService,
   ) {
 
     this.storage.get('theme').then((val) => {
@@ -47,11 +51,16 @@ export class AppComponent {
       if (Capacitor.isPluginAvailable('SplashScreen')) {
         Plugins.SplashScreen.hide();
       }
-      // this.statusBar.styleDefault();
-      // this.splashScreen.hide();
+      this.languageService.setInitialAppLanguage();
     });
   }
-
+  ngOnInit() {
+    this.languages = this.languageService.getLanguages();
+    this.languageService.selected.subscribe(selected => this.selectedLanguage = selected)
+  }
+  selectLanguage(event) {
+    this.languageService.setLanguage(event.detail.value);
+  }
   onToggleColorTheme(event) {
     if (event.detail.checked) {
       this.renderer.setAttribute(document.body, 'color-theme', 'dark');

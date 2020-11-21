@@ -1,62 +1,57 @@
 <ion-app>
   <ion-menu side="start">
     <ion-header>
-       <ion-toolbar class="ion-text-center" color="primary">
-        <ion-title >My finances</ion-title>
+      <ion-toolbar class="ion-text-center" color="primary">
+        <ion-title>{{'myFinances' | translate}}</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
       <ion-list>
         <ion-item>
-          <ion-icon  name="earth" slot="start" lines="none"></ion-icon>
-          <ion-label>Language</ion-label>
-          <ion-select value="english">
-            <ion-select-option value="english">English</ion-select-option>
-            <ion-select-option value="polish">Polski</ion-select-option>
+          <ion-icon name="earth" slot="start" lines="none"></ion-icon>
+          <ion-label>{{'language' | translate}}</ion-label>
+          <ion-select value="{{selectedLanguage}}" (ionChange)="selectLanguage($event)">
+            <ion-select-option *ngFor="let lng of languages" value="{{lng.value}}">{{lng.text}}</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-icon  name="invert-mode" slot="start" lines="none"></ion-icon>
-          <ion-label>Theme</ion-label>
+          <ion-icon name="invert-mode" slot="start" lines="none"></ion-icon>
+          <ion-label>{{'theme' | translate}}</ion-label>
           <ion-toggle [checked]="checked" (ionChange)="onToggleColorTheme($event)"></ion-toggle>
         </ion-item>
         <ion-item>
-          <ion-icon  name="logo-usd" slot="start" lines="none"></ion-icon>
-          <ion-label>Currency</ion-label>
+          <ion-icon name="logo-usd" slot="start" lines="none"></ion-icon>
+          <ion-label>{{'currency' | translate}}</ion-label>
           <ion-select value="dollar">
             <ion-select-option value="dollar">USD</ion-select-option>
             <ion-select-option value="złoty">PLN</ion-select-option>
           </ion-select>
         </ion-item>
-        <ion-item button detail="false">
-          <ion-icon  name="calendar" slot="start" lines="none"></ion-icon>
-          <ion-label>First day of the week</ion-label>
-        </ion-item>
         <ion-item>
-          <ion-icon  name="wallet" slot="start" lines="none"></ion-icon>
-          <ion-label>Budget mode</ion-label>
+          <ion-icon name="wallet" slot="start" lines="none"></ion-icon>
+          <ion-label>{{'budgetMode' | translate}}</ion-label>
           <ion-toggle disabled></ion-toggle>
         </ion-item>
         <ion-item button detail="false" (click)="openTutorial()">
-          <ion-icon  slot="start" name="hammer"></ion-icon>
-          <ion-label>Tutorial</ion-label>
+          <ion-icon slot="start" name="hammer"></ion-icon>
+          <ion-label>{{'tutorial' | translate}}</ion-label>
         </ion-item>
         <ion-item button detail="false">
           <ion-icon color="warning" name="star" slot="start" lines="none"></ion-icon>
-          <ion-label>Achivments</ion-label>
+          <ion-label>{{'achivments' | translate}}</ion-label>
           <ion-badge color="danger" slot="end">66</ion-badge>
         </ion-item>
         <ion-item button detail="false">
-          <ion-icon  name="download" slot="start" lines="none"></ion-icon>
-          <ion-label>Export data to CSV file</ion-label>
+          <ion-icon name="download" slot="start" lines="none"></ion-icon>
+          <ion-label>{{'exportCSV' | translate}}</ion-label>
         </ion-item>
         <ion-item button detail="false" (click)="onClearData()">
           <ion-icon color="danger" name="trash-bin" slot="start" lines="none"></ion-icon>
-          <ion-label>Clear all data</ion-label>
+          <ion-label>{{'clear' | translate}}</ion-label>
         </ion-item>
         <ion-item button detail="false" (click)="onLogout()">
           <ion-icon name="exit" slot="start" lines="none"></ion-icon>
-          <ion-label>Logout</ion-label>
+          <ion-label>{{'logout' | translate}}</ion-label>
         </ion-item>
       </ion-list>
     </ion-content>

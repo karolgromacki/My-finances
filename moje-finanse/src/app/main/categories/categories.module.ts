@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { CategoriesPageRoutingModule } from './categories-routing.module';
 
 import { CategoriesPage } from './categories.page';
-import { ChartsModule } from 'ng2-charts';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -15,7 +15,7 @@ import { ChartsModule } from 'ng2-charts';
     FormsModule,
     IonicModule,
     CategoriesPageRoutingModule,
-    ChartsModule
+    TranslateModule
   ],
   declarations: [CategoriesPage],
   entryComponents: [CategoriesPage]

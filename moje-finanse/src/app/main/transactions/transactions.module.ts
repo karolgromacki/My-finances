@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular';
 import { TransactionsPageRoutingModule } from './transactions-routing.module';
 import { TransactionsPage } from './transactions.page';
 import { GroupByPipe } from 'src/app/Pipes/groupByPipe';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -13,6 +14,7 @@ import { GroupByPipe } from 'src/app/Pipes/groupByPipe';
     FormsModule,
     IonicModule,
     TransactionsPageRoutingModule,
+    TranslateModule
   ],
   declarations: [TransactionsPage, GroupByPipe],
   exports: [GroupByPipe],

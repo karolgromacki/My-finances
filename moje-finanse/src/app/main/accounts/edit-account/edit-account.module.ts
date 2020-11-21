@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { EditAccountPageRoutingModule } from './edit-account-routing.module';
 
 import { EditAccountPage } from './edit-account.page';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
     CommonModule,
     ReactiveFormsModule,
     IonicModule,
-    EditAccountPageRoutingModule
+    EditAccountPageRoutingModule,
+    TranslateModule
   ],
   declarations: [EditAccountPage]
 })

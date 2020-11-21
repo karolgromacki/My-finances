@@ -8,10 +8,16 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { TranslateModule } from '@ngx-translate/core';
-import { HttpClientModule } from '@angular/common/http';
 import { SuperTabsModule } from '@ionic-super-tabs/angular';
+
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage';
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, 'assets/i18n/', '.json')
+}
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,9 +25,17 @@ import { IonicStorageModule } from '@ionic/storage';
   imports: [
     BrowserModule, IonicModule.forRoot(),
     AppRoutingModule, TranslateModule.forRoot(),
+    HttpClientModule,
     IonicStorageModule.forRoot(),
-    SuperTabsModule.forRoot(),
-    HttpClientModule
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    }),
+    SuperTabsModule.forRoot()
+
   ],
   providers: [
     StatusBar,

@@ -4,6 +4,11 @@
       <ion-back-button [defaultHref]="'/main/tabs/categories'"></ion-back-button>
     </ion-buttons>
     <ion-title>{{category?.title}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button disabled="true">
+        <ion-icon></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -11,7 +16,7 @@
   <ion-grid>
     <ion-row *ngIf="!relevantTransactions || relevantTransactions.length <= 0">
       <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
-        <p>No transactions found!</p>
+        <p>{{'noTransactions' | translate}}</p>
       </ion-col>
     </ion-row>
     <ion-row>

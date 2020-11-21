@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { NewAccountPageRoutingModule } from './new-account-routing.module';
 
 import { NewAccountPage } from './new-account.page';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
     CommonModule,
     ReactiveFormsModule,
     IonicModule,
-    NewAccountPageRoutingModule
+    NewAccountPageRoutingModule,
+    TranslateModule
   ],
   declarations: [NewAccountPage]
 })

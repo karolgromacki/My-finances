@@ -8,6 +8,7 @@ import { EditTransactionPageRoutingModule } from './edit-transaction-routing.mod
 
 import { EditTransactionPage } from './edit-transaction.page';
 import { SharedModule } from '../../../shared/shared.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { SharedModule } from '../../../shared/shared.module';
     ReactiveFormsModule,
     IonicModule,
     SharedModule,
-    EditTransactionPageRoutingModule
+    EditTransactionPageRoutingModule,
+    TranslateModule
   ],
   declarations: [EditTransactionPage]
 })

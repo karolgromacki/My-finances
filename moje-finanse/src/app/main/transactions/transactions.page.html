@@ -15,7 +15,7 @@
         <ion-icon name="add" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title *ngIf="!isSearchbarOpened">Transactions</ion-title>
+    <ion-title *ngIf="!isSearchbarOpened">{{'transactions' | translate}}</ion-title>
     <ion-searchbar class="ion-text-left" placeholder="Search..." type="text" [(ngModel)]="title" [(ngModel)]="amount" (ngModelChange)="onSearch()" *ngIf="isSearchbarOpened"
       showCancelButton="true" (ionCancel)="isSearchbarOpened=false; title='';amount=null;onSearch();"></ion-searchbar>
   </ion-toolbar>
@@ -24,16 +24,16 @@
 <ion-content class="ion-padding-horizontal">
 
   <ion-segment class="ion-padding" [(ngModel)]="segment" (ionChange)="onFilterUpdate($event)">
-    <ion-segment-button value="all">All</ion-segment-button>
-    <ion-segment-button value="deposit">Deposit</ion-segment-button>
-    <ion-segment-button value="expense">Expense</ion-segment-button>
+    <ion-segment-button value="all">{{'all' | translate}}</ion-segment-button>
+    <ion-segment-button value="deposit">{{'deposits' | translate}}</ion-segment-button>
+    <ion-segment-button value="expense">{{'expenses' | translate}}</ion-segment-button>
   </ion-segment>
   <ion-grid>
     <ion-row *ngIf="!isLoading && relevantTransactions?.length <= 0">
       <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
         <div>
-          <p>No transactions found! Please create one first!</p>
-          <ion-button routerLink="/main/tabs/transactions/new">Add new transaction <ion-icon name="add"
+          <p>{{'noTransactions' | translate}}</p>
+          <ion-button routerLink="/main/tabs/transactions/new">{{'addTransaction' | translate}}<ion-icon name="add"
               slot="icon-only"></ion-icon>
           </ion-button>
         </div>
@@ -47,7 +47,7 @@
     <ion-row *ngIf="!isLoading && relevantTransactions?.length > 0">
       <ion-col size="12" size-sm="8" offset-sm="2">
         <ion-item>
-          <ion-text>Summary:</ion-text>
+          <ion-text>{{'sum' | translate}}:</ion-text>
           <ion-label class="ion-text-right" slot="end" [attr.color]="(sum < 0 )? 'danger': 'success'">
             {{sum | currency}}
           </ion-label>

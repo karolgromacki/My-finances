@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActionSheetController, IonItemSliding, LoadingController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 import { ChartDataSets, ChartType } from 'chart.js';
 import { Color, Label, MultiDataSet, PluginServiceGlobalRegistrationAndOptions } from 'ng2-charts';
 import { Subscription } from 'rxjs';
@@ -24,8 +25,8 @@ export class CategoriesPage implements OnInit {
     private router: Router,
     private loadingCtrl: LoadingController,
     private actionSheetCtrl: ActionSheetController,
-    private transactionsService: TransactionsService
-
+    private transactionsService: TransactionsService,
+    private translate: TranslateService
   ) { }
 
 
@@ -45,31 +46,31 @@ export class CategoriesPage implements OnInit {
 
   onCategory(categoryId) {
     this.actionSheetCtrl.create({
-      header: 'Choose an Action',
+      header: this.translate.instant('chooseAction')+":",
       buttons: [
         {
-          text: 'Detail',
+          text: this.translate.instant('detail'),
           icon: 'list',
           handler: () => {
             this.router.navigate(['/', 'main', 'tabs', 'categories', categoryId]);
           }
         },
         {
-          text: 'Edit',
+          text: this.translate.instant('edit'),
           icon: 'create-outline',
           handler: () => {
             this.router.navigate(['/', 'main', 'tabs', 'categories', 'edit', categoryId]);
           }
         },
         {
-          text: 'Delete',
+          text: this.translate.instant('delete'),
           icon: 'trash',
           handler: () => {
             this.onDelete(categoryId);
           }
         },
         {
-          text: 'Cancel',
+          text: this.translate.instant('cancel'),
           role: 'cancel',
           icon: 'close-circle'
         }

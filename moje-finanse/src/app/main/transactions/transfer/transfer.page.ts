@@ -42,6 +42,10 @@ export class TransferPage implements OnInit {
 
     });
   }
+  ionViewWillEnter() {
+    this.accountsService.fetchAccounts().subscribe(() => {
+    });
+  }
   addAccount() {
     this.router.navigateByUrl(this.router.url + '/new')
   }
