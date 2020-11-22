@@ -8,6 +8,8 @@ import { TransactionsService } from '../transactions.service';
 import { Account } from '../../accounts/account.model';
 import { CategoriesService } from '../../categories/categories.service';
 import { Category } from '../../categories/category.model';
+import { TranslateService } from '@ngx-translate/core';
+import { Storage } from '@ionic/storage';
 
 function base64toBlob(base64Data, contentType) {
   contentType = contentType || '';
@@ -45,7 +47,9 @@ export class NewTransactionPage implements OnInit {
   categoryIcon: Category;
   icon;
   constructor(
+    private storage: Storage,
     private toastController: ToastController,
+    private translate: TranslateService,
     private transactionService: TransactionsService,
     private router: Router,
     private loadingCtrl: LoadingController,
@@ -94,7 +98,14 @@ export class NewTransactionPage implements OnInit {
       });
     });
   }
-
+  // onAdd() {
+  //   this.storage.set('FORM',this.form.value);
+  //   this.storage.get('FORM').then(val => {
+  //     if (val) {
+  //         console.log(val.type)
+  //     }
+  //   });
+  // }
   ionViewWillEnter() {
     this.accountsService.fetchAccounts().subscribe(() => {
     });
@@ -116,7 +127,7 @@ export class NewTransactionPage implements OnInit {
     }
     console.log(this.form.value);
     this.loadingCtrl.create({
-      message: 'Creating transaction...'
+      message: this.translate.instant('creatingTransaction')
     }).then(loadingEl => {
       loadingEl.present();
 
@@ -137,7 +148,7 @@ export class NewTransactionPage implements OnInit {
   }
   async presentToast() {
     const toast = await this.toastController.create({
-      message: `Created transaction '${this.form.value.title}' <ion-icon name="checkmark"></ion-icon>`,
+      message: this.translate.instant('createdTransaction') + `'${this.form.value.title}' <ion-icon name="checkmark"></ion-icon>`,
       duration: 1500,
       position: 'top'
     });

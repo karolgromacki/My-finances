@@ -10,9 +10,10 @@
     "ts7": "Twórz konta do wykonywania transakcji i monitorwania salda.",
     "ts8": "Dowiedz się gdzie wydajesz swoje pieniądze, dzięki przejrzystym wykresom.",
     "rdts": "Gotów?",
-    "continue": "Kontynuuj", 
+    "continue": "Kontynuuj",
     "skip": "Pomiń",
-    
+    "areYouSure": "Usuń wszystkie dane",
+    "clearAllData": "Wyczyść wszystkie dane",
     "language": "Język",
     "theme": "Motyw",
     "currency": "Waluta",
@@ -22,7 +23,6 @@
     "exportCSV": "Eksportuj do CSV",
     "clear": "Wyczyść dane",
     "logout": "Wyloguj",
-
     "transactions": "Transakcje",
     "categories": "Kategorie",
     "accounts": "Konta",
@@ -39,7 +39,7 @@
     "noCategories": "Nie znaleziono Kategorii! Stwórz jakąś.",
     "noExpenses": "Nie znaleziono wydatków! Stwórz jakieś.",
     "noTransactions": "Nie znaleziono transakcji! Stwórz jakąś.",
-   
+    
     "type": "Typ",
     "title": "Tytuł",
     "note": "Notka",
@@ -55,12 +55,34 @@
     "newAccount": "Nowe Konto",
     "newCategory": "Nowa Kategoria",
     "newTransaction": "Nowa Transakcja",
+    "newTransfer": "Przeniesiono środki",
+
+    "deletingAccount": "Usuwanie konta...",
+    "deletingCategory": "Usuwanie kategorii...",
+    "deletingTransaction": "Usuwanie transakcji...",
+    "editingAccount": "Modyfikowanie konta...",
+    "editingCategory": "Modyfikowanie kategorii...",
+    "editingTransaction": "Modyfikowanie transakcji...",
+    "creatingAccount": "Tworzenie konta...",
+    "creatingCategory": "Tworzenie kategorii...",
+    "creatingTransaction": "Tworzenie transakcji...",
+    "creatingTransfer": "Przenoszenie...",
+    
+    "createdAccount": "Utworzono konto ",
+    "createdCategory": "Utworzono kategorie ",
+    "createdTransaction": "Utworzono transakcje ",
+    "editedAccount": " konto zmodyfikowano ",
+    "editedCategory": " kategorie zmodyfikowano ",
+    "editedTransaction": " transakcje zmodyfikowano ",
+    "deletedAccount": " konto zostało usunięte ",
+    "deletedCategory": " konto zostało usunięte ",
+    "deletedTransaction": " Transakcja została usunięta ",
+
     "chooseAction": "Wybierz opcję",
     "edit": "Edytuj ",
     "detail": "Szczególy",
     "delete": "Usuń",
     "cancel": "Anuluj",
-    
     "emptyTitleField": "To pole nie może być puste, a treść dłuższa niż 20 znaków",
     "unselectedType": "Typ musi być wybrany",
     "unselectedDate": "Data musi być wybrana",
@@ -68,5 +90,4 @@
     "unselectedAccount": "Konto musi być wybrane",
     "unselectedCategory": "Kategoria musi być wybrana",
     "amountLowerThanZero": "Kwota musi być większa od 0"
-
 }

@@ -4,6 +4,7 @@ import { AlertController, LoadingController, NavController, ToastController } fr
 import { Subscription } from 'rxjs';
 import { AccountsService } from '../accounts.service';
 import { Account } from '../account.model';
+import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-account-detail',
   templateUrl: './account-detail.page.html',
@@ -14,6 +15,7 @@ export class AccountDetailPage implements OnInit {
   account: Account;
   private accountSub: Subscription;
   constructor(
+    private translate: TranslateService,
     private alertCtrl: AlertController,
     private router: Router,
     private toastController: ToastController,
@@ -62,7 +64,7 @@ export class AccountDetailPage implements OnInit {
   }
   onDelete(accountId: string, accountTitle: string) {
     this.loadingCtrl.create({
-      message: 'Deleting account...'
+      message: this.translate.instant('deletingAccount'),
     }).then(loadingEl => {
       loadingEl.present();
       this.accountsService.deleteAccount(accountId).subscribe(() => {
@@ -73,8 +75,10 @@ export class AccountDetailPage implements OnInit {
   }
   async presentToast(accountTitle) {
     const toast = await this.toastController.create({
-      message: `Account '${accountTitle}' has been deleted <ion-icon name="checkmark"></ion-icon>`,
-      duration: 1400
+      message: `'${accountTitle}'`+ this.translate.instant('deletedAccount') `<ion-icon name="checkmark"></ion-icon>`,
+      duration: 1400,
+      position: 'bottom',
+      cssClass: 'tabs-bottom'
     });
     toast.present();
   }

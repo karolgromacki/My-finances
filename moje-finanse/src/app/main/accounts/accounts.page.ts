@@ -7,6 +7,7 @@ import { Account } from './account.model';
 import { SegmentChangeEventDetail } from '@ionic/core';
 import { TransactionsService } from '../transactions/transactions.service';
 import { Transaction } from '../transactions/transaction.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-accounts',
@@ -21,6 +22,7 @@ export class AccountsPage implements OnInit {
   private transactionsSub: Subscription;
   isLoading = false;
   constructor(
+    private translate: TranslateService,
     private toastController: ToastController,
     private accountsService: AccountsService,
     private router: Router,
@@ -56,7 +58,7 @@ export class AccountsPage implements OnInit {
   }
   ionViewWillEnter() {
     this.isLoading = true;
-    this.accountsService.fetchAccounts().subscribe(()=>{
+    this.accountsService.fetchAccounts().subscribe(() => {
       this.isLoading = false;
     });
   }
@@ -74,7 +76,7 @@ export class AccountsPage implements OnInit {
   onDelete(accountId: string, accountTitle: string, slidingItem: IonItemSliding) {
     slidingItem.close();
     this.loadingCtrl.create({
-      message: 'Deleting account...'
+      message: this.translate.instant('deletingAccount'),
     }).then(loadingEl => {
       loadingEl.present();
       this.accountsService.deleteAccount(accountId).subscribe(() => {
@@ -85,8 +87,10 @@ export class AccountsPage implements OnInit {
   }
   async presentToast(accountTitle) {
     const toast = await this.toastController.create({
-      message: `Account '${accountTitle}' has been deleted <ion-icon name="checkmark"></ion-icon>`,
-      duration: 1400
+      message: `'${accountTitle}'` + this.translate.instant('deletedAccount') + `<ion-icon name="checkmark"></ion-icon>`,
+      duration: 1400,
+      position: 'bottom',
+      cssClass: 'tabs-bottom'
     });
     toast.present();
   }

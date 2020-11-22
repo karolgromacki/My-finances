@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IonItemSliding, LoadingController, ModalController, NavController, ToastController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { EditTransactionPage } from '../edit-transaction/edit-transaction.page';
 import { Transaction } from '../transaction.model';
@@ -14,7 +15,7 @@ import { TransactionsService } from '../transactions.service';
 export class TransactionDetailPage implements OnInit {
   transaction: Transaction;
   private transactionSub: Subscription;
-  constructor(private toastController: ToastController, private route: ActivatedRoute, private navCtrl: NavController, private transactionsService: TransactionsService, private loadingCtrl: LoadingController) { }
+  constructor(private translate: TranslateService, private toastController: ToastController, private route: ActivatedRoute, private navCtrl: NavController, private transactionsService: TransactionsService, private loadingCtrl: LoadingController) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
@@ -32,7 +33,7 @@ export class TransactionDetailPage implements OnInit {
   }
   onDelete(transactionId: string) {
     this.loadingCtrl.create({
-      message: 'Deleting transaction...'
+      message: this.translate.instant('deletingTransaction'),
     }).then(loadingEl => {
       loadingEl.present();
       this.transactionsService.deleteTransaction(transactionId).subscribe(() => {
@@ -43,9 +44,10 @@ export class TransactionDetailPage implements OnInit {
   }
   async presentToast() {
     const toast = await this.toastController.create({
-      message: `Transaction '${this.transaction.title}' has been deleted <ion-icon name="checkmark"></ion-icon>`,
+      message: `'${this.transaction.title}'` + this.translate.instant('deletedTransaction') + `<ion-icon name="checkmark"></ion-icon>`,
       duration: 1400,
-      position: 'top'
+      position: 'bottom',
+      cssClass: 'tabs-bottom'
     });
     toast.present();
   }

@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { Transaction } from './transaction.model';
 import { TransactionsService } from './transactions.service';
 import { SegmentChangeEventDetail } from '@ionic/core';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class TransactionsPage implements OnInit {
   private transactionsSub: Subscription;
   isLoading = false;
   constructor(
+    private translate: TranslateService,
     private toastController: ToastController,
     private transactionsService: TransactionsService,
     private router: Router,
@@ -93,7 +95,7 @@ export class TransactionsPage implements OnInit {
   onDelete(transactionId: string, transactionTitle: string, slidingItem: IonItemSliding) {
     slidingItem.close();
     this.loadingCtrl.create({
-      message: 'Deleting transaction...'
+      message: this.translate.instant('deleteTransaction')
     }).then(loadingEl => {
       loadingEl.present();
       this.transactionsService.deleteTransaction(transactionId).subscribe(() => {
@@ -138,9 +140,10 @@ export class TransactionsPage implements OnInit {
   }
   async presentToast(transactionTitle: string) {
     const toast = await this.toastController.create({
-      message: `Transaction '${transactionTitle}' has been deleted <ion-icon name="checkmark"></ion-icon>`,
+      message: `'${transactionTitle}'` + this.translate.instant('deletedTransaction') + `<ion-icon name="checkmark"></ion-icon>`,
       duration: 1400,
-      position: 'top'
+      position: 'bottom',
+      cssClass: 'tabs-bottom'
     });
     toast.present();
   }

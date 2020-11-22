@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonItemSliding, LoadingController, NavController, ToastController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { Transaction } from '../../transactions/transaction.model';
 import { TransactionsService } from '../../transactions/transactions.service';
@@ -20,7 +21,7 @@ export class CategoryDetailPage implements OnInit {
   loadedTransactions: Transaction[];
   private transactionsSub: Subscription;
 
-  constructor(private toastController: ToastController, private route: ActivatedRoute, private navCtrl: NavController, private categoriesService: CategoriesService, private transactionsService: TransactionsService, private loadingCtrl: LoadingController, private router: Router) { }
+  constructor(private translate: TranslateService, private toastController: ToastController, private route: ActivatedRoute, private navCtrl: NavController, private categoriesService: CategoriesService, private transactionsService: TransactionsService, private loadingCtrl: LoadingController, private router: Router) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
@@ -53,7 +54,7 @@ export class CategoryDetailPage implements OnInit {
   onDelete(transactionId: string, slidingItem: IonItemSliding) {
     slidingItem.close();
     this.loadingCtrl.create({
-      message: 'Deleting transaction...'
+      message: this.translate.instant('deletingCategory'),
     }).then(loadingEl => {
       loadingEl.present();
       this.transactionsService.deleteTransaction(transactionId).subscribe(() => {
@@ -64,9 +65,10 @@ export class CategoryDetailPage implements OnInit {
   }
   async presentToast() {
     const toast = await this.toastController.create({
-      message: `New transfer has been created <ion-icon name="checkmark"></ion-icon>`,
+      message: this.translate.instant('newTransfer') + `<ion-icon name="checkmark"></ion-icon>`,
       duration: 1400,
-      position: 'top'
+      position: 'bottom',
+      cssClass: 'tabs-bottom'
     });
     toast.present();
   }

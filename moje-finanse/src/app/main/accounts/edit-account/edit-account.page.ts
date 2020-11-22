@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { Account } from '../../accounts/account.model';
 import { AccountsService } from '../accounts.service';
@@ -19,6 +20,7 @@ export class EditAccountPage implements OnInit {
   private accountSub: Subscription;
   constructor(
     private alertCtrl: AlertController,
+    private translate: TranslateService,
     private toastController: ToastController,
     private route: ActivatedRoute,
     private navCtrl: NavController,
@@ -75,7 +77,7 @@ export class EditAccountPage implements OnInit {
       return;
     }
     this.loadingCtrl.create({
-      message: 'Updating account...'
+      message: this.translate.instant('editingAccount')
     }).then(loadingEl => {
       loadingEl.present();
       this.accountsService.updateAccount(
@@ -94,8 +96,10 @@ export class EditAccountPage implements OnInit {
 
   async presentToast() {
     const toast = await this.toastController.create({
-      message: `Account '${this.account.title}' has been modified <ion-icon name="checkmark"></ion-icon>`,
-      duration: 1400
+      message: `'${this.account.title}'` + this.translate.instant('editedAccount') + `<ion-icon name="checkmark"></ion-icon>`,
+      duration: 1400,
+      position: 'bottom',
+      cssClass: 'tabs-bottom'
     });
     toast.present();
   }

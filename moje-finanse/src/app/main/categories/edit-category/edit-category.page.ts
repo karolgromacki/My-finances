@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { CategoriesService } from '../categories.service';
 import { Category } from '../category.model';
@@ -21,6 +22,7 @@ export class EditCategoryPage implements OnInit {
   private categorySub: Subscription;
   constructor(public toastController: ToastController,
     private route: ActivatedRoute,
+    private translate: TranslateService,
     private alertCtrl: AlertController,
     private navCtrl: NavController,
     private categoriesService: CategoriesService,
@@ -78,7 +80,7 @@ export class EditCategoryPage implements OnInit {
       return;
     }
     this.loadingCtrl.create({
-      message: 'Updating category...'
+      message: this.translate.instant('editingCategory')
     }).then(loadingEl => {
       loadingEl.present();
       this.categoriesService.updateCategory(
@@ -95,8 +97,10 @@ export class EditCategoryPage implements OnInit {
   }
   async presentToast() {
     const toast = await this.toastController.create({
-      message: `Category '${this.category.title}' has been modified <ion-icon name="checkmark"></ion-icon>`,
-      duration: 1400
+      message: `'${this.category.title}'` + this.translate.instant('editedCategory') + `<ion-icon name="checkmark"></ion-icon>`,
+      duration: 1400,
+      position: 'bottom',
+      cssClass: 'tabs-bottom'
     });
     toast.present();
   }

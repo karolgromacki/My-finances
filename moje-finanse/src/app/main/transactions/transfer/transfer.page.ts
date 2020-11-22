@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoadingController, NavController, ToastController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
 import { AccountsService } from '../../accounts/accounts.service';
@@ -23,6 +24,7 @@ export class TransferPage implements OnInit {
     private navCtrl: NavController,
     private transactionService: TransactionsService,
     private router: Router,
+    private translate: TranslateService,
     private loadingCtrl: LoadingController,
     private accountsService: AccountsService,
     //private categoriesService: CategoriesService
@@ -54,7 +56,7 @@ export class TransferPage implements OnInit {
       return;
     }
     this.loadingCtrl.create({
-      message: 'Creating transaction...'
+      message: this.translate.instant('creatingTransfer')
     }).then(loadingEl => {
       loadingEl.present();
       this.transactionService.addTransaction(
@@ -83,9 +85,10 @@ export class TransferPage implements OnInit {
   }
   async presentToast() {
     const toast = await this.toastController.create({
-      message: `New transfer has been created <ion-icon name="checkmark"></ion-icon>`,
+      message: this.translate.instant('newTransfer') + `<ion-icon name="checkmark"></ion-icon>`,
       duration: 1400,
-      position: 'top'
+      position: 'bottom',
+      cssClass: 'tabs-bottom'
     });
     toast.present();
   }

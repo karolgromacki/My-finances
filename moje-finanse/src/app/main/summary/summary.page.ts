@@ -26,7 +26,8 @@ export class SummaryPage implements OnInit {
   ]
   public barChartOptions: ChartOptions = {
     legend: {
-      position: 'top'
+      position: 'bottom',
+      cssClass: 'tabs-bottom'
     },
     responsive: true,
     scales: {

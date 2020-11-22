@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { AuthService } from './auth/auth.service';
 import { LanguageService } from './language.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +25,7 @@ export class AppComponent {
   constructor(
     private authService: AuthService,
     private storage: Storage,
+    private translate: TranslateService,
     private platform: Platform,
     // private splashScreen: SplashScreen,
     // private statusBar: StatusBar,
@@ -74,15 +76,15 @@ export class AppComponent {
   }
   onClearData() {
     this.alertCtrl.create({
-      header: 'Are you sure?',
-      message: 'Do you want to clear all data?',
+      header: this.translate.instant('areYouSure'),
+      message: this.translate.instant('clearAllData'),
       buttons: [
         {
-          text: 'Cancel',
+          text: this.translate.instant('cancel'),
           role: 'cancel',
         },
         {
-          text: 'Delete',
+          text: this.translate.instant('delete'),
           handler: () => {
             this.transactionsService.clearAlldata().subscribe(() => {
             });

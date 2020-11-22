@@ -11,6 +11,7 @@ import { Category } from '../../categories/category.model';
 import { ActivatedRoute } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { Transaction } from '../transaction.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-edit-account',
@@ -31,6 +32,7 @@ export class EditTransactionPage implements OnInit {
     private categoriesSub: Subscription;
     constructor(
         private alertCtrl: AlertController,
+        private translate: TranslateService,
         private toastController: ToastController,
         private route: ActivatedRoute,
         private navCtrl: NavController,
@@ -142,7 +144,7 @@ export class EditTransactionPage implements OnInit {
         }
         console.log(this.form.value);
         this.loadingCtrl.create({
-            message: 'Creating transaction...'
+            message: this.translate.instant('editingTransaction')
         }).then(loadingEl => {
             loadingEl.present();
             this.transactionsService.updateTransaction(
@@ -185,9 +187,10 @@ export class EditTransactionPage implements OnInit {
 
     async presentToast() {
         const toast = await this.toastController.create({
-            message: `Created transaction '${this.form.value.title}' <ion-icon name="checkmark"></ion-icon>`,
-            duration: 1500,
-            position: 'top'
+            message: this.translate.instant('editedTransaciton')+`'${this.form.value.title}' <ion-icon name="checkmark"></ion-icon>`,
+            duration: 1400,
+            position: 'bottom',
+      cssClass: 'tabs-bottom'
         });
         toast.present();
     }

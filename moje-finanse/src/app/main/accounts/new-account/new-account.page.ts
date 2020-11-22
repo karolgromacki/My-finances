@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoadingController, NavController, ToastController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 import { AccountsService } from '../accounts.service';
 
 @Component({
@@ -17,6 +18,7 @@ export class NewAccountPage implements OnInit {
     private navCtrl: NavController,
     private accountService: AccountsService,
     private router: Router,
+    private translate: TranslateService,
     private loadingCtrl: LoadingController) { }
 
   ngOnInit() {
@@ -31,7 +33,7 @@ export class NewAccountPage implements OnInit {
       return;
     }
     this.loadingCtrl.create({
-      message: 'Creating account...'
+      message: this.translate.instant('creatingAccount')
     }).then(loadingEl => {
       loadingEl.present();
 
@@ -48,8 +50,10 @@ export class NewAccountPage implements OnInit {
   }
   async presentToast() {
     const toast = await this.toastController.create({
-      message: `Created '${this.form.value.title}' account <ion-icon name="checkmark"></ion-icon>`,
-      duration: 1400
+      message: this.translate.instant('createdAccount') + `'${this.form.value.title}' <ion-icon name="checkmark"></ion-icon>`,
+      duration: 1400,
+      position: 'bottom',
+      cssClass: 'tabs-bottom'
     });
     toast.present();
   }

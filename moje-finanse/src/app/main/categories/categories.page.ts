@@ -37,16 +37,17 @@ export class CategoriesPage implements OnInit {
     });
     this.relevantCategories = this.relevantCategories.filter(category => category.title !== 'Deposit' && category.title !== 'Transfer');
   }
+
   ionViewWillEnter() {
     this.isLoading = true;
     this.categoriesService.fetchCategories().subscribe(() => {
-    this.isLoading = false;
+      this.isLoading = false;
     });
   }
 
   onCategory(categoryId) {
     this.actionSheetCtrl.create({
-      header: this.translate.instant('chooseAction')+":",
+      header: this.translate.instant('chooseAction') + ':',
       buttons: [
         {
           text: this.translate.instant('detail'),
