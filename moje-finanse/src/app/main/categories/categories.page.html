@@ -31,7 +31,7 @@
       <ion-col size="4" class="ion-text-center" *ngFor="let category of relevantCategories">
         <ion-item button (click)="onCategory(category.id)" detail="false" lines="none">
           <ion-label class="ion-text-center">
-            <ion-icon name="{{category.icon}}"></ion-icon>
+            <ion-icon class="icons" name="{{category.icon}}"></ion-icon>
             <p>{{category?.title}}</p>
           </ion-label>
         </ion-item>

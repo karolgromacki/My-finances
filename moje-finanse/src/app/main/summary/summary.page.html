@@ -1,5 +1,5 @@
 <ion-header>
-   <ion-toolbar class="ion-text-center" color="primary">
+  <ion-toolbar class="ion-text-center" color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
@@ -12,21 +12,22 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-slides #slides>
-    <ion-slide *ngFor="let group of loadedTransactions.reverse() | groupBy: 'date'">
-      <ion-grid>
-        <ion-label>{{group.key | date: 'mediumDate'}}</ion-label>
-        <ion-row>
-          <ion-col size="12" class="ion-text-center">
-            <div *ngIf="chartLabels.length == 0">
-              <p>{{'noExpenses' | translate}}</p>
-              <ion-button routerLink="/main/tabs/transactions/new">{{'addTransaction' | translate}} <ion-icon name="add"
-                  slot="icon-only">
-                </ion-icon>
-              </ion-button>
-            </div>
-          </ion-col>
+<ion-content  class="ion-padding">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" class="ion-text-center">
+        <div *ngIf="chartLabels.length == 0">
+          <h6>{{'noExpenses' | translate}}</h6>
+          <ion-button routerLink="/main/tabs/transactions/new">{{'addTransaction' | translate}} <ion-icon name="add"
+              slot="icon-only">
+            </ion-icon>
+          </ion-button>
+        </div>
+      </ion-col>
+      <ion-slides #slides>
+
+        <ion-slide *ngFor="let group of loadedTransactions.reverse() | groupBy: 'date'">
+          <ion-label>{{group.key | date: 'mediumDate'}}</ion-label>
           <ion-col size="12">
             <ion-item *ngIf="chartLabels.length != 0">
               <ion-label>
@@ -49,9 +50,8 @@
               </ion-label>
             </ion-item>
           </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-slide>
-  </ion-slides>
-
+        </ion-slide>
+      </ion-slides>
+    </ion-row>
+  </ion-grid>
 </ion-content>

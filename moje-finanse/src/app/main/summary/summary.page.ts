@@ -26,8 +26,7 @@ export class SummaryPage implements OnInit {
   ]
   public barChartOptions: ChartOptions = {
     legend: {
-      position: 'bottom',
-      cssClass: 'tabs-bottom'
+      position: 'top'
     },
     responsive: true,
     scales: {
@@ -119,7 +118,7 @@ export class SummaryPage implements OnInit {
       this.barChartData[0].data = [];
       this.barChartData[1].data = [];
       this.chartLabels = [];
- 
+
 
       this.loadedTransactions = transactions;
       // this.slides.slideTo(this.loadedTransactions.length);
@@ -136,7 +135,7 @@ export class SummaryPage implements OnInit {
             this.chartLabels.push(category.category);
             console.log(this.chartLabels)
             for (let amount of this.loadedTransactions) {
-               if (amount.type == 'expense' && category.category === amount.category) {
+              if (amount.type == 'expense' && category.category === amount.category) {
                 sum += amount.amount;
                 Expences += category.amount;
               }

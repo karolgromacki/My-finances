@@ -1,6 +1,6 @@
 import { Component, Renderer2 } from '@angular/core';
 import { Plugins, Capacitor } from '@capacitor/core';
-import { AlertController, MenuController, Platform } from '@ionic/angular';
+import { AlertController, MenuController, ModalController, Platform } from '@ionic/angular';
 // import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 // import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AccountsService } from './main/accounts/accounts.service';
@@ -11,6 +11,7 @@ import { Storage } from '@ionic/storage';
 import { AuthService } from './auth/auth.service';
 import { LanguageService } from './language.service';
 import { TranslateService } from '@ngx-translate/core';
+import { AchievementsPage } from './main/achievements/achievements.page';
 
 @Component({
   selector: 'app-root',
@@ -29,6 +30,7 @@ export class AppComponent {
     private platform: Platform,
     // private splashScreen: SplashScreen,
     // private statusBar: StatusBar,
+    private modalCtrl: ModalController,
     private renderer: Renderer2,
     private accountsService: AccountsService,
     private categoriesService: CategoriesService,
@@ -115,7 +117,14 @@ export class AppComponent {
 
 
   openTutorial() {
-    this.router.navigateByUrl('main/tutorial');
+    this.menuCtrl.close().then(() => { this.router.navigateByUrl('main/tutorial'); });
+  }
+  onAchievements() {
+    this.menuCtrl.close().then(() => {
+      this.modalCtrl.create({ component: AchievementsPage }).then(modalEl => {
+        modalEl.present();
+      })
+    });
   }
   onLogout() {
     this.menuCtrl.close();

@@ -111,10 +111,15 @@ const routes: Routes = [
     loadChildren: () => import('./tutorial/tutorial.module').then(m => m.TutorialPageModule)
   },
   {
+    path: 'achievements',
+    loadChildren: () => import('./achievements/achievements.module').then( m => m.AchievementsPageModule)
+  },
+  {
     path: '',
     redirectTo: '/main/tabs/categories',
     pathMatch: 'full'
-  }
+  },
+
 
 
 
