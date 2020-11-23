@@ -19,21 +19,22 @@ interface AccountData {
     providedIn: 'root'
 })
 export class AccountsService {
-    private _accounts = new BehaviorSubject<Account[]>([
-        // new Account('t1', 'Card', 'PKO', 0, 0),
-        // new Account('t2', 'Cash', 'Savings', 0, 0)
-    ]);
+    private _accounts = new BehaviorSubject<Account[]>([]);
     get accounts() {
         return this._accounts.asObservable()
     }
     constructor(private authService: AuthService, private http: HttpClient, private storage: Storage) { }
 
     fetchAccounts() {
-        return this.authService.userId.pipe(switchMap(userId => {
-            if (!userId) {
+        let fetchedUserId: string
+        return this.authService.userId.pipe(take(1), switchMap(userId => {
+            fetchedUserId = userId;
+            return this.authService.token;
+        }), take(1), switchMap(token => {
+            if (!fetchedUserId) {
                 throw new Error('No user id found!')
             }
-            return this.http.get<{ [key: string]: AccountData }>(`https://my-finances-b77a0.firebaseio.com/accounts.json?orderBy="userId"&equalTo="${userId}"`)
+            return this.http.get<{ [key: string]: AccountData }>(`https://my-finances-b77a0.firebaseio.com/accounts.json?orderBy="userId"&equalTo="${fetchedUserId}"&auth=${token}`)
         }),
             map(resData => {
                 const accounts = [];
@@ -60,19 +61,14 @@ export class AccountsService {
     }
 
     getAccount(id: string) {
-        return this.http
-            .get<AccountData>(`https://my-finances-b77a0.firebaseio.com/accounts/${id}.json`)
-            .pipe(
-                map(accountData => {
-                    return new Account(id, accountData.title, accountData.note, accountData.amount, accountData.baseAmount, accountData.userId);
-                })
-            );
-        // this.accounts.pipe(
-        //     take(1),
-        //     map(accounts => {
-        //         return { ...accounts.find(t => t.id === id) };
-        //     })
-        // );
+        return this.authService.token.pipe(take(1), switchMap(token => {
+            return this.http
+                .get<AccountData>(`https://my-finances-b77a0.firebaseio.com/accounts/${id}.json?auth=${token}`)
+
+        }), map(accountData => {
+            return new Account(id, accountData.title, accountData.note, accountData.amount, accountData.baseAmount, accountData.userId);
+        })
+        );
     }
     addAccount(
         title: string,
@@ -80,16 +76,22 @@ export class AccountsService {
         amount: number) {
         let generatedId: string;
         let newAccount: Account;
+        let fetchedUserId: string;
         return this.authService.userId.pipe(take(1), switchMap(userId => {
             if (!userId) {
                 throw new Error('No user id found!')
             }
-            newAccount = new Account(Math.random().toString(), title, note, amount, amount, userId);
-            return this.http.post<{ name: string }>('https://my-finances-b77a0.firebaseio.com/accounts.json', { ...newAccount, id: null });
-        }), switchMap(resData => {
-            generatedId = resData.name;
-            return this.accounts;
-        }),
+            fetchedUserId = userId;
+            return this.authService.token;
+        }), take(1),
+            switchMap(token => {
+                newAccount = new Account(Math.random().toString(), title, note, amount, amount, fetchedUserId);
+                return this.http.post<{ name: string }>(`https://my-finances-b77a0.firebaseio.com/accounts.json?auth=${token}`, { ...newAccount, id: null });
+            }),
+            switchMap(resData => {
+                generatedId = resData.name;
+                return this.accounts;
+            }),
             take(1),
             tap(accounts => {
                 newAccount.id = generatedId;
@@ -97,11 +99,6 @@ export class AccountsService {
             })
 
         );
-
-        // DEFAULT
-        // return this._accounts.pipe(take(1), tap(accounts => {
-        //     this._accounts.next(accounts.concat(newAccount));
-        // }));
     }
 
     updateAccount(
@@ -110,54 +107,51 @@ export class AccountsService {
         note: string,
         amount: number) {
         let updatedAccounts: Account[];
-        return this.accounts.pipe(
-            take(1),
-            switchMap(accounts => {
-                if (accounts || accounts.length <= 0) {
-                    return this.fetchAccounts();
-                }
-                else {
-                    return of(accounts);
-                }
+        return this.authService.token.pipe(take(1), switchMap(token => {
+            return this.accounts.pipe(
+                take(1),
+                switchMap(accounts => {
+                    if (accounts || accounts.length <= 0) {
+                        return this.fetchAccounts();
+                    }
+                    else {
+                        return of(accounts);
+                    }
 
-            }),
-            switchMap(accounts => {
-                const updatedAccountsIndex = accounts.findIndex(tr => tr.id === accountId);
-                const updatedAccounts = [...accounts];
-                const oldAccount = updatedAccounts[updatedAccountsIndex]
-                updatedAccounts[updatedAccountsIndex] = new Account(
-                    oldAccount.id,
-                    title,
-                    note,
-                    amount,
-                    amount, oldAccount.userId);
-                return this.http.put(`https://my-finances-b77a0.firebaseio.com/accounts/${accountId}.json`,
-                    { ...updatedAccounts[updatedAccountsIndex], id: null });
-            }),
-            tap(() => {
-                this._accounts.next(updatedAccounts);
-            })
-        );
+                }),
+                switchMap(accounts => {
+                    const updatedAccountsIndex = accounts.findIndex(tr => tr.id === accountId);
+                    const updatedAccounts = [...accounts];
+                    const oldAccount = updatedAccounts[updatedAccountsIndex]
+                    updatedAccounts[updatedAccountsIndex] = new Account(
+                        oldAccount.id,
+                        title,
+                        note,
+                        amount,
+                        amount, oldAccount.userId);
+                    return this.http.put(`https://my-finances-b77a0.firebaseio.com/accounts/${accountId}.json?auth=${token}`,
+                        { ...updatedAccounts[updatedAccountsIndex], id: null });
+                }),
+                tap(() => {
+                    this._accounts.next(updatedAccounts);
+                })
+            );
+        }));
     }
-    deleteAccount(accountId: string) {
-        return this.http.delete(`https://my-finances-b77a0.firebaseio.com/accounts/${accountId}.json`).pipe(
-            switchMap(() => {
-                return this.accounts;
-            }),
-            take(1),
-            tap(accounts => {
-                this._accounts.next(accounts.filter(a => a.id !== accountId));
-            }));
 
-        // DEFAULT
-        // return this._accounts.pipe(
-        //     take(1),
-        //     tap(accounts => {
-        //         this._accounts.next(accounts.filter(a => a.id !== accountId));
-        //     })
-        // )
+    deleteAccount(accountId: string) {
+        return this.authService.token.pipe(take(1), switchMap(token => {
+            return this.http.delete(`https://my-finances-b77a0.firebaseio.com/accounts/${accountId}.json?auth=${token}`).pipe(
+                switchMap(() => {
+                    return this.accounts;
+                }),
+                take(1),
+                tap(accounts => {
+                    this._accounts.next(accounts.filter(a => a.id !== accountId));
+                }));
+        }));
     }
     clearAlldata() {
-        return this._accounts = new BehaviorSubject<Account[]>([]);
+        // return this._accounts = new BehaviorSubject<Account[]>([]);
     }
 }

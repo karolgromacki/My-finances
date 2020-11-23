@@ -1,4 +1,4 @@
-import { Component, Renderer2 } from '@angular/core';
+import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { Plugins, Capacitor } from '@capacitor/core';
 import { AlertController, MenuController, ModalController, Platform } from '@ionic/angular';
 // import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -12,17 +12,21 @@ import { AuthService } from './auth/auth.service';
 import { LanguageService } from './language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AchievementsPage } from './main/achievements/achievements.page';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
+  private authSub: Subscription;
+  private previousAuthState = false;
   theme;
   checked = false;
   languages = [];
   selectedLanguage = '';
+
   constructor(
     private authService: AuthService,
     private storage: Storage,
@@ -58,13 +62,22 @@ export class AppComponent {
       this.languageService.setInitialAppLanguage();
     });
   }
+
   ngOnInit() {
+    this.authSub = this.authService.userIsAuthenticated.subscribe(isAuth => {
+      if (!isAuth && this.previousAuthState != isAuth) {
+        this.router.navigateByUrl('/auth');
+      }
+      this.previousAuthState = isAuth;
+    });
     this.languages = this.languageService.getLanguages();
     this.languageService.selected.subscribe(selected => this.selectedLanguage = selected)
   }
+
   selectLanguage(event) {
     this.languageService.setLanguage(event.detail.value);
   }
+
   onToggleColorTheme(event) {
     if (event.detail.checked) {
       this.renderer.setAttribute(document.body, 'color-theme', 'dark');
@@ -129,7 +142,11 @@ export class AppComponent {
   onLogout() {
     this.menuCtrl.close();
     this.authService.logout();
-    this.router.navigateByUrl('/auth')
 
+  }
+  ngOnDestroy() {
+    if (this.authSub) {
+      this.authSub.unsubscribe();
+    }
   }
 }

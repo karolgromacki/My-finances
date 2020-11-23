@@ -92,10 +92,11 @@ export class TransactionsPage implements OnInit {
     slidingItem.close();
     this.router.navigate(['/', 'main', 'tabs', 'transactions', 'edit', transactionId]);
   }
+
   onDelete(transactionId: string, transactionTitle: string, slidingItem: IonItemSliding) {
     slidingItem.close();
     this.loadingCtrl.create({
-      message: this.translate.instant('deleteTransaction')
+      message: this.translate.instant('deletingTransaction')
     }).then(loadingEl => {
       loadingEl.present();
       this.transactionsService.deleteTransaction(transactionId).subscribe(() => {
@@ -103,6 +104,7 @@ export class TransactionsPage implements OnInit {
         this.presentToast(transactionTitle);
       });
     });
+
   }
   onFilterUpdate(event: CustomEvent<SegmentChangeEventDetail>) {
     if (event.detail.value === 'deposit') {

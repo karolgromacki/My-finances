@@ -75,7 +75,7 @@ export class AccountDetailPage implements OnInit {
   }
   async presentToast(accountTitle) {
     const toast = await this.toastController.create({
-      message: `'${accountTitle}'`+ this.translate.instant('deletedAccount') `<ion-icon name="checkmark"></ion-icon>`,
+      message: `${accountTitle}`+ this.translate.instant('deletedAccount') + `<ion-icon name="checkmark"></ion-icon>`,
       duration: 1400,
       position: 'bottom',
       cssClass: 'tabs-bottom'

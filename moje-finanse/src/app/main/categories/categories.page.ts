@@ -83,8 +83,6 @@ export class CategoriesPage implements OnInit {
   onDelete(categoryId: string) {
     this.categoriesService.deleteCategory(categoryId).subscribe(() => {
     });
-    this.relevantCategories = this.relevantCategories.filter(category => category.title !== 'Deposit');
-    this.relevantCategories = this.relevantCategories.filter(category => category.title !== 'Transfer');
   }
 
   ngOnDestroy() {
