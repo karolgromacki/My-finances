@@ -29,7 +29,12 @@ export class AccountsService {
     constructor(private authService: AuthService, private http: HttpClient, private storage: Storage) { }
 
     fetchAccounts() {
-        return this.http.get<{ [key: string]: AccountData }>(`https://my-finances-b77a0.firebaseio.com/accounts.json?orderBy="userId"&equalTo="${this.authService.userId}"`).pipe(
+        return this.authService.userId.pipe(switchMap(userId => {
+            if (!userId) {
+                throw new Error('No user id found!')
+            }
+            return this.http.get<{ [key: string]: AccountData }>(`https://my-finances-b77a0.firebaseio.com/accounts.json?orderBy="userId"&equalTo="${userId}"`)
+        }),
             map(resData => {
                 const accounts = [];
                 for (const key in resData) {
@@ -74,22 +79,24 @@ export class AccountsService {
         note: string,
         amount: number) {
         let generatedId: string;
-        const newAccount = new Account(Math.random().toString(), title, note, amount, amount, this.authService.userId);
+        let newAccount: Account;
+        return this.authService.userId.pipe(take(1), switchMap(userId => {
+            if (!userId) {
+                throw new Error('No user id found!')
+            }
+            newAccount = new Account(Math.random().toString(), title, note, amount, amount, userId);
+            return this.http.post<{ name: string }>('https://my-finances-b77a0.firebaseio.com/accounts.json', { ...newAccount, id: null });
+        }), switchMap(resData => {
+            generatedId = resData.name;
+            return this.accounts;
+        }),
+            take(1),
+            tap(accounts => {
+                newAccount.id = generatedId;
+                this._accounts.next(accounts.concat(newAccount));
+            })
 
-        //HTTP
-        return this.http.post<{ name: string }>('https://my-finances-b77a0.firebaseio.com/accounts.json', { ...newAccount, id: null })
-            .pipe(
-                switchMap(resData => {
-                    generatedId = resData.name;
-                    return this.accounts;
-                }),
-                take(1),
-                tap(accounts => {
-                    newAccount.id = generatedId;
-                    this._accounts.next(accounts.concat(newAccount));
-                })
-
-            );
+        );
 
         // DEFAULT
         // return this._accounts.pipe(take(1), tap(accounts => {
@@ -123,7 +130,7 @@ export class AccountsService {
                     title,
                     note,
                     amount,
-                    amount, this.authService.userId);
+                    amount, oldAccount.userId);
                 return this.http.put(`https://my-finances-b77a0.firebaseio.com/accounts/${accountId}.json`,
                     { ...updatedAccounts[updatedAccountsIndex], id: null });
             }),

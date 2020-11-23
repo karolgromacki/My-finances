@@ -55,7 +55,6 @@ export class EditTransactionPage implements OnInit {
                 this.categoriesSub = this.categoriesService.categories.subscribe(categories => {
                     this.accountsSub = this.accountsService.accounts.subscribe(account => {
                         this.transaction = transaction;
-                        console.log(this.transaction)
                         this.form = new FormGroup({
                             type: new FormControl(this.transaction.type, { updateOn: 'change', validators: [Validators.required] }),
                             title: new FormControl(this.transaction.title, { updateOn: 'change', validators: [Validators.required, Validators.maxLength(20)] }),
@@ -132,7 +131,6 @@ export class EditTransactionPage implements OnInit {
     }
     onUpdateTransaction() {
         if (!this.form.valid) {
-            console.log(this.form)
             return;
         }
         else if (this.form.value.type === 'deposit') {
@@ -163,28 +161,7 @@ export class EditTransactionPage implements OnInit {
                 });
         });
     }
-    //   onUpdateAccount() {
-    //     if (!this.form.valid) {
-    //       return;
-    //     }
-    //     this.loadingCtrl.create({
-    //       message: 'Updating account...'
-    //     }).then(loadingEl => {
-    //       loadingEl.present();
-    //       this.transactionsService.updateTransaction(
-    //         this.transaction.id,
-    //         this.form.value.title,
-    //         this.form.value.note,
-    //         this.form.value.baseAmount,
-    //       ).subscribe(() => {
-    //         loadingEl.dismiss();
-    //         this.presentToast();
-    //         this.form.reset();
-    //         this.router.navigate(['/', 'main', 'tabs', 'accounts']);
-    //       });
-    //     });
-    //   }
-
+   
     async presentToast() {
         const toast = await this.toastController.create({
             message: this.translate.instant('editedTransaciton')+`'${this.form.value.title}' <ion-icon name="checkmark"></ion-icon>`,

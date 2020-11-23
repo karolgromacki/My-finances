@@ -35,31 +35,35 @@ export class TransactionsService {
   constructor(private authService: AuthService, private http: HttpClient, private storage: Storage) { }
 
   fetchTransactions() {
-    return this.http.get<{ [key: string]: TransactionData }>(`https://my-finances-b77a0.firebaseio.com/transactions.json?orderBy="userId"&equalTo="${this.authService.userId}"`).pipe(
-      map(resData => {
-        const transactions = [];
-        for (const key in resData) {
-          if (resData.hasOwnProperty(key)) {
-            transactions.push(
-              new Transaction(
-                key,
-                resData[key].type,
-                resData[key].title,
-                resData[key].note,
-                resData[key].category,
-                resData[key].account,
-                resData[key].amount,
-                resData[key].date,
-                resData[key].imageUrl,
-                resData[key].icon,
-                resData[key].userId
-              )
-            );
-          }
+    return this.authService.userId.pipe(switchMap(userId => {
+      if (!userId) {
+        throw new Error('No user id found!')
+      }
+      return this.http.get<{ [key: string]: TransactionData }>(`https://my-finances-b77a0.firebaseio.com/transactions.json?orderBy="userId"&equalTo="${userId}"`)
+    }), map(resData => {
+      const transactions = [];
+      for (const key in resData) {
+        if (resData.hasOwnProperty(key)) {
+          transactions.push(
+            new Transaction(
+              key,
+              resData[key].type,
+              resData[key].title,
+              resData[key].note,
+              resData[key].category,
+              resData[key].account,
+              resData[key].amount,
+              resData[key].date,
+              resData[key].imageUrl,
+              resData[key].icon,
+              resData[key].userId
+            )
+          );
         }
-        return transactions.sort((a, b) => b.date.valueOf() - a.date.valueOf());
+      }
+      return transactions.sort((a, b) => b.date.valueOf() - a.date.valueOf());
 
-      }),
+    }),
       tap(transactions => {
         this._transactions.next(transactions);
       })
@@ -87,22 +91,24 @@ export class TransactionsService {
     imageUrl: string,
     icon: string) {
     let generatedId: string;
-    const newTransaction = new Transaction(Math.random().toString(), type, title, note, category, account, amount, date, imageUrl, icon, this.authService.userId);
+    let newTransaction: Transaction;
+    return this.authService.userId.pipe(take(1), switchMap(userId => {
+      if (!userId) {
+        throw new Error('No user id found!')
+      }
+      newTransaction = new Transaction(Math.random().toString(), type, title, note, category, account, amount, date, imageUrl, icon, userId);
+      return this.http.post<{ name: string }>('https://my-finances-b77a0.firebaseio.com/transactions.json', { ...newTransaction, id: null })
+    }), switchMap(resData => {
+      generatedId = resData.name;
+      return this.transactions;
+    }),
+      take(1),
+      tap(transactions => {
+        newTransaction.id = generatedId;
+        this._transactions.next(transactions.concat(newTransaction));
+      })
 
-    //HTTP
-    return this.http.post<{ name: string }>('https://my-finances-b77a0.firebaseio.com/transactions.json', { ...newTransaction, id: null })
-      .pipe(
-        switchMap(resData => {
-          generatedId = resData.name;
-          return this.transactions;
-        }),
-        take(1),
-        tap(transactions => {
-          newTransaction.id = generatedId;
-          this._transactions.next(transactions.concat(newTransaction));
-        })
-
-      );
+    );
   }
 
   updateTransaction(
@@ -133,7 +139,7 @@ export class TransactionsService {
         const oldTransaction = updatedTransactions[updatedTransactionsIndex]
         updatedTransactions[updatedTransactionsIndex] = new Transaction(
           oldTransaction.id, type, title, note,
-          category, account, amount, date, oldTransaction.imageUrl, icon, this.authService.userId);
+          category, account, amount, date, oldTransaction.imageUrl, icon, oldTransaction.userId);
         return this.http.put(`https://my-finances-b77a0.firebaseio.com/transactions/${transactionId}.json`,
           { ...updatedTransactions[updatedTransactionsIndex], id: null });
       }),

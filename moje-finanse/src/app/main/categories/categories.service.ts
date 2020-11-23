@@ -7,6 +7,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { Storage } from '@ionic/storage';
 
+
 interface CategoryData {
   title: string;
   icon: string;
@@ -32,23 +33,27 @@ export class CategoriesService {
   constructor(private authService: AuthService, private http: HttpClient, private storage: Storage) { }
 
   fetchCategories() {
-    return this.http.get<{ [key: string]: CategoryData }>(`https://my-finances-b77a0.firebaseio.com/categories.json?orderBy="userId"&equalTo="${this.authService.userId}"`).pipe(
-      map(resData => {
-        const categories = [];
-        for (const key in resData) {
-          if (resData.hasOwnProperty(key)) {
-            categories.push(
-              new Category(
-                key,
-                resData[key].title,
-                resData[key].icon,
-                resData[key].userId
-              )
-            );
-          }
+    return this.authService.userId.pipe(switchMap(userId => {
+      if (!userId) {
+        throw new Error('No User id found!')
+      }
+      return this.http.get<{ [key: string]: CategoryData }>(`https://my-finances-b77a0.firebaseio.com/categories.json?orderBy="userId"&equalTo="${userId}"`)
+    }), map(resData => {
+      const categories = [];
+      for (const key in resData) {
+        if (resData.hasOwnProperty(key)) {
+          categories.push(
+            new Category(
+              key,
+              resData[key].title,
+              resData[key].icon,
+              resData[key].userId
+            )
+          );
         }
-        return categories;
-      }),
+      }
+      return categories;
+    }),
       tap(categories => {
         this._categories.next(categories.sort((a, b) => (a.title < b.title ? -1 : 1)));
       })
@@ -74,22 +79,25 @@ export class CategoriesService {
     title: string,
     icon: string) {
     let generatedId: string;
-    const newCategory = new Category(Math.random().toString(), title, icon, this.authService.userId);
+    let newCategory: Category;
+    return this.authService.userId.pipe(take(1), switchMap(userId => {
+      if (!userId) {
+        throw new Error('No user id found!');
+      }
+      newCategory = new Category(Math.random().toString(), title, icon, userId);
+      return this.http.post<{ name: string }>('https://my-finances-b77a0.firebaseio.com/categories.json', { ...newCategory, id: null })
 
-    //HTTP
-    return this.http.post<{ name: string }>('https://my-finances-b77a0.firebaseio.com/categories.json', { ...newCategory, id: null })
-      .pipe(
-        switchMap(resData => {
-          generatedId = resData.name;
-          return this.categories;
-        }),
-        take(1),
-        tap(categories => {
-          newCategory.id = generatedId;
-          this._categories.next(categories.concat(newCategory));
-        })
+    }), switchMap(resData => {
+      generatedId = resData.name;
+      return this.categories;
+    }),
+      take(1),
+      tap(categories => {
+        newCategory.id = generatedId;
+        this._categories.next(categories.concat(newCategory));
+      })
 
-      );
+    );
 
     // DEFAULT
     // return this._categories.pipe(take(1), tap(categories => {
@@ -100,7 +108,7 @@ export class CategoriesService {
   updateCategory(
     categoryId: string,
     title: string,
-    icon: string,) {
+    icon: string) {
     let updatedCategories: Category[];
     return this.categories.pipe(
       take(1),
@@ -121,7 +129,7 @@ export class CategoriesService {
           oldCategory.id,
           title,
           icon,
-          this.authService.userId);
+          oldCategory.userId);
         return this.http.put(`https://my-finances-b77a0.firebaseio.com/categories/${categoryId}.json`,
           { ...updatedCategories[updatedCategoriesIndex], id: null });
       }),
@@ -149,13 +157,13 @@ export class CategoriesService {
     // )
   }
   clearAlldata() {
-    return this.http.delete(`https://my-finances-b77a0.firebaseio.com/categories.json`).pipe(
-      switchMap(() => {
-        return this.categories;
-      }),
-      take(1),
-      tap(categories => {
-        this._categories.next(categories.filter(c => c.userId !== this.authService.userId));
-      }));
+    // return this.http.delete(`https://my-finances-b77a0.firebaseio.com/categories.json`).pipe(
+    //   switchMap(() => {
+    //     return this.categories;
+    //   }),
+    //   take(1),
+    //   tap(categories => {
+    //     this._categories.next(categories.filter(c => c.userId !== this.authService.userId));
+    //   }));
   }
 }

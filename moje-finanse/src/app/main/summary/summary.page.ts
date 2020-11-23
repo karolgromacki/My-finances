@@ -133,7 +133,6 @@ export class SummaryPage implements OnInit {
         if (category.type === 'expense') {
           if (!this.chartLabels.includes(category.category)) {
             this.chartLabels.push(category.category);
-            console.log(this.chartLabels)
             for (let amount of this.loadedTransactions) {
               if (amount.type == 'expense' && category.category === amount.category) {
                 sum += amount.amount;

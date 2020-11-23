@@ -115,7 +115,6 @@ export class NewTransactionPage implements OnInit {
 
   onCreateTransaction() {
     if (!this.form.valid) {
-      console.log(this.form)
       return;
     }
     else if (this.form.value.type === 'deposit') {
