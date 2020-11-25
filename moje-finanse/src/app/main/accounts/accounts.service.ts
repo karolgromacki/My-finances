@@ -152,7 +152,4 @@ export class AccountsService {
             })
         );
     }
-    clearAlldata() {
-        // return this._accounts = new BehaviorSubject<Account[]>([]);
-    }
 }

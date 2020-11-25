@@ -17,7 +17,7 @@
         <ion-item>
           <ion-icon name="invert-mode" slot="start" lines="none"></ion-icon>
           <ion-label>{{'theme' | translate}}</ion-label>
-          <ion-toggle [checked]="checked" (ionChange)="onToggleColorTheme($event)"></ion-toggle>
+          <ion-toggle  [checked]="selectedTheme" (ionChange)="selectTheme($event)"></ion-toggle>
         </ion-item>
         <ion-item>
           <ion-icon name="logo-usd" slot="start" lines="none"></ion-icon>

@@ -8,7 +8,7 @@ const THEME_KEY = 'SELECTED_CURRENCY';
   providedIn: 'root'
 })
 export class ThemeService {
-  private _selected = new BehaviorSubject<any>('on');
+  private _selected = new BehaviorSubject<any>(null);
 
   get selected() {
     return this._selected;

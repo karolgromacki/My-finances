@@ -15,6 +15,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage';
 import { AchievementsPage } from './main/achievements/achievements.page';
+import { FormsModule } from '@angular/forms';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json')
@@ -26,7 +27,7 @@ export function createTranslateLoader(http: HttpClient) {
   imports: [
     BrowserModule, IonicModule.forRoot(),
     AppRoutingModule, TranslateModule.forRoot(),
-    HttpClientModule,
+    HttpClientModule, FormsModule,
     IonicStorageModule.forRoot(),
     TranslateModule.forRoot({
       loader: {

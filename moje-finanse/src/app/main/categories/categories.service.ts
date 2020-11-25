@@ -151,15 +151,4 @@ export class CategoriesService {
       })
     );
   }
-
-  clearAlldata() {
-    // return this.http.delete(`https://my-finances-b77a0.firebaseio.com/categories.json`).pipe(
-    //   switchMap(() => {
-    //     return this.categories;
-    //   }),
-    //   take(1),
-    //   tap(categories => {
-    //     this._categories.next(categories.filter(c => c.userId !== this.authService.userId));
-    //   }));
-  }
 }

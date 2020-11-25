@@ -15,6 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AchievementsPage } from './main/achievements/achievements.page';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { ThemeService } from './Services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -25,11 +26,11 @@ export class AppComponent implements OnInit, OnDestroy {
   private authSub: Subscription;
   private previousAuthState = false;
   theme;
-  checked = true;
   languages = [];
   currencies = [];
   selectedLanguage = '';
   selectedCurrency = '';
+  selectedTheme = null;
 
   constructor(
     private authService: AuthService,
@@ -46,15 +47,17 @@ export class AppComponent implements OnInit, OnDestroy {
     private menuCtrl: MenuController,
     private languageService: LanguageService,
     private currencyService: CurrencyService,
+    private themeService: ThemeService,
     private loadingCtrl: LoadingController
   ) {
 
-    this.storage.get('theme').then((val) => {
-      if (val == null)
-        this.renderer.setAttribute(document.body, 'color-theme', 'dark');
-      if (val == 'dark')
-        this.checked = true;
-    });
+    if (this.selectedTheme) {
+      this.renderer.setAttribute(document.body, 'color-theme', 'dark');
+    }
+    else{
+      this.renderer.setAttribute(document.body, 'color-theme', 'light');
+    }
+
     this.initializeApp();
   }
 
@@ -64,6 +67,7 @@ export class AppComponent implements OnInit, OnDestroy {
         Plugins.SplashScreen.hide();
       }
       this.languageService.setInitialAppLanguage();
+      this.themeService.setInitialAppTheme();
       this.currencyService.setInitialAppCurrency();
     });
   }
@@ -79,6 +83,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.currencies = this.currencyService.getCurrencies();
     this.languageService.selected.subscribe(selected => this.selectedLanguage = selected);
     this.currencyService.selected.subscribe(selected => this.selectedCurrency = selected);
+    this.themeService.selected.subscribe(selected => this.selectedTheme = selected);
     Plugins.App.addListener('appStateChange', this.checkAuthOnResume.bind(this));
   }
 
@@ -101,18 +106,17 @@ export class AppComponent implements OnInit, OnDestroy {
   selectCurrency(event) {
     this.currencyService.setCurrency(event.detail.value);
   }
-
-  onToggleColorTheme(event) {
+  selectTheme(event) {
+    this.themeService.setTheme(event.detail.checked);
     if (event.detail.checked) {
       this.renderer.setAttribute(document.body, 'color-theme', 'dark');
-      this.storage.set('theme', 'dark');
     }
     else {
       this.renderer.setAttribute(document.body, 'color-theme', 'light');
-      this.storage.set('theme', 'light');
     }
 
   }
+
   onClearData() {
     this.alertCtrl.create({
       header: this.translate.instant('areYouSure'),
@@ -121,7 +125,6 @@ export class AppComponent implements OnInit, OnDestroy {
         {
           text: this.translate.instant('delete'),
           handler: () => {
-            let tran;
             this.loadingCtrl.create({
               message: this.translate.instant('deletingData')
             }).then(loadingEl => {
