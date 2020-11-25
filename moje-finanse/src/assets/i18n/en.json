@@ -4,7 +4,7 @@
     "ts1": " is a multiplatform ",
     "ts2": " application",
     "ts3": "This application is still a 'work in progress' project.",
-    "ts4": "Mam nadzieję, że Ci się spodoba.",
+    "ts4": "I hope you'll like it.",
     "ts5": "Crate and monitor your expenses and deposits.",
     "ts6": "Create your own categories of your expenses.",
     "ts7": "Create accounts to execute transactions and monitor your balance.",
@@ -12,7 +12,9 @@
     "rdts": "Ready to start?",
     "continue": "Continue",
     "skip": "Skip",
-
+    "search": "Search...",
+    "areYouSure": "Are you sure?",
+    "clearAllData": "Do you want to clear all data?",
     "language": "Language",
     "theme": "Theme",
     "currency": "Currency",
@@ -22,7 +24,6 @@
     "exportCSV": "Export to CSV",
     "clear": "Clear data",
     "logout": "Logout",
-
     "transactions": "Tansactions",
     "categories": "Categories",
     "accounts": "Accounts",
@@ -39,7 +40,6 @@
     "noCategories": "No categories found! Please create one first!",
     "noExpenses": "No expenses found! Please create one first!",
     "noTransactions": "No transactions found! Please create one first!",
-
     "type": "Type",
     "title": "Title",
     "note": "Note",
@@ -48,15 +48,13 @@
     "category": "Category",
     "amount": "Amount",
     "baseAmount": "Base amount",
-    
     "addAccount": "Add account",
     "addCategory": "Add category",
     "newAccount": "New account",
     "newCategory": "New category",
     "addTransaction": "Add Transaction",
     "newTransaction": "New Trensaction",
-    "newTransfer":" New transfer has been created.",
-
+    "newTransfer": " New transfer has been created.",
     "deletingAccount": "Deleting account...",
     "deletingCategory": "Deleting category...",
     "deletingTransaction": "Deleting transaction...",
@@ -67,7 +65,6 @@
     "creatingCategory": "Creating category...",
     "creatingTransaction": "Creating transaction...",
     "creatingTransfer": "Transfering...",
-    
     "createdAccount": "Created account ",
     "createdCategory": "Created category ",
     "createdTransaction": "Created transaction ",
@@ -77,7 +74,6 @@
     "deletedAccount": " account has been deleted ",
     "deletedCategory": " category has been deleted ",
     "deletedTransaction": " transaction has been deleted ",
-
     "chooseAction": "Choose an action",
     "edit": "Edit ",
     "detail": "Details",
@@ -86,7 +82,6 @@
     "deleteCategory": "Deleting category...",
     "deleteTransaction": "Deleting transaaction...",
     "cancel": "Cancel",
-   
     "emptyTitleField": "This title cannot be empty and longer than 20 characters.",
     "unselectedType": "Type must be selected",
     "unselectedDate": "Date must be selected",
@@ -94,5 +89,4 @@
     "unselectedAccount": "Account must be selected",
     "unselectedCategory": "Category must be selected",
     "amountLowerThanZero": "Amount must be higher than 0"
-
 }

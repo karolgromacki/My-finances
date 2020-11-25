@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { Plugins, Capacitor } from '@capacitor/core';
+import { Plugins, Capacitor, AppState } from '@capacitor/core';
 import { AlertController, MenuController, ModalController, Platform } from '@ionic/angular';
 // import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 // import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -13,6 +13,7 @@ import { LanguageService } from './language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AchievementsPage } from './main/achievements/achievements.page';
 import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +24,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private authSub: Subscription;
   private previousAuthState = false;
   theme;
-  checked = false;
+  checked = true;
   languages = [];
   selectedLanguage = '';
 
@@ -32,8 +33,6 @@ export class AppComponent implements OnInit, OnDestroy {
     private storage: Storage,
     private translate: TranslateService,
     private platform: Platform,
-    // private splashScreen: SplashScreen,
-    // private statusBar: StatusBar,
     private modalCtrl: ModalController,
     private renderer: Renderer2,
     private accountsService: AccountsService,
@@ -49,7 +48,7 @@ export class AppComponent implements OnInit, OnDestroy {
       if (val == null)
         this.renderer.setAttribute(document.body, 'color-theme', 'dark');
       if (val == 'dark')
-        this.checked = true;
+        this.checked = false;
     });
     this.initializeApp();
   }
@@ -72,6 +71,20 @@ export class AppComponent implements OnInit, OnDestroy {
     });
     this.languages = this.languageService.getLanguages();
     this.languageService.selected.subscribe(selected => this.selectedLanguage = selected)
+    Plugins.App.addListener('appStateChange', this.checkAuthOnResume.bind(this));
+  }
+
+  private checkAuthOnResume(state: AppState) {
+    if (state.isActive) {
+      this.authService
+        .autoLogin()
+        .pipe(take(1))
+        .subscribe(success => {
+          if (!success) {
+            this.onLogout();
+          }
+        });
+    }
   }
 
   selectLanguage(event) {
@@ -95,32 +108,32 @@ export class AppComponent implements OnInit, OnDestroy {
       message: this.translate.instant('clearAllData'),
       buttons: [
         {
+          text: this.translate.instant('delete'),
+          handler: () => {
+            // this.transactionsService.clearAlldata().subscribe(() => {
+            // });
+            // this.categoriesService.clearAlldata()
+            // this.accountsService.clearAlldata().subscribe(() => {
+            // });
+            // this.categoriesService.addCategory(
+            //   'Transfer',
+            //   'swap-horizontal').subscribe(() => {
+            //   });
+            // this.categoriesService.addCategory(
+            //   'Deposit',
+            //   'card').subscribe(() => {
+            //     if (this.router.url == '/main/tabs/categories')
+            //       this.router.navigateByUrl('/main/tabs/transactions');
+            //     else
+            //       this.router.navigateByUrl('/main/tabs/categories');
+            //     this.menuCtrl.close();
+            //   });
+          }
+        },
+        {
           text: this.translate.instant('cancel'),
           role: 'cancel',
         },
-        {
-          text: this.translate.instant('delete'),
-          handler: () => {
-            this.transactionsService.clearAlldata().subscribe(() => {
-            });
-            this.categoriesService.clearAlldata()
-            this.accountsService.clearAlldata().subscribe(() => {
-            });
-            this.categoriesService.addCategory(
-              'Transfer',
-              'swap-horizontal').subscribe(() => {
-              });
-            this.categoriesService.addCategory(
-              'Deposit',
-              'card').subscribe(() => {
-                if (this.router.url == '/main/tabs/categories')
-                  this.router.navigateByUrl('/main/tabs/transactions');
-                else
-                  this.router.navigateByUrl('/main/tabs/categories');
-                this.menuCtrl.close();
-              });
-          }
-        }
       ]
     }).then(alertEl => {
       alertEl.present();

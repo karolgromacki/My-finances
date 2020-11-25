@@ -160,17 +160,19 @@ export class TransactionsService {
   }
 
   deleteTransaction(transactionId: string) {
-    return this.authService.token.pipe(take(1), switchMap(token => {
-      return this.http.delete(`https://my-finances-b77a0.firebaseio.com/transactions/${transactionId}.json?auth=${token}`).pipe(
-        switchMap(() => {
-          return this.transactions;
-        }),
-        take(1),
-        tap(transactions => {
-          this._transactions.next(transactions.filter(a => a.id !== transactionId));
-        }));
-    }));
-
+    return this.authService.token.pipe(
+      take(1),
+      switchMap(token => {
+        return this.http.delete(`https://my-finances-b77a0.firebaseio.com/transactions/${transactionId}.json?auth=${token}`);
+      }),
+      switchMap(() => {
+        return this.transactions;
+      }),
+      take(1),
+      tap(transactions => {
+        this._transactions.next(transactions.filter(a => a.id !== transactionId));
+      })
+    );
   }
   clearAlldata() {
     //return this._transactions = new BehaviorSubject<Transaction[]>([]);

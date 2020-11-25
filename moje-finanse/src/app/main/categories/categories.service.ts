@@ -137,25 +137,21 @@ export class CategoriesService {
     }));
   }
   deleteCategory(categoryId: string) {
-    return this.authService.token.pipe(take(1), switchMap(token => {
-      return this.http.delete(`https://my-finances-b77a0.firebaseio.com/categories/${categoryId}.json?auth=${token}`).pipe(
-        switchMap(() => {
-          return this.categories;
-        }),
-        take(1),
-        tap(categories => {
-          this._categories.next(categories.filter(a => a.id !== categoryId));
-        }));
-    }));
-
-    // DEFAULT
-    // return this._categories.pipe(
-    //     take(1),
-    //     tap(categories => {
-    //         this._categories.next(categories.filter(a => a.id !== categoryId));
-    //     })
-    // )
+    return this.authService.token.pipe(
+      take(1),
+      switchMap(token => {
+        return this.http.delete(`https://my-finances-b77a0.firebaseio.com/categories/${categoryId}.json?auth=${token}`);
+      }),
+      switchMap(() => {
+        return this.categories;
+      }),
+      take(1),
+      tap(categories => {
+        this._categories.next(categories.filter(a => a.id !== categoryId));
+      })
+    );
   }
+
   clearAlldata() {
     // return this.http.delete(`https://my-finances-b77a0.firebaseio.com/categories.json`).pipe(
     //   switchMap(() => {

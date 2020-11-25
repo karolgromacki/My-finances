@@ -8,14 +8,16 @@ import { TransactionDetailPageRoutingModule } from './transaction-detail-routing
 
 import { TransactionDetailPage } from './transaction-detail.page';
 import { EditTransactionPage } from '../edit-transaction/edit-transaction.page';
+import { TranslateModule} from '@ngx-translate/core';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    TransactionDetailPageRoutingModule
+    TransactionDetailPageRoutingModule,
+    TranslateModule
   ],
   declarations: [TransactionDetailPage]
 })
-export class TransactionDetailPageModule {}
+export class TransactionDetailPageModule { }

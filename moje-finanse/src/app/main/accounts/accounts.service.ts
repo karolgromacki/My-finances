@@ -141,15 +141,16 @@ export class AccountsService {
 
     deleteAccount(accountId: string) {
         return this.authService.token.pipe(take(1), switchMap(token => {
-            return this.http.delete(`https://my-finances-b77a0.firebaseio.com/accounts/${accountId}.json?auth=${token}`).pipe(
-                switchMap(() => {
-                    return this.accounts;
-                }),
-                take(1),
-                tap(accounts => {
-                    this._accounts.next(accounts.filter(a => a.id !== accountId));
-                }));
-        }));
+            return this.http.delete(`https://my-finances-b77a0.firebaseio.com/accounts/${accountId}.json?auth=${token}`);
+        }),
+            switchMap(() => {
+                return this.accounts;
+            }),
+            take(1),
+            tap(accounts => {
+                this._accounts.next(accounts.filter(a => a.id !== accountId));
+            })
+        );
     }
     clearAlldata() {
         // return this._accounts = new BehaviorSubject<Account[]>([]);

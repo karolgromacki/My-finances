@@ -16,7 +16,7 @@
       </ion-button>
     </ion-buttons>
     <ion-title *ngIf="!isSearchbarOpened">{{'transactions' | translate}}</ion-title>
-    <ion-searchbar class="ion-text-left" placeholder="Search..." type="text" [(ngModel)]="title" [(ngModel)]="amount"
+    <ion-searchbar class="ion-text-left" placeholder="{{'search' | translate}}" type="text" [(ngModel)]="title" [(ngModel)]="amount"
       (ngModelChange)="onSearch()" *ngIf="isSearchbarOpened" showCancelButton="true"
       (ionCancel)="isSearchbarOpened=false; title='';amount=null;onSearch();"></ion-searchbar>
   </ion-toolbar>
@@ -57,7 +57,7 @@
     <ion-row *ngIf="!isLoading && relevantTransactions?.length > 0">
       <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
         <ion-list class="ion-no-padding">
-          <ion-item-group *ngFor="let group of relevantTransactions | groupBy: 'date'" [hidden]="group.hide">
+          <ion-item-group *ngFor="let group of relevantTransactions.reverse() | groupBy: 'date'" [hidden]="group.hide">
             <ion-item-divider color="light" sticky>
               <ion-label slot="start">
                 {{group.key | date: 'shortDate'}}
@@ -66,7 +66,7 @@
                 {{group.key | date: 'shortDate'}}
               </ion-label> -->
             </ion-item-divider>
-            <ion-item-sliding #slidingItem *ngFor="let transaction of group?.list.reverse()">
+            <ion-item-sliding #slidingItem *ngFor="let transaction of group?.list">
               <ion-item routerDirection="forward" detail
                 [routerLink]="['/','main','tabs','transactions', transaction.id]">
                 <ion-icon name="{{transaction?.icon}}"></ion-icon>
