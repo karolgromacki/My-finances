@@ -148,8 +148,9 @@ export class NewTransactionPage implements OnInit {
   async presentToast() {
     const toast = await this.toastController.create({
       message: this.translate.instant('createdTransaction') + `'${this.form.value.title}' <ion-icon name="checkmark"></ion-icon>`,
-      duration: 1500,
-      position: 'top'
+      duration: 1400,
+      position: 'bottom',
+      cssClass: 'tabs-bottom'
     });
     toast.present();
   }

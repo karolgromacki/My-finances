@@ -4,13 +4,14 @@ import { Storage } from '@ionic/storage';
 import { BehaviorSubject } from 'rxjs';
 
 const LNG_KEY = 'SELECTED_LANGUAGE';
+const CUR_KEY = 'SELECTED_CURRENCY';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LanguageService {
   private _selected = new BehaviorSubject<any>('en');
-  
+
   get selected() {
     return this._selected;
   }
@@ -42,3 +43,4 @@ export class LanguageService {
   }
 
 }
+

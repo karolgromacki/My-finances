@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IonItemSliding, LoadingController, NavController, ToastController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { CurrencyService } from 'src/app/Services/currency.service';
 import { Transaction } from '../../transactions/transaction.model';
 import { TransactionsService } from '../../transactions/transactions.service';
 import { CategoriesService } from '../categories.service';
@@ -15,15 +16,20 @@ import { Category } from '../category.model';
 })
 export class CategoryDetailPage implements OnInit {
   category: Category;
+  currency: string;
   private categoriesSub: Subscription;
+  private currenciesSub: Subscription;
   sum: number;
   relevantTransactions: Transaction[];
   loadedTransactions: Transaction[];
   private transactionsSub: Subscription;
 
-  constructor(private translate: TranslateService, private toastController: ToastController, private route: ActivatedRoute, private navCtrl: NavController, private categoriesService: CategoriesService, private transactionsService: TransactionsService, private loadingCtrl: LoadingController, private router: Router) { }
+  constructor(private currencyService: CurrencyService, private translate: TranslateService, private toastController: ToastController, private route: ActivatedRoute, private navCtrl: NavController, private categoriesService: CategoriesService, private transactionsService: TransactionsService, private loadingCtrl: LoadingController, private router: Router) { }
 
   ngOnInit() {
+    this.currenciesSub = this.currencyService.selected.subscribe(selected => {
+      this.currency = selected;
+    })
     this.route.paramMap.subscribe(paramMap => {
       if (!paramMap.has('categoryId')) {
         this.navCtrl.navigateBack('/main/tabs/transactions');
@@ -46,6 +52,9 @@ export class CategoryDetailPage implements OnInit {
         });
       });
     });
+  }
+  ionViewWillEnter() {
+    this.transactionsService.fetchTransactions().subscribe()
   }
   onEdit(transactionId: string, slidingItem: IonItemSliding) {
     slidingItem.close();
@@ -71,5 +80,13 @@ export class CategoryDetailPage implements OnInit {
       cssClass: 'tabs-bottom'
     });
     toast.present();
+  }
+  ngOnDestroy(): void {
+    if (this.currenciesSub) {
+      this.currenciesSub.unsubscribe();
+    }
+    if (this.transactionsSub) {
+      this.transactionsSub.unsubscribe();
+    }
   }
 }

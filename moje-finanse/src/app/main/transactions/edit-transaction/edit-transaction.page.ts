@@ -161,13 +161,13 @@ export class EditTransactionPage implements OnInit {
                 });
         });
     }
-   
+
     async presentToast() {
         const toast = await this.toastController.create({
-            message: this.translate.instant('editedTransaciton')+`'${this.form.value.title}' <ion-icon name="checkmark"></ion-icon>`,
+            message: this.translate.instant('editedTransaciton') + `'${this.form.value.title}' <ion-icon name="checkmark"></ion-icon>`,
             duration: 1400,
             position: 'bottom',
-      cssClass: 'tabs-bottom'
+            cssClass: 'tabs-bottom'
         });
         toast.present();
     }

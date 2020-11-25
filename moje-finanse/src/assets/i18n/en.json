@@ -34,6 +34,7 @@
     "expenses": "Expenses",
     "expense": "Expense",
     "sum": "Sum",
+    "none": "None",
     "transferFrom": "Transafer from",
     "transferTo": "Transfer to",
     "noAccounts": "No accounts found! Please create one first!",

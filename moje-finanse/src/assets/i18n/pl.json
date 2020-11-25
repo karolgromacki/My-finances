@@ -34,13 +34,13 @@
     "expenses": "Wydatki",
     "expense": "Wydatek",
     "sum": "Suma",
+    "none": "Brak",
     "transferFrom": "Przenieś z",
     "transferTo": "Przenieś do",
     "noAccounts": "Nie znaleziono Kont! Stwórz jakieś.",
     "noCategories": "Nie znaleziono Kategorii! Stwórz jakąś.",
     "noExpenses": "Nie znaleziono wydatków! Stwórz jakieś.",
     "noTransactions": "Nie znaleziono transakcji! Stwórz jakąś.",
-    
     "type": "Typ",
     "title": "Tytuł",
     "note": "Notka",
@@ -49,7 +49,6 @@
     "category": "Kategoria",
     "amount": "Kwota",
     "baseAmount": "Kwota podstawowa",
-    
     "addAccount": "Dodaj Konto",
     "addCategory": "Dodaj Kategorię",
     "addTransaction": "Dodaj Transakcję",
@@ -57,7 +56,6 @@
     "newCategory": "Nowa Kategoria",
     "newTransaction": "Nowa Transakcja",
     "newTransfer": "Przeniesiono środki",
-
     "deletingAccount": "Usuwanie konta...",
     "deletingCategory": "Usuwanie kategorii...",
     "deletingTransaction": "Usuwanie transakcji...",
@@ -68,7 +66,6 @@
     "creatingCategory": "Tworzenie kategorii...",
     "creatingTransaction": "Tworzenie transakcji...",
     "creatingTransfer": "Przenoszenie...",
-    
     "createdAccount": "Utworzono konto ",
     "createdCategory": "Utworzono kategorie ",
     "createdTransaction": "Utworzono transakcje ",
@@ -78,11 +75,13 @@
     "deletedAccount": " konto zostało usunięte ",
     "deletedCategory": " konto zostało usunięte ",
     "deletedTransaction": " Transakcja została usunięta ",
-
     "chooseAction": "Wybierz opcję",
     "edit": "Edytuj ",
     "detail": "Szczególy",
     "delete": "Usuń",
+    "deleteAccount": "Usuwanie konta...",
+    "deleteCategory": "Usuwanie kategorii...",
+    "deleteTransaction": "Usuwanie transakcji...",
     "cancel": "Anuluj",
     "emptyTitleField": "To pole nie może być puste, a treść dłuższa niż 20 znaków",
     "unselectedType": "Typ musi być wybrany",

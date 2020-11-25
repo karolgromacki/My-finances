@@ -9,7 +9,8 @@ import { CategoriesService } from './main/categories/categories.service';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { AuthService } from './auth/auth.service';
-import { LanguageService } from './language.service';
+import { LanguageService } from './Services/language.service';
+import { CurrencyService } from './Services/currency.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AchievementsPage } from './main/achievements/achievements.page';
 import { Subscription } from 'rxjs';
@@ -26,7 +27,9 @@ export class AppComponent implements OnInit, OnDestroy {
   theme;
   checked = true;
   languages = [];
+  currencies = [];
   selectedLanguage = '';
+  selectedCurrency = '';
 
   constructor(
     private authService: AuthService,
@@ -42,13 +45,14 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router,
     private menuCtrl: MenuController,
     private languageService: LanguageService,
+    private currencyService: CurrencyService,
   ) {
 
     this.storage.get('theme').then((val) => {
       if (val == null)
         this.renderer.setAttribute(document.body, 'color-theme', 'dark');
       if (val == 'dark')
-        this.checked = false;
+        this.checked = true;
     });
     this.initializeApp();
   }
@@ -59,6 +63,7 @@ export class AppComponent implements OnInit, OnDestroy {
         Plugins.SplashScreen.hide();
       }
       this.languageService.setInitialAppLanguage();
+      this.currencyService.setInitialAppCurrency();
     });
   }
 
@@ -70,7 +75,9 @@ export class AppComponent implements OnInit, OnDestroy {
       this.previousAuthState = isAuth;
     });
     this.languages = this.languageService.getLanguages();
-    this.languageService.selected.subscribe(selected => this.selectedLanguage = selected)
+    this.currencies = this.currencyService.getCurrencies();
+    this.languageService.selected.subscribe(selected => this.selectedLanguage = selected);
+    this.currencyService.selected.subscribe(selected => this.selectedCurrency = selected);
     Plugins.App.addListener('appStateChange', this.checkAuthOnResume.bind(this));
   }
 
@@ -89,6 +96,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   selectLanguage(event) {
     this.languageService.setLanguage(event.detail.value);
+  }
+  selectCurrency(event) {
+    this.currencyService.setCurrency(event.detail.value);
   }
 
   onToggleColorTheme(event) {

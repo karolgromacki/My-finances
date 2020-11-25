@@ -7,6 +7,7 @@ import { Transaction } from './transaction.model';
 import { TransactionsService } from './transactions.service';
 import { SegmentChangeEventDetail } from '@ionic/core';
 import { TranslateService } from '@ngx-translate/core';
+import { CurrencyService } from 'src/app/Services/currency.service';
 
 
 @Component({
@@ -24,8 +25,11 @@ export class TransactionsPage implements OnInit {
   relevantTransactions: Transaction[];
   loadedTransactions: Transaction[];
   private transactionsSub: Subscription;
+  private currencySub: Subscription;
   isLoading = false;
+  currency: string;
   constructor(
+    private currencyService: CurrencyService,
     private translate: TranslateService,
     private toastController: ToastController,
     private transactionsService: TransactionsService,
@@ -49,6 +53,9 @@ export class TransactionsPage implements OnInit {
     );
   }
   ngOnInit() {
+    this.currencySub = this.currencyService.selected.subscribe(selected => {
+      this.currency = selected;
+    })
     this.transactionsSub = this.transactionsService.transactions.subscribe(transactions => {
       this.loadedTransactions = transactions;
       this.relevantTransactions = transactions;
@@ -87,6 +94,9 @@ export class TransactionsPage implements OnInit {
     if (this.transactionsSub) {
       this.transactionsSub.unsubscribe();
     }
+    if (this.currencySub) {
+      this.currencySub.unsubscribe();
+    }
   }
   onEdit(transactionId: string, slidingItem: IonItemSliding) {
     slidingItem.close();
@@ -96,7 +106,8 @@ export class TransactionsPage implements OnInit {
   onDelete(transactionId: string, transactionTitle: string, slidingItem: IonItemSliding) {
     slidingItem.close();
     this.loadingCtrl.create({
-      message: this.translate.instant('deletingTransaction')}).then(loadingEl => {
+      message: this.translate.instant('deletingTransaction')
+    }).then(loadingEl => {
       loadingEl.present();
       this.transactionsService.deleteTransaction(transactionId).subscribe(() => {
         loadingEl.dismiss();

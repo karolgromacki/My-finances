@@ -24,7 +24,7 @@
         <ion-item>
           <ion-text>Summarize:</ion-text>
           <ion-label class="ion-text-right" slot="end" [attr.color]="(sum < 0 )? 'danger': 'success'">
-            {{sum | currency}}
+            {{sum | currency: currency}}
           </ion-label>
         </ion-item>
       </ion-col>
@@ -42,7 +42,7 @@
               </ion-label>
               <ion-label slot="end" class="ion-text-right"
                 [attr.color]="(transaction?.type === 'expense')? 'danger': 'success'">
-                <p>{{ (transaction?.type ==='expense') ? "-" : "+" }}{{transaction.amount | currency}}</p>
+                <p>{{ (transaction?.type ==='expense') ? "-" : "+" }}{{transaction.amount | currency: currency}}</p>
               </ion-label>
             </ion-item>
             <ion-item-options side="end">

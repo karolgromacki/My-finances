@@ -22,9 +22,8 @@
         <ion-item>
           <ion-icon name="logo-usd" slot="start" lines="none"></ion-icon>
           <ion-label>{{'currency' | translate}}</ion-label>
-          <ion-select value="dollar">
-            <ion-select-option value="dollar">USD</ion-select-option>
-            <ion-select-option value="złoty">PLN</ion-select-option>
+          <ion-select value="{{selectedCurrency}}" (ionChange)="selectCurrency($event)">
+            <ion-select-option *ngFor="let cur of currencies" [value]="cur.value">{{cur.text | translate}}</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item>
