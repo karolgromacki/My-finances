@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { Plugins, Capacitor, AppState } from '@capacitor/core';
-import { AlertController, MenuController, ModalController, Platform } from '@ionic/angular';
+import { AlertController, LoadingController, MenuController, ModalController, Platform } from '@ionic/angular';
 // import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 // import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AccountsService } from './main/accounts/accounts.service';
@@ -46,6 +46,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private menuCtrl: MenuController,
     private languageService: LanguageService,
     private currencyService: CurrencyService,
+    private loadingCtrl: LoadingController
   ) {
 
     this.storage.get('theme').then((val) => {
@@ -120,24 +121,35 @@ export class AppComponent implements OnInit, OnDestroy {
         {
           text: this.translate.instant('delete'),
           handler: () => {
-            // this.transactionsService.clearAlldata().subscribe(() => {
-            // });
-            // this.categoriesService.clearAlldata()
-            // this.accountsService.clearAlldata().subscribe(() => {
-            // });
-            // this.categoriesService.addCategory(
-            //   'Transfer',
-            //   'swap-horizontal').subscribe(() => {
-            //   });
-            // this.categoriesService.addCategory(
-            //   'Deposit',
-            //   'card').subscribe(() => {
-            //     if (this.router.url == '/main/tabs/categories')
-            //       this.router.navigateByUrl('/main/tabs/transactions');
-            //     else
-            //       this.router.navigateByUrl('/main/tabs/categories');
-            //     this.menuCtrl.close();
-            //   });
+            let tran;
+            this.loadingCtrl.create({
+              message: this.translate.instant('deletingData')
+            }).then(loadingEl => {
+              loadingEl.present();
+              this.transactionsService.transactions.subscribe(transactions => {
+                transactions.forEach(t => {
+                  console.log(t.id)
+                  this.transactionsService.deleteTransaction(t.id).subscribe(() => {
+                  });
+                });
+              });
+              this.categoriesService.categories.subscribe(categories => {
+                categories.forEach(c => {
+                  console.log(c.id)
+                  this.categoriesService.deleteCategory(c.id).subscribe(() => {
+                  });
+                });
+              });
+              this.accountsService.accounts.subscribe(accounts => {
+                accounts.forEach(a => {
+                  console.log(a.id)
+                  this.accountsService.deleteAccount(a.id).subscribe(() => {
+                  });
+                });
+              });
+              loadingEl.dismiss();
+            });
+            this.menuCtrl.close();
           }
         },
         {

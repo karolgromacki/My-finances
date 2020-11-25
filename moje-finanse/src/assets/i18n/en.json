@@ -59,6 +59,7 @@
     "deletingAccount": "Deleting account...",
     "deletingCategory": "Deleting category...",
     "deletingTransaction": "Deleting transaction...",
+    "deletingData": "Deleting all data...",
     "editingAccount": "Editing account...",
     "editingCategory": "Editing category...",
     "editingTransaction": "Editing transaction...",

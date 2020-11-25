@@ -26,6 +26,7 @@ interface TransactionData {
 })
 export class TransactionsService {
   private _transactions = new BehaviorSubject<Transaction[]>([]);
+
   get transactions() {
     return this._transactions.asObservable()
   }
@@ -173,9 +174,6 @@ export class TransactionsService {
         this._transactions.next(transactions.filter(a => a.id !== transactionId));
       })
     );
-  }
-  clearAlldata() {
-    //return this._transactions = new BehaviorSubject<Transaction[]>([]);
   }
 }
 

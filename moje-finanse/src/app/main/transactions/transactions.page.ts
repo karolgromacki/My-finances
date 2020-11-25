@@ -114,8 +114,8 @@ export class TransactionsPage implements OnInit {
         this.presentToast(transactionTitle);
       });
     });
-
   }
+  
   onFilterUpdate(event: CustomEvent<SegmentChangeEventDetail>) {
     if (event.detail.value === 'deposit') {
       this.segment = 'deposit';
