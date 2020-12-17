@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { BehaviorSubject } from 'rxjs';
 
-const THEME_KEY = 'SELECTED_CURRENCY';
+const THEME_KEY = 'SELECTED_THEME';
 
 @Injectable({
   providedIn: 'root'

@@ -60,6 +60,7 @@ export class TransactionsPage implements OnInit {
       this.loadedTransactions = transactions;
       this.relevantTransactions = transactions;
     });
+
   }
 
   ionViewWillEnter() {
@@ -115,7 +116,7 @@ export class TransactionsPage implements OnInit {
       });
     });
   }
-  
+
   onFilterUpdate(event: CustomEvent<SegmentChangeEventDetail>) {
     if (event.detail.value === 'deposit') {
       this.segment = 'deposit';

@@ -4,7 +4,6 @@ import { Storage } from '@ionic/storage';
 import { BehaviorSubject } from 'rxjs';
 
 const LNG_KEY = 'SELECTED_LANGUAGE';
-const CUR_KEY = 'SELECTED_CURRENCY';
 
 @Injectable({
   providedIn: 'root'

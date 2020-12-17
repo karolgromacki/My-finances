@@ -54,7 +54,7 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.selectedTheme) {
       this.renderer.setAttribute(document.body, 'color-theme', 'dark');
     }
-    else{
+    else {
       this.renderer.setAttribute(document.body, 'color-theme', 'light');
     }
 
@@ -164,7 +164,25 @@ export class AppComponent implements OnInit, OnDestroy {
       alertEl.present();
     });
   }
-
+  exportToCSV() {
+    let accounts = [];
+    let categories = [];
+    let transactions = [];
+    this.transactionsService.transactions.subscribe(transaction => {
+      transaction.forEach(t => {
+        transactions.push(t.type)
+        transactions.push(t.title)
+        transactions.push(t.note)
+        transactions.push(t.category)
+        transactions.push(t.account)
+        transactions.push(t.amount)
+        transactions.push(t.date)
+        transactions.push(t.imageUrl)
+        transactions.push(t.icon)
+      });
+      console.log(transactions)
+    })
+  }
 
 
   openTutorial() {

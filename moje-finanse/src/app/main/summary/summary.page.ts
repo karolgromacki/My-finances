@@ -6,6 +6,7 @@ import { Color, Label } from 'ng2-charts';
 import { Subscription } from 'rxjs';
 import { Transaction } from '../transactions/transaction.model';
 import { TransactionsService } from '../transactions/transactions.service';
+import { SegmentChangeEventDetail } from '@ionic/core';
 
 @Component({
   selector: 'app-summary',
@@ -13,10 +14,10 @@ import { TransactionsService } from '../transactions/transactions.service';
   styleUrls: ['./summary.page.scss'],
 })
 export class SummaryPage implements OnInit {
-  @ViewChild('slides', { static: true }) slides: IonSlides;
   loadedTransactions: Transaction[];
   private transactionsSub: Subscription;
   isLoading = false;
+  segment = 'day';
   Expences = 0;
   Deposits = 0;
   barChartColors: Color[] = [
@@ -108,11 +109,9 @@ export class SummaryPage implements OnInit {
   chartType = 'doughnut';
 
 
-  constructor(private http: HttpClient, private transactionsService: TransactionsService) { }
+  constructor(private transactionsService: TransactionsService) { }
 
   ngOnInit() {
-    // this.slides.isEnd().then(isEnd => isEnd = true);
-
     this.transactionsSub = this.transactionsService.transactions.subscribe(transactions => {
       this.chartData[0].data = [];
       this.barChartData[0].data = [];
@@ -121,7 +120,6 @@ export class SummaryPage implements OnInit {
 
 
       this.loadedTransactions = transactions;
-      // this.slides.slideTo(this.loadedTransactions.length);
       this.loadedTransactions = this.loadedTransactions.sort((a, b) => b.date.valueOf() - a.date.valueOf());
       this.loadedTransactions.forEach(element => {
         element.date = new Date(new Date(element.date).toDateString())
@@ -162,10 +160,27 @@ export class SummaryPage implements OnInit {
     });
 
   }
+
   ionViewWillEnter() {
     this.isLoading = true;
     this.transactionsService.fetchTransactions().subscribe(() => {
       this.isLoading = false;
     });
+  }
+  onFilterUpdate(event: CustomEvent<SegmentChangeEventDetail>) {
+    if (event.detail.value === 'day') {
+      this.segment = 'day';
+      this.loadedTransactions = this.loadedTransactions.filter(transaction => {transaction.type === 'expense'});
+
+    }
+    else if (event.detail.value === 'expense') {
+      this.segment = 'expense';
+      this.loadedTransactions = this.loadedTransactions.filter(transaction => transaction.type === 'expense');
+
+    }
+    else {
+      this.segment = 'all';
+      this.loadedTransactions = this.loadedTransactions;
+    }
   }
 }
