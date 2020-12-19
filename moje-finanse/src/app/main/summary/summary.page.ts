@@ -46,7 +46,7 @@ export class SummaryPage implements OnInit {
         //For expense chart
         if (!this.expenseChartLabels.includes(transaction.category)) {
           this.expenseChartLabels.push(transaction.category);
-          for (let amount of this.loadedTransactions) {
+          for (let amount of relevant) {
             if (amount.type == 'expense' && transaction.category === amount.category) {
               sum += amount.amount;
             }
@@ -57,7 +57,6 @@ export class SummaryPage implements OnInit {
         //console.log(expences)
         this.expenseChartData.push(sum);
         this.expences += expences;
-        console.log(this.expences)
       }
       else {
         //For balance chart
@@ -78,8 +77,6 @@ export class SummaryPage implements OnInit {
   }
 
   ionViewWillLeave() {
-    // this.Expences = 0;
-    // this.Deposits = 0;
     if (this.expenseChart && this.balanceChart) {
       this.expenseChart.destroy();
       this.balanceChart.destroy();
@@ -87,12 +84,18 @@ export class SummaryPage implements OnInit {
   }
 
   onFilterUpdate() {
+    if (this.expenseChartData.length === 0 && this.balanceChart) {
+      this.hide = true;
+      this.expenseChart.destroy()
+      this.balanceChart.destroy()
+    }
     if (this.segment === 'day') {
       this.segment = 'day';
       this.dateTo = null;
       this.dateFrom = new Date()
       this.relevantTransactions = [];
       this.relevantTransactions = this.loadedTransactions.filter(transaction => new Date(transaction.date).toDateString() === new Date().toDateString());
+      console.log(this.relevantTransactions)
     }
     else if (this.segment === 'week') {
       this.segment = 'week';
@@ -128,16 +131,11 @@ export class SummaryPage implements OnInit {
       else if (this.expenseChartData.length !== 0) {
         this.hide = false;
       }
-      this.expenseChartLabels = []
-      this.expenseChartData = []
+      console.log(this.relevantTransactions)
       this.expenseChart = new Chart('expenses', this.expenseConfig)
       this.balanceChart = new Chart('balance', this.balanceConfig)
     }
-    else if (this.expenseChartData.length === 0 && this.balanceChart) {
-      this.hide = true;
-      this.expenseChart.destroy()
-      this.balanceChart.destroy()
-    }
+
     this.expenseChartLabels = []
     this.expenseChartData = []
     this.expences = 0;
