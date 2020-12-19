@@ -33,6 +33,7 @@
     "deposit": "Deposit",
     "expenses": "Expenses",
     "expense": "Expense",
+    "balance": "Balance",
     "sum": "Sum",
     "none": "None",
     "transferFrom": "Transafer from",
@@ -90,5 +91,9 @@
     "unselectedAccounts": "Accounts must be selected",
     "unselectedAccount": "Account must be selected",
     "unselectedCategory": "Category must be selected",
-    "amountLowerThanZero": "Amount must be higher than 0"
+    "amountLowerThanZero": "Amount must be higher than 0",
+    "day": "Day",
+    "week": "Week",
+    "month": "Month",
+    "year": "Year"
 }

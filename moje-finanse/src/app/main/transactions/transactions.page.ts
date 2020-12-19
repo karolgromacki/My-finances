@@ -75,19 +75,25 @@ export class TransactionsPage implements OnInit {
       else {
         this.relevantTransactions = this.loadedTransactions;
       }
-      this.sum = 0;
-      this.relevantTransactions.forEach((transaction) => {
-        if (transaction.type === 'deposit') {
-          this.sum += transaction.amount;
-        }
-        else if (transaction.type === 'expense') {
-          this.sum -= transaction.amount;
-        }
-      });
+      this.summarize();
       this.loadedTransactions.forEach(element => {
         element.date = new Date(new Date(element.date).toDateString())
       });
       this.isLoading = false;
+      this.relevantTransactions.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      this.relevantTransactions.reverse();
+    });
+  }
+
+  summarize() {
+    this.sum = 0;
+    this.relevantTransactions.forEach((transaction) => {
+      if (transaction.type === 'deposit') {
+        this.sum += transaction.amount;
+      }
+      else if (transaction.type === 'expense') {
+        this.sum -= transaction.amount;
+      }
     });
   }
 
@@ -99,6 +105,7 @@ export class TransactionsPage implements OnInit {
       this.currencySub.unsubscribe();
     }
   }
+
   onEdit(transactionId: string, slidingItem: IonItemSliding) {
     slidingItem.close();
     this.router.navigate(['/', 'main', 'tabs', 'transactions', 'edit', transactionId]);
@@ -111,10 +118,12 @@ export class TransactionsPage implements OnInit {
     }).then(loadingEl => {
       loadingEl.present();
       this.transactionsService.deleteTransaction(transactionId).subscribe(() => {
+        this.summarize();
         loadingEl.dismiss();
         this.presentToast(transactionTitle);
       });
     });
+
   }
 
   onFilterUpdate(event: CustomEvent<SegmentChangeEventDetail>) {

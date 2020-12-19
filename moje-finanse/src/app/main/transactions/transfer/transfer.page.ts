@@ -38,7 +38,7 @@ export class TransferPage implements OnInit {
         note: new FormControl(null, { updateOn: 'blur' }),
         accountTo: new FormControl(null, { updateOn: 'change', validators: [Validators.required] }),
         accountFrom: new FormControl(null, { updateOn: 'change', validators: [Validators.required] }),
-        date: new FormControl(new Date(Date.now()).toDateString(), { updateOn: 'change', validators: [Validators.required] })
+        date: new FormControl(new Date().toDateString(), { updateOn: 'change', validators: [Validators.required] })
       });
       this.loadedAccounts = account;
 

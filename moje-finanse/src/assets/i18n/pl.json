@@ -33,6 +33,7 @@
     "deposit": "Wpływ",
     "expenses": "Wydatki",
     "expense": "Wydatek",
+    "balance": "Bilans",
     "sum": "Suma",
     "none": "Brak",
     "transferFrom": "Przenieś z",
@@ -90,5 +91,9 @@
     "unselectedAccounts": "Konta muszą być wybrane",
     "unselectedAccount": "Konto musi być wybrane",
     "unselectedCategory": "Kategoria musi być wybrana",
-    "amountLowerThanZero": "Kwota musi być większa od 0"
+    "amountLowerThanZero": "Kwota musi być większa od 0",
+    "day": "Dzień",
+    "week": "Tydzień",
+    "month": "Miesiąc",
+    "year": "Rok"
 }
