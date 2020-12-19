@@ -40,6 +40,7 @@
     "transferTo": "Przenieś do",
     "noAccounts": "Nie znaleziono Kont! Stwórz jakieś.",
     "noCategories": "Nie znaleziono Kategorii! Stwórz jakąś.",
+    "noExpensesSummary": "Nie znaleziono wydatków w tym okresie! Stwórz jakieś.",
     "noExpenses": "Nie znaleziono wydatków! Stwórz jakieś.",
     "noTransactions": "Nie znaleziono transakcji! Stwórz jakąś.",
     "type": "Typ",

@@ -5,6 +5,7 @@ import { Transaction } from '../transactions/transaction.model';
 import { TransactionsService } from '../transactions/transactions.service';
 import { SegmentChangeEventDetail } from '@ionic/core';
 import * as Chart from 'chart.js';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-summary',
@@ -12,6 +13,7 @@ import * as Chart from 'chart.js';
   styleUrls: ['./summary.page.scss'],
 })
 export class SummaryPage implements OnInit {
+  hide;
   transactionSub: Subscription;
   loadedTransactions: Transaction[];
   relevantTransactions: Transaction[];
@@ -19,69 +21,71 @@ export class SummaryPage implements OnInit {
   expenseChart: Chart;
   expenseChartData = [];
   expenseConfig;
-  balanceChartLabels: Label[] = [];
   balanceChart: Chart;
-  balanceChartData = [];
   balanceConfig;
-  Expences: number = 0;
-  Deposits: number = 0;
-  segment = 'day';
+  expences: number = 0;
+  deposits: number = 0;
+  segment = 'year';
   dateFrom: Date = new Date();
-  dateTo: Date = null;
-  constructor(private transactionsService: TransactionsService) { }
+  dateTo: Date;
+  constructor(private transactionsService: TransactionsService, private translate: TranslateService,) { }
 
   ngOnInit() {
     this.transactionSub = this.transactionsService.transactions.subscribe(transaction => {
       this.loadedTransactions = transaction;
-      this.relevantTransactions = this.loadedTransactions
+      this.relevantTransactions = this.loadedTransactions;
     });
   }
 
   addDataToChart(relevant) {
     for (let transaction of relevant) {
-      let Expences = 0;
-      let Deposits = 0;
+      let expences = 0;
+      let deposits = 0;
       let sum = 0;
       if (transaction.type === 'expense') {
+        //For expense chart
         if (!this.expenseChartLabels.includes(transaction.category)) {
           this.expenseChartLabels.push(transaction.category);
           for (let amount of this.loadedTransactions) {
             if (amount.type == 'expense' && transaction.category === amount.category) {
               sum += amount.amount;
-              Expences += transaction.amount;
             }
           }
         }
+        //For balance chart
+        expences += transaction.amount;
+        //console.log(expences)
         this.expenseChartData.push(sum);
-        this.Expences += Expences;
+        this.expences += expences;
+        console.log(this.expences)
       }
       else {
-        Deposits += transaction.amount;
-        this.Deposits += Deposits
+        //For balance chart
+        deposits += transaction.amount;
+        this.deposits += deposits
       }
     }
+    this.expences.toFixed(2)
   }
 
 
   ionViewWillEnter() {
     this.transactionsService.fetchTransactions().subscribe(() => {
-      this.relevantTransactions.filter(transaction => new Date(transaction.date).toDateString() === new Date().toDateString());
-      setTimeout(() => {
-        if (this.relevantTransactions.length != 0 && document.getElementById('expenses')) {
-          this.onFilterUpdate()
-          this.expenseChart = new Chart('expenses', this.expenseConfig)
-          this.balanceChart = new Chart('balance', this.balanceConfig)
-        }
-      }, 0)
+      if (this.relevantTransactions.length > 0 && document.getElementById('expenses')) {
+        this.onFilterUpdate();
+      }
     });
   }
-  
-  ionViewWillLeave(){
-    this.Expences = 0;
-    this.Deposits = 0;
-    this.expenseChart.destroy();
-    this.balanceChart.destroy();
+
+  ionViewWillLeave() {
+    // this.Expences = 0;
+    // this.Deposits = 0;
+    if (this.expenseChart && this.balanceChart) {
+      this.expenseChart.destroy();
+      this.balanceChart.destroy();
+    }
   }
+
   onFilterUpdate() {
     if (this.segment === 'day') {
       this.segment = 'day';
@@ -89,7 +93,6 @@ export class SummaryPage implements OnInit {
       this.dateFrom = new Date()
       this.relevantTransactions = [];
       this.relevantTransactions = this.loadedTransactions.filter(transaction => new Date(transaction.date).toDateString() === new Date().toDateString());
-
     }
     else if (this.segment === 'week') {
       this.segment = 'week';
@@ -116,16 +119,32 @@ export class SummaryPage implements OnInit {
       this.relevantTransactions = [];
       this.relevantTransactions = this.loadedTransactions.filter(transaction => new Date(transaction.date).getFullYear() === new Date().getFullYear());
     }
-    console.log(this.relevantTransactions)
-    this.addDataToChart(this.relevantTransactions);
-    this.configChart();
-    this.expenseChart = new Chart('expenses', this.expenseConfig)
-    this.balanceChart = new Chart('balance', this.balanceConfig)
-    this.Expences = 0;
-    this.Deposits = 0;
+    if (this.relevantTransactions.length > 0) {
+      this.addDataToChart(this.relevantTransactions);
+      this.configChart();
+      if (this.expenseChartData.length === 0) {
+        this.hide = true;
+      }
+      else if (this.expenseChartData.length !== 0) {
+        this.hide = false;
+      }
+      this.expenseChartLabels = []
+      this.expenseChartData = []
+      this.expenseChart = new Chart('expenses', this.expenseConfig)
+      this.balanceChart = new Chart('balance', this.balanceConfig)
+    }
+    else if (this.expenseChartData.length === 0 && this.balanceChart) {
+      this.hide = true;
+      this.expenseChart.destroy()
+      this.balanceChart.destroy()
+    }
     this.expenseChartLabels = []
     this.expenseChartData = []
+    this.expences = 0;
+    this.deposits = 0;
   }
+
+
 
   configChart() {
     this.expenseConfig = {
@@ -141,9 +160,15 @@ export class SummaryPage implements OnInit {
         }]
       },
       options: {
+        title: {
+          display: true,
+          text: this.translate.instant('expenses')
+        },
+        responsive: true,
         cutoutPercentage: 80,
         legend: {
-          position: 'right'
+          position: 'right',
+          onClick: (e) => e.stopPropagation()
         },
         tooltips: {
           callbacks: {
@@ -160,55 +185,122 @@ export class SummaryPage implements OnInit {
                 });
                 const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
 
-                label += value + '$ ' + Number((value / sum) * 100).toFixed(2) + '%';
+                label += value.toFixed(2) + '$ ' + Number((value / sum) * 100).toFixed(2) + '%';
                 return label;
               } catch (error) {
                 console.log(error);
               }
             }
+          },
+          pan: {
+            enabled: false,
+            mode: "x",
+            speed: 100,
+            threshold: 100
+          },
+          zoom: {
+            enabled: false,
+            drag: false,
+            mode: "xy",
+            limits: {
+              max: 0,
+              min: 0
+            }
           }
         },
-        responsive: true,
-        title: {
-          display: false,
-          text: 'Chart'
-        },
-        pan: {
-          enabled: true,
-          mode: 'xy'
-        },
-        zoom: {
-          enabled: true,
-          mode: 'xy'
-        }
+
       }
     }
 
 
     this.balanceConfig = {
+      responsive: true,
       type: 'horizontalBar',
       data: {
-        labels: this.balanceChartLabels,
+        labels: ' ',
         datasets: [{
-          label: 'Expences',
-          data: [this.Expences],
+          label: this.translate.instant('expenses'),
+          data: [this.expences],
           backgroundColor: '#f94144',
           borderWidth: 1
         },
         {
-          label: 'Deposits',
-          data: [this.Deposits],
+          label: this.translate.instant('deposits'),
+          data: [this.deposits],
           backgroundColor: '#2dd36f',
           borderWidth: 1
         }
         ]
       },
-      legend: {
-        display: true
-      },
-      responsive: true,
+      options: {
+        title: {
+          display: true,
+          text: this.translate.instant('balance')
+        },
+        legend: {
+          onClick: (e) => e.stopPropagation()
+        },
+        scales: {
+          xAxes: [{
+            display: true,
+            gridLines: {
+              display: true,
+              color: "#777777"
+            },
+          }],
+          yAxes: [{
+            display: true,
+            gridLines: {
+              display: true,
+              color: "#777777"
+            },
+          }]
+        },
+        tooltips: {
+          callbacks: {
+            label: function (tooltipItem, data) {
+              try {
+                let label = ' ' + data.labels[tooltipItem.index] || '';
 
+                if (label) {
+                  label += ': ';
+                }
+
+                const sumExpense = data.datasets[0].data.reduce((accumulator, curValue) => {
+                  return accumulator + curValue;
+                });
+                const sumDeposit = data.datasets[1].data.reduce((accumulator, curValue) => {
+                  return accumulator + curValue;
+                });
+                const sum = sumExpense + sumDeposit
+                const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+
+                label += value.toFixed(2) + '$ ' + Number((value / sum) * 100).toFixed(2) + '%';
+                return label;
+              } catch (error) {
+                console.log(error);
+              }
+            }
+          },
+          pan: {
+            enabled: false,
+            mode: "x",
+            speed: 100,
+            threshold: 100
+          },
+          zoom: {
+            enabled: false,
+            drag: false,
+            mode: "xy",
+            limits: {
+              max: 0,
+              min: 0
+            }
+          }
+        },
+      }
     }
+
     Chart.scaleService.updateScaleDefaults('linear', {
       ticks: {
         min: 0
