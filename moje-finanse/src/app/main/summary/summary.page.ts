@@ -6,6 +6,9 @@ import { TransactionsService } from '../transactions/transactions.service';
 import { SegmentChangeEventDetail } from '@ionic/core';
 import * as Chart from 'chart.js';
 import { TranslateService } from '@ngx-translate/core';
+import { Storage } from '@ionic/storage';
+import { LegendService } from 'src/app/Services/legend.service';
+
 
 @Component({
   selector: 'app-summary',
@@ -14,6 +17,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class SummaryPage implements OnInit {
   hide;
+  legend;
   transactionSub: Subscription;
   loadedTransactions: Transaction[];
   relevantTransactions: Transaction[];
@@ -28,9 +32,10 @@ export class SummaryPage implements OnInit {
   segment = 'year';
   dateFrom: Date = new Date();
   dateTo: Date;
-  constructor(private transactionsService: TransactionsService, private translate: TranslateService,) { }
+  constructor(private transactionsService: TransactionsService, private translate: TranslateService, private storage: Storage, private legendService: LegendService) { }
 
   ngOnInit() {
+    this.legendService.selected.subscribe(selected => this.legend = selected);
     this.transactionSub = this.transactionsService.transactions.subscribe(transaction => {
       this.loadedTransactions = transaction;
       this.relevantTransactions = this.loadedTransactions;
@@ -65,6 +70,7 @@ export class SummaryPage implements OnInit {
       }
     }
     this.expences.toFixed(2)
+
   }
 
 
@@ -82,7 +88,10 @@ export class SummaryPage implements OnInit {
       this.balanceChart.destroy();
     }
   }
-
+  hideLegend(event) {
+    this.legendService.setLegend(event.detail.checked);
+    this.onFilterUpdate();
+  }
   onFilterUpdate() {
     if (this.expenseChartData.length === 0 && this.balanceChart) {
       this.hide = true;
@@ -95,13 +104,18 @@ export class SummaryPage implements OnInit {
       this.dateFrom = new Date()
       this.relevantTransactions = [];
       this.relevantTransactions = this.loadedTransactions.filter(transaction => new Date(transaction.date).toDateString() === new Date().toDateString());
-      console.log(this.relevantTransactions)
     }
     else if (this.segment === 'week') {
       this.segment = 'week';
       this.relevantTransactions = [];
-      this.dateTo = new Date(new Date().getTime() + ((7 - (new Date().getDay())) * 24 * 60 * 60 * 1000))
-      // 21 {dzisiejsza data do milisekund} + (7 {ilość dni w tyg} - 1 {dzisiejszy dzień tyg do milisekund}  
+      if (new Date().getDay() == 0) {
+        this.dateTo = new Date(new Date().getTime())
+      }
+      else {
+        this.dateTo = new Date(new Date().getTime() + ((7 - (new Date().getDay())) * 24 * 60 * 60 * 1000))
+        // 21 {dzisiejsza data do milisekund} + (7 {ilość dni w tyg} - 1 {dzisiejszy dzień tyg do milisekund}  
+      }
+
       this.dateFrom = new Date(this.dateTo.getTime() - (6 * 24 * 60 * 60 * 1000))
       this.relevantTransactions = this.loadedTransactions.filter(transaction => new Date(transaction.date).getTime() >= this.dateFrom.getTime() && new Date(transaction.date).getTime() <= this.dateTo.getTime());
 
@@ -131,7 +145,6 @@ export class SummaryPage implements OnInit {
       else if (this.expenseChartData.length !== 0) {
         this.hide = false;
       }
-      console.log(this.relevantTransactions)
       this.expenseChart = new Chart('expenses', this.expenseConfig)
       this.balanceChart = new Chart('balance', this.balanceConfig)
     }
@@ -165,7 +178,8 @@ export class SummaryPage implements OnInit {
         responsive: true,
         cutoutPercentage: 80,
         legend: {
-          position: 'right',
+          display: this.legend,
+          position: 'left',
           onClick: (e) => e.stopPropagation()
         },
         tooltips: {

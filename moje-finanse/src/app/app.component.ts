@@ -16,6 +16,7 @@ import { AchievementsPage } from './main/achievements/achievements.page';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { ThemeService } from './Services/theme.service';
+import { LegendService } from './Services/legend.service';
 
 @Component({
   selector: 'app-root',
@@ -47,6 +48,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private menuCtrl: MenuController,
     private languageService: LanguageService,
     private currencyService: CurrencyService,
+    private legendService: LegendService,
     private themeService: ThemeService,
     private loadingCtrl: LoadingController
   ) {
@@ -69,6 +71,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.languageService.setInitialAppLanguage();
       this.themeService.setInitialAppTheme();
       this.currencyService.setInitialAppCurrency();
+      this.legendService.setInitialAppLegend();
     });
   }
 
@@ -114,7 +117,6 @@ export class AppComponent implements OnInit, OnDestroy {
     else {
       this.renderer.setAttribute(document.body, 'color-theme', 'light');
     }
-
   }
 
   onClearData() {

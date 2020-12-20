@@ -33,11 +33,16 @@
         </div>
       </ion-col>
       <ion-col size="12" class="ion-text-center">
-        <ion-item [hidden]="relevantTransactions.length == 0" class="ion-text-center">
+        <ion-item *ngIf="relevantTransactions.length != 0" class="ion-text-center">
           <ion-label *ngIf="segment == 'day'">{{dateFrom | date: "d.M.yy"}}</ion-label>
           <ion-label *ngIf="segment == 'week' || segment == 'month'">{{dateFrom | date: "d.M.yy"}} - {{dateTo | date:
             "d.M.yy"}}</ion-label>
           <ion-label *ngIf="segment == 'year'">{{dateFrom | date:"yyyy"}}</ion-label>
+        </ion-item>
+        <ion-item *ngIf="relevantTransactions.length != 0">
+          <ion-icon name="pie-chart" slot="start" lines="none"></ion-icon>
+          <ion-label>Legend</ion-label>
+          <ion-toggle [checked]="legend" (ionChange)="hideLegend($event)"></ion-toggle>
         </ion-item>
         <canvas [hidden]="hide || relevantTransactions.length == 0" class="ion-margin-top" id="expenses"></canvas>
         <canvas [hidden]="relevantTransactions.length == 0" class="ion-margin-top" id="balance"></canvas>
