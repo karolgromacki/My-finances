@@ -255,6 +255,7 @@ export class SummaryPage implements OnInit {
           }]
         },
         tooltips: {
+          titleFontSize: 0,
           callbacks: {
             label: function (tooltipItem, data) {
               try {

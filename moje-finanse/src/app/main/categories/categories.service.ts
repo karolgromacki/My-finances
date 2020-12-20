@@ -19,7 +19,11 @@ interface CategoryData {
 })
 export class CategoriesService {
   private _categories = new BehaviorSubject<Category[]>([]);
-  private _icons = ['airplane-outline', 'bag-handle', 'beer', 'fast-food', 'barbell', 'bed', 'bus', 'car', 'cart', 'cafe', 'construct', 'color-palette', 'earth', 'fitness', 'gift', 'home', 'football', 'glasses', 'musical-notes', 'paw']
+  private _icons = ['airplane', 'compass', 'briefcase', 'boat', 'earth', 'subway', 'train', 'bus', 'trail-sign', 'car', 'speedometer', 'bicycle', 'rocket', 'planet', 'telescope', 'glasses',
+    'american-football', 'football', 'tennisball', 'golf', 'barbell', 'musical-notes', 'headset', 'color-palette', 'ticket', 'film', 'dice', 'game-controller', 'library', 'paw', 'leaf', 'flower',
+    'cafe', 'wine', 'pint', 'beer', 'fast-food', 'restaurant', 'pizza', 'nutrition', 'water', 'flash', 'bulb', 'thermometer', 'cart', 'basket', 'bag-handle', 'pricetag',
+    'business', 'call', 'mail', 'calculator', 'save', 'clipboard', 'document-text', 'document-attach', 'server', 'globe', 'logo-bitcoin', 'logo-usd', 'pie-chart', 'cellular', 'stats-chart', 'shield',
+    'school', 'bed', 'home', 'key', 'gift', 'trophy', 'construct', 'build', 'shirt', 'cut', 'fitness', 'bandage', 'star', 'snow', 'sunny','cog']
 
   get categories() {
     return this._categories.asObservable()

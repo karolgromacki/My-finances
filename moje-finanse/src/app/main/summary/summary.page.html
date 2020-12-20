@@ -33,7 +33,7 @@
         </div>
       </ion-col>
       <ion-col size="12" class="ion-text-center">
-        <ion-item [hidden]="hide || relevantTransactions.length == 0" class="ion-text-center">
+        <ion-item [hidden]="relevantTransactions.length == 0" class="ion-text-center">
           <ion-label *ngIf="segment == 'day'">{{dateFrom | date: "d.M.yy"}}</ion-label>
           <ion-label *ngIf="segment == 'week' || segment == 'month'">{{dateFrom | date: "d.M.yy"}} - {{dateTo | date:
             "d.M.yy"}}</ion-label>
