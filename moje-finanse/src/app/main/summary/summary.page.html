@@ -13,15 +13,30 @@
 </ion-header>
 
 <ion-content>
-  <div class="ion-padding-horizontal">
-    <ion-segment scrollable="true" class="ion-padding" [(ngModel)]="segment" (ionChange)="onFilterUpdate()">
+
+  <!-- <ion-item>
+    <ion-label>{{'budget' | translate}}:</ion-label>
+    <ion-label>
+      <div class="progress-outer">
+        <div class="progress-inner" [style.width]="(100) + '%'">{{100}}%</div>
+      </div>
+    </ion-label>
+  </ion-item> -->
+  <!-- 
+  <ion-item *ngIf="relevantTransactions.length != 0">
+    <ion-icon name="list" slot="start" lines="none"></ion-icon>
+    <ion-label>{{'legend' | translate}}</ion-label>
+    <ion-toggle [checked]="legend" (ionChange)="hideLegend($event)"></ion-toggle>
+  </ion-item> -->
+  <div class="ion-padding-horizontal ion-padding-top">
+    <ion-segment scrollable="false" [(ngModel)]="segment" (ionChange)="onFilterUpdate()">
       <ion-segment-button value="day">{{'day' | translate}}</ion-segment-button>
       <ion-segment-button value="week">{{'week' | translate}}</ion-segment-button>
       <ion-segment-button value="month">{{'month' | translate}}</ion-segment-button>
       <ion-segment-button value="year">{{'year' | translate}}</ion-segment-button>
     </ion-segment>
   </div>
-  <ion-grid class="ion-padding-horizontal">
+  <ion-grid class="ion-no-padding ion-padding-horizontal ion-margin-top">
     <ion-row>
       <ion-col [hidden]="relevantTransactions.length != 0" size="12" class="ion-text-center">
         <div>
@@ -32,20 +47,26 @@
           </ion-button>
         </div>
       </ion-col>
-      <ion-col size="12" class="ion-text-center">
+      <ion-col class="ion-no-padding">
         <ion-item *ngIf="relevantTransactions.length != 0" class="ion-text-center">
           <ion-label *ngIf="segment == 'day'">{{dateFrom | date: "d.M.yy"}}</ion-label>
-          <ion-label *ngIf="segment == 'week' || segment == 'month'">{{dateFrom | date: "d.M.yy"}} - {{dateTo | date:
+          <ion-label *ngIf="segment == 'week' || segment == 'month'">{{dateFrom | date:
+            "d.M.yy"}} - {{dateTo | date:
             "d.M.yy"}}</ion-label>
           <ion-label *ngIf="segment == 'year'">{{dateFrom | date:"yyyy"}}</ion-label>
         </ion-item>
-        <ion-item *ngIf="relevantTransactions.length != 0">
-          <ion-icon name="pie-chart" slot="start" lines="none"></ion-icon>
-          <ion-label>Legend</ion-label>
-          <ion-toggle [checked]="legend" (ionChange)="hideLegend($event)"></ion-toggle>
-        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" class="ion-no-padding">
+        <ion-buttons [hidden]="hide || relevantTransactions.length == 0" class="options">
+          <ion-button (click)="onOptionButtonClick()">
+            <ion-icon slot="icon-only" name="ellipsis-vertical-circle"></ion-icon>
+          </ion-button>
+        </ion-buttons>
         <canvas [hidden]="hide || relevantTransactions.length == 0" class="ion-margin-top" id="expenses"></canvas>
-        <canvas [hidden]="relevantTransactions.length == 0" class="ion-margin-top" id="balance"></canvas>
+        <canvas [hidden]="relevantTransactions.length == 0" class="ion-padding-horizontal ion-margin-top"
+          id="balance"></canvas>
       </ion-col>
     </ion-row>
   </ion-grid>

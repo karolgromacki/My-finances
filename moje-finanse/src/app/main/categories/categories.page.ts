@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActionSheetController, IonItemSliding, LoadingController } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { ChartDataSets, ChartType } from 'chart.js';
 import { Color, Label, MultiDataSet, PluginServiceGlobalRegistrationAndOptions } from 'ng2-charts';
@@ -26,12 +27,18 @@ export class CategoriesPage implements OnInit {
     private loadingCtrl: LoadingController,
     private actionSheetCtrl: ActionSheetController,
     private transactionsService: TransactionsService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private storage: Storage
   ) { }
 
 
 
   ngOnInit() {
+    this.storage.get('DID_TUTORIAL').then(res => {
+      if (res !== true) {
+        this.router.navigateByUrl('/main/tutorial');
+      }
+    });
     this.categoriesSub = this.categoriesService.categories.subscribe(categories => {
       this.relevantCategories = categories;
     });

@@ -1,5 +1,5 @@
 {
-  "appId": "com.my-finances.ionic-angular",
+  "appId": "com.myFinances.app",
   "appName": "Moje Finanse",
   "bundledWebRuntime": false,
   "npmClient": "npm",

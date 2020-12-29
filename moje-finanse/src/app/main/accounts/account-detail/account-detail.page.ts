@@ -5,6 +5,9 @@ import { Subscription } from 'rxjs';
 import { AccountsService } from '../accounts.service';
 import { Account } from '../account.model';
 import { TranslateService } from '@ngx-translate/core';
+import { Category } from '../../categories/category.model';
+import { Transaction } from '../../transactions/transaction.model';
+import { TransactionsService } from '../../transactions/transactions.service';
 @Component({
   selector: 'app-account-detail',
   templateUrl: './account-detail.page.html',
@@ -13,7 +16,10 @@ import { TranslateService } from '@ngx-translate/core';
 export class AccountDetailPage implements OnInit {
   isLoading = false;
   account: Account;
+  array = [];
+  loadedTransactions: Transaction[];
   private accountSub: Subscription;
+  private transactionsSub: Subscription;
   constructor(
     private translate: TranslateService,
     private alertCtrl: AlertController,
@@ -22,7 +28,8 @@ export class AccountDetailPage implements OnInit {
     private route: ActivatedRoute,
     private navCtrl: NavController,
     private accountsService: AccountsService,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private transactionsService: TransactionsService,
   ) { }
 
   ngOnInit() {
@@ -59,7 +66,10 @@ export class AccountDetailPage implements OnInit {
 
   ngOnDestroy() {
     if (this.accountSub) {
-      this.accountSub.unsubscribe()
+      this.accountSub.unsubscribe();
+    }
+    if (this.transactionsSub) {
+      this.transactionsSub.unsubscribe();
     }
   }
   onDelete(accountId: string, accountTitle: string) {
@@ -75,7 +85,7 @@ export class AccountDetailPage implements OnInit {
   }
   async presentToast(accountTitle) {
     const toast = await this.toastController.create({
-      message: `${accountTitle}`+ this.translate.instant('deletedAccount') + `<ion-icon name="checkmark"></ion-icon>`,
+      message: `${accountTitle}` + this.translate.instant('deletedAccount') + `<ion-icon name="checkmark"></ion-icon>`,
       duration: 1400,
       position: 'bottom',
       cssClass: 'tabs-bottom'

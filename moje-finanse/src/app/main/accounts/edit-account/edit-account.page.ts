@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { Account } from '../../accounts/account.model';
+import { Account } from '../account.model';
 import { AccountsService } from '../accounts.service';
 
 @Component({

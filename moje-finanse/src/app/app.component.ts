@@ -17,6 +17,10 @@ import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { ThemeService } from './Services/theme.service';
 import { LegendService } from './Services/legend.service';
+import { File } from '@ionic-native/file/ngx';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { Papa } from 'ngx-papaparse';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -50,15 +54,19 @@ export class AppComponent implements OnInit, OnDestroy {
     private currencyService: CurrencyService,
     private legendService: LegendService,
     private themeService: ThemeService,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private papa: Papa,
+    private file: File,
+    private socialSharing: SocialSharing,
+    private datePipe: DatePipe
   ) {
 
-    if (this.selectedTheme) {
-      this.renderer.setAttribute(document.body, 'color-theme', 'dark');
-    }
-    else {
-      this.renderer.setAttribute(document.body, 'color-theme', 'light');
-    }
+    // if (this.selectedTheme) {
+    //   this.renderer.setAttribute(document.body, 'color-theme', 'dark');
+    // }
+    // else {
+    //   this.renderer.setAttribute(document.body, 'color-theme', 'light');
+    // }
 
     this.initializeApp();
   }
@@ -166,24 +174,41 @@ export class AppComponent implements OnInit, OnDestroy {
       alertEl.present();
     });
   }
-  exportToCSV() {
-    let accounts = [];
-    let categories = [];
-    let transactions = [];
+
+  exportCSV() {
+    let all = []
     this.transactionsService.transactions.subscribe(transaction => {
       transaction.forEach(t => {
-        transactions.push(t.type)
-        transactions.push(t.title)
-        transactions.push(t.note)
-        transactions.push(t.category)
-        transactions.push(t.account)
-        transactions.push(t.amount)
-        transactions.push(t.date)
-        transactions.push(t.imageUrl)
-        transactions.push(t.icon)
+        let transactionDetail = [];
+        transactionDetail.push(t.type)
+        transactionDetail.push(t.title)
+        transactionDetail.push(t.category)
+        transactionDetail.push(t.account)
+        transactionDetail.push(t.amount)
+        transactionDetail.push(this.datePipe.transform(t.date, 'dd.MM.yyyy'))
+        transactionDetail.push(t.note)
+        all.push(transactionDetail)
       });
-      console.log(transactions)
     })
+    let csv = this.papa.unparse({
+      fields: ['Type', 'Title', 'Category', 'Account', 'Amount', 'Date', 'Note'],
+      data: all
+    });
+    // console.log('csv:', csv)
+    if (this.platform.is('capacitor')) {
+      this.file.writeFile(this.file.dataDirectory, 'My-Finances-Data.csv', csv, { replace: true }).then(res => {
+        this.socialSharing.share(null, null, res.nativeURL, null);
+      })
+    }
+    else {
+      var blob = new Blob([csv]);
+      var a = window.document.createElement('a');
+      a.href = window.URL.createObjectURL(blob);
+      a.download = 'My-Finances-Data.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
   }
 
 

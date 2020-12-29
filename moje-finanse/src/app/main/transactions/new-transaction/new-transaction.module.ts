@@ -19,6 +19,6 @@ import { TranslateModule } from '@ngx-translate/core';
     NewTransactionPageRoutingModule,
     TranslateModule
   ],
-  declarations: [NewTransactionPage]
+  declarations: [NewTransactionPage],
 })
-export class NewTransactionPageModule {}
+export class NewTransactionPageModule { }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoadingController, NavController, ToastController } from '@ionic/angular';
+import { LoadingController, NavController, Platform, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { AccountsService } from '../../accounts/accounts.service';
 import { TransactionsService } from '../transactions.service';
@@ -25,6 +25,7 @@ export class EditTransactionPage implements OnInit {
     loadedCategories: Category[];
     categoryIcon: Category;
     icon;
+    scannedCode = null;
     isLoading = false;
     transactionId: string;
     private accountsSub: Subscription;
@@ -40,7 +41,8 @@ export class EditTransactionPage implements OnInit {
         private accountsService: AccountsService,
         private categoriesService: CategoriesService,
         private loadingCtrl: LoadingController,
-        private router: Router
+        private router: Router,
+        private platform: Platform
     ) { }
 
     ngOnInit() {

@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { BehaviorSubject } from 'rxjs';
 
-const LEGEND_KEY = 'LEGEND';
+const BUDGET_KEY = 'SELECTED_BUDGET';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LegendService {
+export class BudgetService {
   private _selected = new BehaviorSubject<any>(null);
 
   get selected() {
@@ -16,17 +16,17 @@ export class LegendService {
 
   constructor(private storage: Storage) { }
 
-  setInitialAppLegend() {
-    this.storage.get(LEGEND_KEY).then(val => {
+  setInitialAppBudget() {
+    this.storage.get(BUDGET_KEY).then(val => {
       if (val) {
-        this.setLegend(val);
+        this.setBudget(val);
         this.selected.next(val);
       }
     });
   }
 
-  setLegend(legend) {
-    this.selected.next(legend);
-    this.storage.set(LEGEND_KEY, legend)
+  setBudget(budget) {
+    this.selected.next(budget);
+    this.storage.set(BUDGET_KEY, budget)
   }
 }

@@ -34,11 +34,11 @@
       </ion-row>
       <ion-row
         *ngIf="!form?.get('baseAmount').valid && form?.get('baseAmount').touched || !form?.get('title').valid && form?.get('title').touched">
-        <ion-col size="8" size-sm="3" offset-sm="3">
+        <ion-col size="6" size-sm="3" offset-sm="3">
           <ion-label *ngIf="!form?.get('title').valid && form?.get('title').touched" color="danger">*{{'emptyTitleField' | translate}}</ion-label>
         </ion-col>
-        <ion-col size="4" size-sm="3">
-          <ion-label *ngIf="!form?.get('baseAmount')?.valid && form?.get('baseAmount').touched" color="danger">*{{'amountLowerTheanZero' | translate}}</ion-label>
+        <ion-col size="6" size-sm="3">
+          <ion-label *ngIf="!form?.get('baseAmount')?.valid && form?.get('baseAmount').touched" color="danger">*{{'amountLowerThanZero' | translate}}</ion-label>
         </ion-col>
       </ion-row>
       <ion-row>

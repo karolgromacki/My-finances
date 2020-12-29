@@ -8,6 +8,7 @@ import * as Chart from 'chart.js';
 import { TranslateService } from '@ngx-translate/core';
 import { Storage } from '@ionic/storage';
 import { LegendService } from 'src/app/Services/legend.service';
+import { AlertController } from '@ionic/angular';
 
 
 @Component({
@@ -32,7 +33,12 @@ export class SummaryPage implements OnInit {
   segment = 'year';
   dateFrom: Date = new Date();
   dateTo: Date;
-  constructor(private transactionsService: TransactionsService, private translate: TranslateService, private storage: Storage, private legendService: LegendService) { }
+  constructor(private transactionsService: TransactionsService,
+    private translate: TranslateService,
+    private storage: Storage,
+    private legendService: LegendService,
+    private alertCtrl: AlertController
+  ) { }
 
   ngOnInit() {
     this.legendService.selected.subscribe(selected => this.legend = selected);
@@ -88,10 +94,11 @@ export class SummaryPage implements OnInit {
       this.balanceChart.destroy();
     }
   }
-  hideLegend(event) {
-    this.legendService.setLegend(event.detail.checked);
-    this.onFilterUpdate();
-  }
+  // hideLegend(event) {
+  //   this.legendService.setLegend(event.detail.checked);
+  //   this.onFilterUpdate();
+  // }
+  
   onFilterUpdate() {
     if (this.expenseChartData.length === 0 && this.balanceChart) {
       this.hide = true;
@@ -155,7 +162,40 @@ export class SummaryPage implements OnInit {
     this.deposits = 0;
   }
 
-
+  onOptionButtonClick() {
+    this.alertCtrl.create({
+      header: 'Legenda',
+      inputs: [
+        {
+          type: 'radio',
+          label: 'Pokaż legende',
+          value: true
+        },
+        {
+          type: 'radio',
+          label: 'Ukryj legende',
+          value: false
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Ok',
+          handler: data => {
+            if (data != null)
+              console.log(data)
+            this.legendService.setLegend(data);
+            this.onFilterUpdate();
+          }
+        }
+      ]
+    }).then(alertEl => {
+      alertEl.present();
+    });
+  }
 
   configChart() {
     this.expenseConfig = {
@@ -197,7 +237,7 @@ export class SummaryPage implements OnInit {
                 });
                 const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
 
-                label += value.toFixed(2) + '$ ' + Number((value / sum) * 100).toFixed(2) + '%';
+                label += 'Amount: ' + value.toFixed(2) + ', ' + Number((value / sum) * 100).toFixed(2) + '%';
                 return label;
               } catch (error) {
                 console.log(error);
@@ -288,7 +328,7 @@ export class SummaryPage implements OnInit {
                 const sum = sumExpense + sumDeposit
                 const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
 
-                label += value.toFixed(2) + '$ ' + Number((value / sum) * 100).toFixed(2) + '%';
+                label += 'Amount: ' + value.toFixed(2) + ', ' + Number((value / sum) * 100).toFixed(2) + '%';
                 return label;
               } catch (error) {
                 console.log(error);

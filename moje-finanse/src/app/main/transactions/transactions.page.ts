@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonItemSliding, LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-// import { NewTransactionPage } from './new-transaction/new-transaction.page';
 import { Transaction } from './transaction.model';
 import { TransactionsService } from './transactions.service';
 import { SegmentChangeEventDetail } from '@ionic/core';
@@ -76,6 +75,7 @@ export class TransactionsPage implements OnInit {
         this.relevantTransactions = this.loadedTransactions;
       }
       this.summarize();
+      this.onSearch();
       this.loadedTransactions.forEach(element => {
         element.date = new Date(new Date(element.date).toDateString())
       });
@@ -118,6 +118,8 @@ export class TransactionsPage implements OnInit {
     }).then(loadingEl => {
       loadingEl.present();
       this.transactionsService.deleteTransaction(transactionId).subscribe(() => {
+        if (this.segment !== 'all')
+          this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === this.segment);
         this.summarize();
         loadingEl.dismiss();
         this.presentToast(transactionTitle);
@@ -127,38 +129,23 @@ export class TransactionsPage implements OnInit {
   }
 
   onFilterUpdate(event: CustomEvent<SegmentChangeEventDetail>) {
+    this.sum = 0;
     if (event.detail.value === 'deposit') {
       this.segment = 'deposit';
       this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === 'deposit');
-      this.onSearch();
-      this.sum = 0;
-      this.relevantTransactions.forEach((transaction) => {
-        this.sum += transaction.amount;
-      });
     }
     else if (event.detail.value === 'expense') {
       this.segment = 'expense';
       this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === 'expense');
-      this.onSearch();
-      this.sum = 0;
-      this.relevantTransactions.forEach((transaction) => {
-        this.sum -= transaction.amount;
-      });
     }
-    else {
+    else if (event.detail.value === 'all') {
       this.segment = 'all';
       this.relevantTransactions = this.loadedTransactions;
-      this.onSearch();
-      this.sum = 0;
-      this.relevantTransactions.forEach((transaction) => {
-        if (transaction.type === 'deposit') {
-          this.sum += transaction.amount;
-        }
-        else if (transaction.type === 'expense') {
-          this.sum -= transaction.amount;
-        }
-      });
     }
+    this.onSearch();
+    this.summarize();
+    this.relevantTransactions.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    this.relevantTransactions.reverse();
   }
   async presentToast(transactionTitle: string) {
     const toast = await this.toastController.create({

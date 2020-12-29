@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package com.myFinances.app;
 
 import android.os.Bundle;
 

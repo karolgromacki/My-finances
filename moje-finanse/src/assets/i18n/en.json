@@ -1,4 +1,5 @@
 {
+    "settingUp": "Setting up the application",
     "welcome": "Welcome to ",
     "myFinances": "My finances",
     "ts1": " is a multiplatform ",
@@ -21,6 +22,7 @@
     "budgetMode": "Budget mode",
     "tutorial": "Tutorial",
     "achivments": "Achivments",
+    "notification": "Notification",
     "exportCSV": "Export to CSV",
     "clear": "Clear data",
     "logout": "Logout",
@@ -34,13 +36,14 @@
     "expenses": "Expenses",
     "expense": "Expense",
     "balance": "Balance",
+    "selectIcon": "Select the category icon",
     "sum": "Sum",
     "none": "None",
     "transferFrom": "Transafer from",
     "transferTo": "Transfer to",
-    "noAccounts": "No accounts found! Please create one first.",
-    "noCategories": "No categories found! Please create one first!",
-    "noExpensesSummary": "No expenses found in this period! Please create one first.",
+    "noAccounts": "No accounts found!\nPlease create one first.",
+    "noCategories": "No categories found!\nPlease create one first!",
+    "noExpensesSummary": "No expenses found in this period!\nPlease create one first.",
     "noExpenses": "No expenses found! Please create one first.",
     "noTransactions": "No transactions found! Please create one first.",
     "type": "Type",
@@ -96,5 +99,7 @@
     "day": "Day",
     "week": "Week",
     "month": "Month",
-    "year": "Year"
+    "year": "Year",
+    "legend": "Legend",
+    "budget": "Budget"
 }

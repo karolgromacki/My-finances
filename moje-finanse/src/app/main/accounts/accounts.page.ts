@@ -58,6 +58,9 @@ export class AccountsPage implements OnInit {
   }
   ionViewWillEnter() {
     this.isLoading = true;
+    this.transactionsService.fetchTransactions().subscribe(() => {
+
+    });
     this.accountsService.fetchAccounts().subscribe(() => {
       this.isLoading = false;
     });

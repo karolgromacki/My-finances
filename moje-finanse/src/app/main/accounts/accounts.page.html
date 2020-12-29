@@ -2,9 +2,6 @@
    <ion-toolbar class="ion-text-center" color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
-      <ion-button disabled="true">
-        <ion-icon></ion-icon>
-      </ion-button>
     </ion-buttons>
     <ion-buttons slot="primary">
       <ion-button routerLink="/main/tabs/accounts/transfer">
@@ -14,12 +11,12 @@
         <ion-icon name="add" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>{{'accounts' | translate}}</ion-title>
+    <ion-title >{{'accounts' | translate}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-grid>
+  <ion-grid class="ion-no-padding">
     <ion-row *ngIf="!isLoading && relevantAccounts?.length <= 0">
       <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
         <div>

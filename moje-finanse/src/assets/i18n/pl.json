@@ -1,4 +1,5 @@
 {
+    "settingUp": "Konfiguracja aplikacji",
     "welcome": "Witaj w ",
     "myFinances": "Moje Finanse",
     "ts1": " to multiplatformowa aplikacja stworzona w oparciu o framework ",
@@ -21,6 +22,7 @@
     "budgetMode": "Tryb budżetu",
     "tutorial": "O aplikacji",
     "achivments": "Osiągnięcia",
+    "notification": "Przypomnienie",
     "exportCSV": "Eksportuj do CSV",
     "clear": "Wyczyść dane",
     "logout": "Wyloguj",
@@ -34,6 +36,7 @@
     "expenses": "Wydatki",
     "expense": "Wydatek",
     "balance": "Bilans",
+    "selectIcon": "Wybierz ikonę kategorii",
     "sum": "Suma",
     "none": "Brak",
     "transferFrom": "Przenieś z",
@@ -50,7 +53,7 @@
     "account": "Konto",
     "category": "Kategoria",
     "amount": "Kwota",
-    "baseAmount": "Kwota podstawowa",
+    "baseAmount": "Kwota bazowa",
     "addAccount": "Dodaj Konto",
     "addCategory": "Dodaj Kategorię",
     "addTransaction": "Dodaj Transakcję",
@@ -96,5 +99,7 @@
     "day": "Dzień",
     "week": "Tydzień",
     "month": "Miesiąc",
-    "year": "Rok"
+    "year": "Rok",
+    "legend": "Legenda",
+    "budget": "Budżet"
 }

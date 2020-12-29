@@ -1,29 +1,3 @@
-// import { Injectable } from '@angular/core';
-
-// @Injectable({
-//   providedIn: 'root'
-// })
-// export class AuthService {
-//   private _userIsAuthenticated = true;
-//   private _userId = 'abc';
-//   constructor() { }
-
-//   get userIsAuthenticated() {
-//     return this._userIsAuthenticated;
-//   }
-//   get userId(){
-//     return this._userId;
-//   }
-//   login() {
-//     this._userIsAuthenticated = true;
-//   }
-//   logout() {
-//     this._userIsAuthenticated = false;
-//   }
-// }
-
-
-
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
@@ -49,8 +23,6 @@ export interface AuthResponseData {
 export class AuthService implements OnDestroy {
   private _user = new BehaviorSubject<User>(null);
   private activeLogoutTimer: any;
-  // private _userId = null;
-  // private _token = new BehaviorSubject<string>();
 
   get userIsAuthenticated() {
     return this._user.asObservable().pipe(map(user => {

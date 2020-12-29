@@ -17,6 +17,13 @@ import { IonicStorageModule } from '@ionic/storage';
 import { AchievementsPage } from './main/achievements/achievements.page';
 import { FormsModule } from '@angular/forms';
 
+import { File } from '@ionic-native/file/ngx';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { PapaParseModule } from 'ngx-papaparse';
+import { DatePipe } from '@angular/common';
+import { NgxQRCodeModule } from 'ngx-qrcode2';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json')
 }
@@ -25,9 +32,14 @@ export function createTranslateLoader(http: HttpClient) {
   declarations: [AppComponent, AchievementsPage],
   entryComponents: [AchievementsPage],
   imports: [
-    BrowserModule, IonicModule.forRoot(),
-    AppRoutingModule, TranslateModule.forRoot(),
-    HttpClientModule, FormsModule,
+
+    BrowserModule,
+    IonicModule.forRoot(),
+    AppRoutingModule,
+    PapaParseModule,
+    TranslateModule.forRoot(),
+    HttpClientModule,
+    FormsModule,
     IonicStorageModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
@@ -36,13 +48,18 @@ export function createTranslateLoader(http: HttpClient) {
         deps: [HttpClient]
       }
     }),
-    SuperTabsModule.forRoot()
+    SuperTabsModule.forRoot(),
+    NgxQRCodeModule
 
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    DatePipe,
+    File,
+    SocialSharing,
+    BarcodeScanner
   ],
   bootstrap: [AppComponent]
 })

@@ -24,12 +24,21 @@ export class CategoryDetailPage implements OnInit {
   loadedTransactions: Transaction[];
   private transactionsSub: Subscription;
 
-  constructor(private currencyService: CurrencyService, private translate: TranslateService, private toastController: ToastController, private route: ActivatedRoute, private navCtrl: NavController, private categoriesService: CategoriesService, private transactionsService: TransactionsService, private loadingCtrl: LoadingController, private router: Router) { }
+  constructor(
+    private currencyService: CurrencyService,
+    private translate: TranslateService,
+    private toastController: ToastController,
+    private route: ActivatedRoute,
+    private navCtrl: NavController,
+    private categoriesService: CategoriesService,
+    private transactionsService: TransactionsService,
+    private loadingCtrl: LoadingController,
+    private router: Router) { }
 
   ngOnInit() {
     this.currenciesSub = this.currencyService.selected.subscribe(selected => {
       this.currency = selected;
-    })
+    });
     this.route.paramMap.subscribe(paramMap => {
       if (!paramMap.has('categoryId')) {
         this.navCtrl.navigateBack('/main/tabs/transactions');

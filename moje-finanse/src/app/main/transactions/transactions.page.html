@@ -22,15 +22,17 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding-horizontal">
-  <ion-segment class="ion-padding" [(ngModel)]="segment" (ionChange)="onFilterUpdate($event)">
-    <ion-segment-button value="all">{{'all' | translate}}</ion-segment-button>
-    <ion-segment-button value="deposit">{{'deposits' | translate}}</ion-segment-button>
-    <ion-segment-button value="expense">{{'expenses' | translate}}</ion-segment-button>
-  </ion-segment>
-  <ion-grid>
-    <ion-row *ngIf="!isLoading && relevantTransactions?.length <= 0">
-      <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
+<ion-content>
+  <div class="ion-padding-horizontal ion-padding-top">
+    <ion-segment class="" [(ngModel)]="segment" (ionChange)="onFilterUpdate($event)">
+      <ion-segment-button value="all">{{'all' | translate}}</ion-segment-button>
+      <ion-segment-button value="deposit">{{'deposits' | translate}}</ion-segment-button>
+      <ion-segment-button value="expense">{{'expenses' | translate}}</ion-segment-button>
+    </ion-segment>
+  </div>
+  <ion-grid class="ion-no-padding ion-padding-horizontal ion-margin-top">
+    <ion-row class="ion-no-padding" *ngIf="!isLoading && relevantTransactions?.length <= 0">
+      <ion-col class="ion-no-padding" size="12" size-sm="8" offset-sm="2" class="ion-text-center">
         <div>
           <p>{{'noTransactions' | translate}}</p>
           <ion-button routerLink="/main/tabs/transactions/new">{{'addTransaction' | translate}}<ion-icon name="add"
@@ -54,8 +56,8 @@
         </ion-item>
       </ion-col>
     </ion-row>
-    <ion-row *ngIf="!isLoading && relevantTransactions?.length > 0">
-      <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
+    <ion-row class="ion-no-padding" *ngIf="!isLoading && relevantTransactions?.length > 0">
+      <ion-col class="ion-no-padding" size="12" size-sm="8" offset-sm="2" class="ion-text-center">
         <ion-list class="ion-no-padding">
           <ion-item-group *ngFor="let group of relevantTransactions | groupBy: 'date'" [hidden]="group.hide">
             <ion-item-divider color="light" sticky>
@@ -70,7 +72,7 @@
               <ion-item routerDirection="forward" detail
                 [routerLink]="['/','main','tabs','transactions', transaction.id]">
                 <ion-icon name="{{transaction?.icon}}"></ion-icon>
-                <ion-label class="ion-margin-start">
+                <ion-label text-wrap class="ion-margin-start">
                   <ion-text>{{transaction?.title}}</ion-text>
                   <p>{{transaction?.category}}</p>
                 </ion-label>

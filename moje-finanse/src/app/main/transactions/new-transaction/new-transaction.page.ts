@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoadingController, ToastController } from '@ionic/angular';
+import { LoadingController, Platform, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { AccountsService } from '../../accounts/accounts.service';
 import { TransactionsService } from '../transactions.service';
@@ -10,6 +10,7 @@ import { CategoriesService } from '../../categories/categories.service';
 import { Category } from '../../categories/category.model';
 import { TranslateService } from '@ngx-translate/core';
 import { Storage } from '@ionic/storage';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 
 function base64toBlob(base64Data, contentType) {
   contentType = contentType || '';
@@ -46,6 +47,7 @@ export class NewTransactionPage implements OnInit {
   private categoriesSub: Subscription;
   categoryIcon: Category;
   icon;
+  scannedCode = null;
   constructor(
     private storage: Storage,
     private toastController: ToastController,
@@ -54,7 +56,9 @@ export class NewTransactionPage implements OnInit {
     private router: Router,
     private loadingCtrl: LoadingController,
     private accountsService: AccountsService,
-    private categoriesService: CategoriesService
+    private categoriesService: CategoriesService,
+    private BarcodeScanner: BarcodeScanner,
+    private platform: Platform
   ) { }
 
   ngOnInit() {
@@ -87,16 +91,37 @@ export class NewTransactionPage implements OnInit {
             }
             else if (userType === 'deposit') {
               categoryControl.setValidators(null);
-              categoryControl.setValue('Deposit');
+              categoryControl.setValue('deposit');
               this.icon = 'card';
             }
             categoryControl.updateValueAndValidity();
           });
 
         this.loadedAccounts = account;
-        this.loadedCategories = categories?.filter(category => category.title !== 'Deposit');
+        this.loadedCategories = categories?.filter(category => category.title !== 'deposit');
       });
     });
+  }
+  ngOnDestroy(): void {
+    if (this.categoriesSub) {
+      this.categoriesSub.unsubscribe();
+    }
+    if (this.accountsSub)
+      this.accountsSub.unsubscribe();
+
+  }
+  scanCode() {
+    this.BarcodeScanner.scan().then(barcodeData => {
+      this.scannedCode = barcodeData.text;
+      if (this.scannedCode != null) {
+        let tab = this.scannedCode.split('|')
+        this.form.get('type').setValue('expense');
+        this.form.get('amount').setValue(tab[3] / 100);
+        this.form.get('title').setValue(tab[4]);
+        this.form.get('note').setValue(tab[5]);
+      }
+    })
+
   }
   // onAdd() {
   //   this.storage.set('FORM',this.form.value);

@@ -112,7 +112,7 @@ const routes: Routes = [
   },
   {
     path: 'achievements',
-    loadChildren: () => import('./achievements/achievements.module').then( m => m.AchievementsPageModule)
+    loadChildren: () => import('./achievements/achievements.module').then(m => m.AchievementsPageModule)
   },
   {
     path: '',
