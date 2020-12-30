@@ -24,7 +24,7 @@
 
 <ion-content>
   <div class="ion-padding-horizontal ion-padding-top">
-    <ion-segment class="" [(ngModel)]="segment" (ionChange)="onFilterUpdate($event)">
+    <ion-segment [(ngModel)]="segment" (ionChange)="onFilterUpdate($event)">
       <ion-segment-button value="all">{{'all' | translate}}</ion-segment-button>
       <ion-segment-button value="deposit">{{'deposits' | translate}}</ion-segment-button>
       <ion-segment-button value="expense">{{'expenses' | translate}}</ion-segment-button>
@@ -96,3 +96,15 @@
     </ion-row>
   </ion-grid>
 </ion-content>
+
+<ion-item button *ngIf="selectedBudget" routerLink="/main/budget">
+  <ion-label>{{'budget' | translate}}: {{budgetSum | currency: currency}}</ion-label>
+  <ion-label>
+    <div class="percent">{{budgetBar}}%</div>
+    <div class="progress-outer">
+      <div *ngIf="budgetBar>0" class="progress-inner" [style.background-color]="budgetBar <= 30 ? 'red' : 'rgb(0, 153, 255)' "
+        [style.width]="budgetBar + '%'">
+      </div>
+    </div>
+  </ion-label>
+</ion-item>

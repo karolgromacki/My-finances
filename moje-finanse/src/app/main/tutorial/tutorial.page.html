@@ -16,29 +16,36 @@
       <ion-grid class="ion-padding">
         <ion-row>
           <ion-col>
-            <ion-item>
-              <ion-icon name="earth" slot="start" lines="none"></ion-icon>
-              <ion-label>{{'language' | translate}}</ion-label>
+            <ion-item  lines="none">
+              <ion-icon name="earth" slot="start"></ion-icon>
+              <ion-label >{{'language' | translate}}</ion-label>
               <ion-select value="{{selectedLanguage}}" (ionChange)="selectLanguage($event)">
                 <ion-select-option *ngFor="let lng of languages" value="{{lng.value}}">{{lng.text}}</ion-select-option>
               </ion-select>
             </ion-item>
           </ion-col>
           <ion-col>
-            <ion-item>
-              <ion-icon name="invert-mode" slot="start" lines="none"></ion-icon>
+            <ion-item  lines="none">
+              <ion-icon name="invert-mode" slot="start" ></ion-icon>
               <ion-label>{{'theme' | translate}}</ion-label>
               <ion-toggle [checked]="selectedTheme" (ionChange)="selectTheme($event)"></ion-toggle>
             </ion-item>
           </ion-col>
           <ion-col>
-            <ion-item>
-              <ion-icon name="logo-usd" slot="start" lines="none"></ion-icon>
+            <ion-item  lines="none">
+              <ion-icon name="logo-usd" slot="start" ></ion-icon>
               <ion-label>{{'currency' | translate}}</ion-label>
               <ion-select value="{{selectedCurrency}}" (ionChange)="selectCurrency($event)">
                 <ion-select-option *ngFor="let cur of currencies" [value]="cur.value">{{cur.text | translate}}
                 </ion-select-option>
               </ion-select>
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-item  lines="none"> 
+              <ion-icon name="settings-outline" slot="start" ></ion-icon>
+              <ion-label>{{'defaultProfile' | translate}}</ion-label>
+              <ion-toggle [checked]="defaultMode" (ionChange)="setDefaultMode($event)"></ion-toggle>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -57,8 +64,8 @@
     </ion-slide>
     <ion-slide>
       <img src="" class="slide-image" />
-      <h2 class="slide-title">{{'transactions' | translate}}</h2>
-      <p>{{'ts5' | translate}}</p>
+      <h2 class="slide-title">{{'accounts' | translate}}</h2>
+      <p>{{'ts7' | translate}}</p>
     </ion-slide>
     <ion-slide>
       <img src="" class="slide-image" />
@@ -67,8 +74,8 @@
     </ion-slide>
     <ion-slide>
       <img src="" class="slide-image" />
-      <h2 class="slide-title">{{'accounts' | translate}}</h2>
-      <p>{{'ts7' | translate}}</p>
+      <h2 class="slide-title">{{'transactions' | translate}}</h2>
+      <p>{{'ts5' | translate}}</p>
     </ion-slide>
     <ion-slide>
       <img src="" class="slide-image" />

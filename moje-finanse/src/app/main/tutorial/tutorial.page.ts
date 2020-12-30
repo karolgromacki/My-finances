@@ -5,6 +5,8 @@ import { Storage } from '@ionic/storage';
 import { CurrencyService } from 'src/app/Services/currency.service';
 import { LanguageService } from 'src/app/Services/language.service';
 import { ThemeService } from 'src/app/Services/theme.service';
+import { AccountsService } from '../accounts/accounts.service';
+import { CategoriesService } from '../categories/categories.service';
 @Component({
   selector: 'app-tutorial',
   templateUrl: './tutorial.page.html',
@@ -19,6 +21,21 @@ export class TutorialPage implements OnInit {
   selectedLanguage = '';
   selectedCurrency = '';
   selectedTheme = null;
+  defaultMode = true;
+
+  defaultCategories = [
+    { title: 'Car', icon: 'car' },
+    { title: 'Food', icon: 'restaurant' },
+    { title: 'Home', icon: 'home' },
+    { title: 'Clothes', icon: 'shirt' },
+    { title: 'Health', icon: 'fitness' },
+    { title: 'Hobby', icon: 'color-palette' },
+  ]
+  defaultAccounts = [
+    { title: 'Cash', baseAmount: 500 },
+    { title: 'Savings', baseAmount: 1000 },
+  ]
+
   @ViewChild('slides', { static: true }) slides: IonSlides;
 
   constructor(
@@ -28,13 +45,16 @@ export class TutorialPage implements OnInit {
     private renderer: Renderer2,
     private languageService: LanguageService,
     private currencyService: CurrencyService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private categoriesService: CategoriesService,
+    private accountsService: AccountsService
   ) { }
 
   ngOnInit() {
     this.storage.get('DID_TUTORIAL').then(val => {
       if (val == true) {
         this.firstSlide = false;
+        this.defaultMode = false;
       }
     });
     this.languages = this.languageService.getLanguages();
@@ -42,6 +62,10 @@ export class TutorialPage implements OnInit {
     this.languageService.selected.subscribe(selected => this.selectedLanguage = selected);
     this.currencyService.selected.subscribe(selected => this.selectedCurrency = selected);
     this.themeService.selected.subscribe(selected => this.selectedTheme = selected);
+  }
+  setDefaultMode(event) {
+    this.defaultMode = event.detail.checked;
+    console.log(this.defaultMode)
   }
   selectLanguage(event) {
     this.languageService.setLanguage(event.detail.value);
@@ -60,8 +84,20 @@ export class TutorialPage implements OnInit {
   }
 
   startApp() {
-    this.router
-      .navigateByUrl('/main/tabs/categories', { replaceUrl: true });
+    if (this.defaultMode === true) {
+      this.defaultCategories.forEach(element => {
+        this.categoriesService.addCategory(
+          element.title,
+          element.icon).subscribe();
+      });
+      this.defaultAccounts.forEach(element => {
+        this.accountsService.addAccount(
+          element.title, '',
+          +element.baseAmount).subscribe();
+      })
+      this.defaultMode = false;
+    }
+    this.router.navigateByUrl('/main/tabs/transactions', { replaceUrl: true });
     this.storage.set('DID_TUTORIAL', true);
 
   }

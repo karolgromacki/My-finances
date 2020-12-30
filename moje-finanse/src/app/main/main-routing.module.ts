@@ -111,6 +111,14 @@ const routes: Routes = [
     loadChildren: () => import('./tutorial/tutorial.module').then(m => m.TutorialPageModule)
   },
   {
+    path: 'budget',
+    loadChildren: () => import('./budget/budget.module').then( m => m.BudgetPageModule)
+  },
+  {
+    path: 'new-budget',
+    loadChildren: () => import('./budget/new-budget/new-budget.module').then( m => m.NewBudgetPageModule)
+  },
+  {
     path: 'achievements',
     loadChildren: () => import('./achievements/achievements.module').then(m => m.AchievementsPageModule)
   },
@@ -119,6 +127,8 @@ const routes: Routes = [
     redirectTo: '/main/tabs/categories',
     pathMatch: 'full'
   },
+
+
 
 
 

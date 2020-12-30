@@ -34,11 +34,6 @@ export class CategoriesPage implements OnInit {
 
 
   ngOnInit() {
-    this.storage.get('DID_TUTORIAL').then(res => {
-      if (res !== true) {
-        this.router.navigateByUrl('/main/tutorial');
-      }
-    });
     this.categoriesSub = this.categoriesService.categories.subscribe(categories => {
       this.relevantCategories = categories;
     });

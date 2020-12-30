@@ -98,7 +98,7 @@ export class SummaryPage implements OnInit {
   //   this.legendService.setLegend(event.detail.checked);
   //   this.onFilterUpdate();
   // }
-  
+
   onFilterUpdate() {
     if (this.expenseChartData.length === 0 && this.balanceChart) {
       this.hide = true;
@@ -237,7 +237,7 @@ export class SummaryPage implements OnInit {
                 });
                 const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
 
-                label += 'Amount: ' + value.toFixed(2) + ', ' + Number((value / sum) * 100).toFixed(2) + '%';
+                label +=  value.toFixed(2) + ', ' + Number((value / sum) * 100).toFixed(2) + '%';
                 return label;
               } catch (error) {
                 console.log(error);
@@ -328,7 +328,7 @@ export class SummaryPage implements OnInit {
                 const sum = sumExpense + sumDeposit
                 const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
 
-                label += 'Amount: ' + value.toFixed(2) + ', ' + Number((value / sum) * 100).toFixed(2) + '%';
+                label += value.toFixed(2) + ', ' + Number((value / sum) * 100).toFixed(2) + '%';
                 return label;
               } catch (error) {
                 console.log(error);

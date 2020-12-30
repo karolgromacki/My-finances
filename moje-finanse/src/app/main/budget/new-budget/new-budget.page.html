@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar class="ion-text-center" color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/main/tabs/transactions"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{'newBudget' | translate}}</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="onCreateBudget()" [disabled]="!form.valid">
+        <ion-icon name="checkmark" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="form">
+    <ion-grid>
+      <ion-row>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">*{{'period' | translate}}</ion-label>
+            <ion-select formControlName="period" #type>
+              <ion-select-option value="day">{{'day' | translate}}</ion-select-option>
+              <ion-select-option value="month">{{'month' | translate}}</ion-select-option>
+              <ion-select-option value="year">{{'year' | translate}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+        <ion-col size="6" size-sm="3" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">*{{'baseAmount' | translate}}</ion-label>
+            <ion-input type="number" inputmode="decimal" autocomplete autocorrect formControlName="baseAmount">
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="!form.get('baseAmount').valid && form.get('baseAmount').touched || !form.get('period').valid && form.get('period').touched ">
+        <ion-col size="6" size-sm="3">
+          <ion-label *ngIf="!form.get('period').valid && form.get('period').touched" color="danger">
+            *{{'unselectedPeriod' | translate}}</ion-label>
+        </ion-col>
+        <ion-col size="6" size-sm="3">
+          <ion-label *ngIf="!form.get('baseAmount').valid && form.get('baseAmount').touched" color="danger">
+            *{{'amountLowerThanZero' | translate}}</ion-label>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

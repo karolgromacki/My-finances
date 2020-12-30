@@ -15,11 +15,6 @@
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-icon name="invert-mode" slot="start" lines="none"></ion-icon>
-          <ion-label>{{'theme' | translate}}</ion-label>
-          <ion-toggle [checked]="selectedTheme" (ionChange)="selectTheme($event)"></ion-toggle>
-        </ion-item>
-        <ion-item>
           <ion-icon name="logo-usd" slot="start" lines="none"></ion-icon>
           <ion-label>{{'currency' | translate}}</ion-label>
           <ion-select value="{{selectedCurrency}}" (ionChange)="selectCurrency($event)">
@@ -28,9 +23,18 @@
           </ion-select>
         </ion-item>
         <ion-item>
+          <ion-icon name="invert-mode" slot="start" lines="none"></ion-icon>
+          <ion-label>{{'theme' | translate}}</ion-label>
+          <ion-toggle [checked]="selectedTheme" (ionChange)="selectTheme($event)"></ion-toggle>
+        </ion-item>
+        <ion-item *ngIf="this.budget==null" (click)="onBudget()">
           <ion-icon name="wallet" slot="start" lines="none"></ion-icon>
           <ion-label>{{'budgetMode' | translate}}</ion-label>
-          <ion-toggle></ion-toggle>
+        </ion-item>
+        <ion-item *ngIf="this.budget!=null">
+          <ion-icon (click)="onBudget()" name="wallet" slot="start" lines="none"></ion-icon>
+          <ion-label (click)="onBudget()">{{'budgetMode' | translate}}</ion-label>
+          <ion-toggle [checked]="selectedBudget" (ionChange)="toggleBudget($event)"></ion-toggle>
         </ion-item>
         <ion-item button detail="false" (click)="openTutorial()">
           <ion-icon slot="start" name="hammer"></ion-icon>
@@ -38,7 +42,7 @@
         </ion-item>
         <ion-item disabled button (click)="onAchievements()" detail="false">
           <ion-icon color="warning" name="star" slot="start" lines="none"></ion-icon>
-          <ion-label>{{'achivments' | translate}}</ion-label>
+          <ion-label>{{'achievements' | translate}}</ion-label>
           <ion-badge color="danger" slot="end">66</ion-badge>
         </ion-item>
         <!-- <ion-item disabled button detail="false">

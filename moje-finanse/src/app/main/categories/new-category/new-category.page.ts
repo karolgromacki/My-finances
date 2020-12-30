@@ -28,7 +28,7 @@ export class NewCategoryPage implements OnInit {
   selectIcon(icon) {
     this.selectedIcon = icon;
   }
-  onCreateTransaction() {
+  onCreateCategory() {
     if (!this.form.valid) {
       return;
     }

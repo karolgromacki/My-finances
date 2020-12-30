@@ -33,9 +33,23 @@ export class AccountsPage implements OnInit {
 
   ngOnInit() {
     this.accountsSub = this.accountsService.accounts.subscribe(accounts => {
-      let sum;
-      this.sum = 0;
+      this.relevantAccounts = accounts;
+    });
+    this.transactionsSub = this.transactionsService.transactions.subscribe(transactions => {
+      this.relevantTransactions = transactions;
+    });
+  }
+  ionViewWillEnter() {
+    this.isLoading = true;
+    this.transactionsService.fetchTransactions().subscribe(() => {
+    });
+    this.accountsService.fetchAccounts().subscribe(() => {
+      this.isLoading = false;
+    });
+    this.accountsSub = this.accountsService.accounts.subscribe(accounts => { 
       this.transactionsSub = this.transactionsService.transactions.subscribe(transactions => {
+        let sum = 0;
+        this.sum = 0;
         this.relevantTransactions = transactions;
         this.relevantAccounts = accounts;
         this.relevantAccounts?.forEach((account) => {
@@ -54,15 +68,6 @@ export class AccountsPage implements OnInit {
           this.sum += account.amount;
         });
       });
-    });
-  }
-  ionViewWillEnter() {
-    this.isLoading = true;
-    this.transactionsService.fetchTransactions().subscribe(() => {
-
-    });
-    this.accountsService.fetchAccounts().subscribe(() => {
-      this.isLoading = false;
     });
   }
 

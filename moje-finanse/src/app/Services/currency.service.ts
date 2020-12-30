@@ -28,6 +28,7 @@ export class CurrencyService {
   getCurrencies() {
     return [
       { text: 'USD', value: 'USD' },
+      { text: 'EUR', value: 'EUR' },
       { text: 'PLN', value: 'PLN' },
       { text: 'none', value: ' ' },
     ]

@@ -28,7 +28,7 @@ export class NewAccountPage implements OnInit {
       note: new FormControl(null, { updateOn: 'blur' })
     });
   }
-  onCreateTransaction() {
+  onCreateAccount() {
     if (!this.form.valid) {
       return;
     }

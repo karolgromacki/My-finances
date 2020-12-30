@@ -115,12 +115,12 @@ export class NewTransactionPage implements OnInit {
       this.scannedCode = barcodeData.text;
       if (this.scannedCode != null) {
         let tab = this.scannedCode.split('|')
-        this.form.get('type').setValue('expense');
-        this.form.get('amount').setValue(tab[3] / 100);
+        this.form.get('amount').setValue((tab[3] / 100).toFixed(2));
         this.form.get('title').setValue(tab[4]);
         this.form.get('note').setValue(tab[5]);
       }
     })
+
 
   }
   // onAdd() {

@@ -21,6 +21,8 @@ import { File } from '@ionic-native/file/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { Papa } from 'ngx-papaparse';
 import { DatePipe } from '@angular/common';
+import { BudgetService } from './main/budget/budget.service';
+import { Budget } from './main/budget/budget.model';
 
 @Component({
   selector: 'app-root',
@@ -36,6 +38,8 @@ export class AppComponent implements OnInit, OnDestroy {
   selectedLanguage = '';
   selectedCurrency = '';
   selectedTheme = null;
+  selectedBudget = null;
+  budget: Budget;
 
   constructor(
     private authService: AuthService,
@@ -54,19 +58,13 @@ export class AppComponent implements OnInit, OnDestroy {
     private currencyService: CurrencyService,
     private legendService: LegendService,
     private themeService: ThemeService,
+    private budgetService: BudgetService,
     private loadingCtrl: LoadingController,
     private papa: Papa,
     private file: File,
     private socialSharing: SocialSharing,
     private datePipe: DatePipe
   ) {
-
-    // if (this.selectedTheme) {
-    //   this.renderer.setAttribute(document.body, 'color-theme', 'dark');
-    // }
-    // else {
-    //   this.renderer.setAttribute(document.body, 'color-theme', 'light');
-    // }
 
     this.initializeApp();
   }
@@ -78,6 +76,7 @@ export class AppComponent implements OnInit, OnDestroy {
       }
       this.languageService.setInitialAppLanguage();
       this.themeService.setInitialAppTheme();
+      this.budgetService.setInitialAppBudget();
       this.currencyService.setInitialAppCurrency();
       this.legendService.setInitialAppLegend();
     });
@@ -92,6 +91,12 @@ export class AppComponent implements OnInit, OnDestroy {
     });
     this.languages = this.languageService.getLanguages();
     this.currencies = this.currencyService.getCurrencies();
+    this.budgetService.selected.subscribe(selected => this.selectedBudget = selected);
+    this.budgetService.budget.subscribe(budget => {
+      this.budget = budget
+      console.log(this.budget)
+    });
+
     this.languageService.selected.subscribe(selected => this.selectedLanguage = selected);
     this.currencyService.selected.subscribe(selected => this.selectedCurrency = selected);
     this.themeService.selected.subscribe(selected => this.selectedTheme = selected);
@@ -113,6 +118,17 @@ export class AppComponent implements OnInit, OnDestroy {
 
   selectLanguage(event) {
     this.languageService.setLanguage(event.detail.value);
+  }
+  onBudget() {
+    this.menuCtrl.close().then(() => {
+      if (this.budget != null)
+        this.router.navigateByUrl('main/budget');
+      else
+        this.router.navigateByUrl('main/new-budget');
+    });
+  }
+  toggleBudget(event) {
+    this.budgetService.setBudget(event.detail.checked);
   }
   selectCurrency(event) {
     this.currencyService.setCurrency(event.detail.value);

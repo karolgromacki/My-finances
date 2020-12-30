@@ -64,7 +64,7 @@ export class AuthPage implements OnInit {
           () => {
             this.isLoading = false;
             loadingEl.dismiss();
-            this.router.navigateByUrl('/main/tabs/categories');
+            this.router.navigateByUrl('/main/tabs/transactions');
           },
           errRes => {
             loadingEl.dismiss();
