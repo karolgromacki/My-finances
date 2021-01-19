@@ -18,6 +18,6 @@ import { TranslateModule } from '@ngx-translate/core';
   ],
   declarations: [TransactionsPage, GroupByPipe],
   exports: [GroupByPipe],
-  entryComponents: [TransactionsPage]
+  entryComponents: [TransactionsPage, GroupByPipe]
 })
 export class TransactionsPageModule { }

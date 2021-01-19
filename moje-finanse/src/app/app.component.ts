@@ -176,6 +176,7 @@ export class AppComponent implements OnInit, OnDestroy {
                   });
                 });
               });
+              this.budgetService.resetBudget();
               loadingEl.dismiss();
             });
             this.menuCtrl.close();

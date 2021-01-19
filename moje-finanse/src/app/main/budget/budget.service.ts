@@ -39,6 +39,13 @@ export class BudgetService {
       }
     });
   }
+  resetBudget() {
+    this.budget.next(null);
+    this.selected.next(null);
+    this.storage.set(BUDGET_TOGGLE_KEY, null);
+    this.storage.set(BUDGET_KEY, null);
+
+  }
 
   setBudget(budget) {
     this.selected.next(budget);

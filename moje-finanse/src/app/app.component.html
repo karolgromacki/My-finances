@@ -2,7 +2,7 @@
   <ion-menu side="start">
     <ion-header>
       <ion-toolbar class="ion-text-center" color="primary">
-        <ion-title>{{'myFinances' | translate}}</ion-title>
+        <ion-title class="ion-no-padding">{{'myFinances' | translate}}</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -10,14 +10,14 @@
         <ion-item>
           <ion-icon name="earth" slot="start" lines="none"></ion-icon>
           <ion-label>{{'language' | translate}}</ion-label>
-          <ion-select value="{{selectedLanguage}}" (ionChange)="selectLanguage($event)">
+          <ion-select class="ion-no-padding" value="{{selectedLanguage}}" (ionChange)="selectLanguage($event)">
             <ion-select-option *ngFor="let lng of languages" value="{{lng.value}}">{{lng.text}}</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item>
           <ion-icon name="logo-usd" slot="start" lines="none"></ion-icon>
           <ion-label>{{'currency' | translate}}</ion-label>
-          <ion-select value="{{selectedCurrency}}" (ionChange)="selectCurrency($event)">
+          <ion-select class="ion-no-padding" value="{{selectedCurrency}}" (ionChange)="selectCurrency($event)">
             <ion-select-option *ngFor="let cur of currencies" [value]="cur.value">{{cur.text | translate}}
             </ion-select-option>
           </ion-select>

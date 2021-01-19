@@ -49,8 +49,8 @@
           <ion-item-sliding #slidingItem>
             <ion-item routerDirection="forward" detail [routerLink]="['/','main','tabs','accounts', account.id]">
               <ion-icon name="card"></ion-icon>
-              <ion-label  class="ion-margin-start">
-                <h2>{{account?.title}}</h2>
+              <ion-label  class="ion-no-margin ion-margin-start">
+                {{account?.title}}
                 <p>{{account?.note}}</p>
               </ion-label>
               <ion-label slot="end" class="ion-text-right" [attr.color]="(account?.amount < 0)? 'danger': 'success'">
