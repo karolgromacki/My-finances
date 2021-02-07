@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonItemSliding, LoadingController, NavController, ToastController } from '@ionic/angular';
+import { AlertController, IonItemSliding, LoadingController, NavController, ToastController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { CurrencyService } from 'src/app/Services/currency.service';
@@ -16,6 +16,7 @@ import { Category } from '../category.model';
 })
 export class CategoryDetailPage implements OnInit {
   category: Category;
+  isLoading = false;
   currency: string;
   private categoriesSub: Subscription;
   private currenciesSub: Subscription;
@@ -30,6 +31,7 @@ export class CategoryDetailPage implements OnInit {
     private toastController: ToastController,
     private route: ActivatedRoute,
     private navCtrl: NavController,
+    private alertCtrl: AlertController,
     private categoriesService: CategoriesService,
     private transactionsService: TransactionsService,
     private loadingCtrl: LoadingController,
@@ -44,6 +46,7 @@ export class CategoryDetailPage implements OnInit {
         this.navCtrl.navigateBack('/main/tabs/transactions');
         return;
       }
+      this.isLoading = true;
       this.categoriesSub = this.categoriesService.getCategory(paramMap.get('categoryId')).subscribe(category => {
         this.category = category;
         this.transactionsSub = this.transactionsService.transactions.subscribe(transactions => {
@@ -57,13 +60,36 @@ export class CategoryDetailPage implements OnInit {
             else if (transaction.type === 'expense') {
               this.sum -= transaction.amount;
             }
+            this.isLoading = false;
           });
         });
-      });
+      },
+        error => {
+          this.alertCtrl
+            .create({
+              header: 'An error occurred!',
+              message: 'Account could not be fetched. Please try again later.',
+              buttons: [
+                {
+                  text: 'Okay',
+                  handler: () => {
+                    this.router.navigate(['/main/tabs/accounts']);
+                  }
+                }
+              ]
+            })
+            .then(alertEl => {
+              alertEl.present();
+            });
+        });
     });
   }
   ionViewWillEnter() {
-    this.transactionsService.fetchTransactions().subscribe()
+    this.transactionsService.fetchTransactions().subscribe(()=>{
+      this.relevantTransactions.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      this.relevantTransactions.reverse();
+    });
+    
   }
   onEdit(transactionId: string, slidingItem: IonItemSliding) {
     slidingItem.close();

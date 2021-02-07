@@ -1,4 +1,6 @@
 {
+    "email":"Should be a valid email address.",
+    "password":"Should at least be 6 characters long.",
     "settingUp": "Setting up the application",
     "defaultProfile": "Default profile",
     "typeAmount": "Type amount:",
@@ -99,6 +101,7 @@
     "deleteTransaction": "Deleting transaaction...",
     "cancel": "Cancel",
     "emptyTitleField": "This title cannot be empty and longer than 20 characters.",
+    "emptyField": "This field cannot be empty",
     "unselectedType": "Type must be selected",
     "unselectedDate": "Date must be selected",
     "unselectedAccounts": "Accounts must be selected",
@@ -111,5 +114,8 @@
     "month": "Month",
     "year": "Year",
     "legend": "Legend",
+    "picture": "Take picture",
+    "showLegend": "Show legend",
+    "hideLegend": "Hide legend",
     "budget": "Budget"
 }

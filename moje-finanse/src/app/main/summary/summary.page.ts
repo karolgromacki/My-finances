@@ -163,32 +163,33 @@ export class SummaryPage implements OnInit {
   }
 
   onOptionButtonClick() {
+    let legendLabel;
+    if (!this.legend)
+      legendLabel = "showLegend"
+    else
+      legendLabel = "hideLegend"
+    console.log(this.legend)
     this.alertCtrl.create({
       header: 'Legenda',
       inputs: [
         {
           type: 'radio',
-          label: 'Pokaż legende',
-          value: true
+          label: this.translate.instant(legendLabel),
+          value: !this.legend
         },
-        {
-          type: 'radio',
-          label: 'Ukryj legende',
-          value: false
-        }
       ],
       buttons: [
         {
-          text: 'Cancel',
+          text: this.translate.instant('cancel'),
           role: 'cancel',
         },
         {
           text: 'Ok',
           handler: data => {
-            if (data != null)
-              console.log(data)
-            this.legendService.setLegend(data);
-            this.onFilterUpdate();
+            if (data != null) {
+              this.legendService.setLegend(data);
+              this.onFilterUpdate();
+            }
           }
         }
       ]
@@ -237,7 +238,7 @@ export class SummaryPage implements OnInit {
                 });
                 const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
 
-                label +=  value.toFixed(2) + ', ' + Number((value / sum) * 100).toFixed(2) + '%';
+                label += value.toFixed(2) + ', ' + Number((value / sum) * 100).toFixed(2) + '%';
                 return label;
               } catch (error) {
                 console.log(error);

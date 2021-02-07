@@ -8,6 +8,7 @@ import { AccountDetailPageRoutingModule } from './account-detail-routing.module'
 
 import { AccountDetailPage } from './account-detail.page';
 import { TranslateModule } from '@ngx-translate/core';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { TranslateModule } from '@ngx-translate/core';
     FormsModule,
     IonicModule,
     AccountDetailPageRoutingModule,
-    TranslateModule
+    TranslateModule,
+    SharedModule
   ],
   declarations: [AccountDetailPage]
 })

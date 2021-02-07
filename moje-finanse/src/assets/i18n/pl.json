@@ -1,4 +1,6 @@
 {
+    "email":"Wprowadź poprawny adres email.",
+    "password":"Hasło powinno się składać z conajmniej 6 znaków.",
     "settingUp": "Konfiguracja aplikacji",
     "defaultProfile": "Domyślny profil",
     "typeAmount": "Wpisz kwotę:",
@@ -99,6 +101,7 @@
     "deleteTransaction": "Usuwanie transakcji...",
     "cancel": "Anuluj",
     "emptyTitleField": "To pole nie może być puste, a treść dłuższa niż 20 znaków",
+    "emptyField": "To pole nie może być puste",
     "unselectedType": "Typ musi być wybrany",
     "unselectedDate": "Data musi być wybrana",
     "unselectedAccounts": "Konta muszą być wybrane",
@@ -111,5 +114,8 @@
     "month": "Miesiąc",
     "year": "Rok",
     "legend": "Legenda",
+    "picture": "Dodaj zdjęcie",
+    "showLegend": "Pokaż legende",
+    "hideLegend": "Ukryj legende",
     "budget": "Budżet"
 }

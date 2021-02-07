@@ -30,8 +30,8 @@
               <ion-input type="email" ngModel name="email" required email #emailCtrl="ngModel"></ion-input>
             </ion-item>
             <ion-item *ngIf="!emailCtrl.valid && emailCtrl.touched" lines="none">
-              <ion-label>
-                Should be a valid email address.
+              <ion-label color="danger">
+                {{'email' | translate}}
               </ion-label>
             </ion-item>
             <ion-item>
@@ -40,8 +40,8 @@
               </ion-input>
             </ion-item>
             <ion-item *ngIf="!passwordCtrl.valid && passwordCtrl.touched" lines="none">
-              <ion-label>
-                Should at least be 6 characters long.
+              <ion-label class="ion-text-wrap" color="danger">
+                {{'password' | translate}}
               </ion-label>
             </ion-item>
           </ion-list>

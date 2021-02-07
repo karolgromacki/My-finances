@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
+import { AlertController, IonItemSliding, LoadingController, NavController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { AccountsService } from '../accounts.service';
 import { Account } from '../account.model';
@@ -8,6 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Category } from '../../categories/category.model';
 import { Transaction } from '../../transactions/transaction.model';
 import { TransactionsService } from '../../transactions/transactions.service';
+import { CurrencyService } from 'src/app/Services/currency.service';
 @Component({
   selector: 'app-account-detail',
   templateUrl: './account-detail.page.html',
@@ -18,8 +19,11 @@ export class AccountDetailPage implements OnInit {
   account: Account;
   array = [];
   loadedTransactions: Transaction[];
+  relevantTransactions: Transaction[];
   private accountSub: Subscription;
   private transactionsSub: Subscription;
+  private currencySub: Subscription;
+  currency;
   constructor(
     private translate: TranslateService,
     private alertCtrl: AlertController,
@@ -30,6 +34,7 @@ export class AccountDetailPage implements OnInit {
     private accountsService: AccountsService,
     private loadingCtrl: LoadingController,
     private transactionsService: TransactionsService,
+    private currencyService: CurrencyService,
   ) { }
 
   ngOnInit() {
@@ -39,10 +44,17 @@ export class AccountDetailPage implements OnInit {
         return;
       }
       this.isLoading = true;
+      this.currencySub = this.currencyService.selected.subscribe(selected => {
+        this.currency = selected;
+      })
+
       this.accountSub = this.accountsService.getAccount(paramMap.get('accountId')).subscribe(account => {
         this.account = account
-        this.isLoading = false;
-      },
+        this.transactionsSub = this.transactionsService.transactions.subscribe(transactions => {
+          this.loadedTransactions = transactions;
+          this.relevantTransactions = transactions.filter(transaction => transaction.account === account.title);
+          this.isLoading = false;
+        }); },
         error => {
           this.alertCtrl
             .create({
@@ -63,6 +75,12 @@ export class AccountDetailPage implements OnInit {
         });
     });
   }
+  ionViewWillEnter() {
+    this.transactionsService.fetchTransactions().subscribe(()=>{
+      this.relevantTransactions.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      this.relevantTransactions.reverse();
+    });
+  }
 
   ngOnDestroy() {
     if (this.accountSub) {
@@ -71,7 +89,15 @@ export class AccountDetailPage implements OnInit {
     if (this.transactionsSub) {
       this.transactionsSub.unsubscribe();
     }
+    if (this.currencySub) {
+      this.currencySub.unsubscribe();
+    }
   }
+  onEdit(transactionId: string, slidingItem: IonItemSliding) {
+    slidingItem.close();
+    this.router.navigate(['/', 'main', 'tabs', 'transactions', 'edit', transactionId]);
+  }
+
   onDelete(accountId: string, accountTitle: string) {
     this.loadingCtrl.create({
       message: this.translate.instant('deletingAccount'),

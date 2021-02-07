@@ -8,6 +8,7 @@ import { CategoryDetailPageRoutingModule } from './category-detail-routing.modul
 
 import { CategoryDetailPage } from './category-detail.page';
 import { TranslateModule } from '@ngx-translate/core';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { TranslateModule } from '@ngx-translate/core';
     FormsModule,
     IonicModule,
     CategoryDetailPageRoutingModule, 
-    TranslateModule
+    TranslateModule,
+    SharedModule
   ],
   declarations: [CategoryDetailPage]
 })
