@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonItemSliding, LoadingController, ModalController, ToastController } from '@ionic/angular';
+import { AlertController, IonItemSliding, LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Transaction } from './transaction.model';
 import { TransactionsService } from './transactions.service';
@@ -9,6 +9,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { CurrencyService } from 'src/app/Services/currency.service';
 import { BudgetService } from 'src/app/main/budget/budget.service';
 import { Storage } from '@ionic/storage';
+import { AchievementsService } from '../achievements/achievements.service';
+import { Achievement } from '../achievements/achievement.model';
 
 
 @Component({
@@ -25,9 +27,11 @@ export class TransactionsPage implements OnInit {
   amount: string = '';
   relevantTransactions: Transaction[];
   loadedTransactions: Transaction[];
+  loadedAchievements: Achievement[];
   budgetTransactions: Transaction[];
   private transactionsSub: Subscription;
   private currencySub: Subscription;
+  private achievementsSub: Subscription;
   isLoading = false;
   currency: string;
   selectedBudget;
@@ -42,7 +46,9 @@ export class TransactionsPage implements OnInit {
     private router: Router,
     private loadingCtrl: LoadingController,
     private budgetService: BudgetService,
-    private storage: Storage
+    private storage: Storage,
+    private achievementsService: AchievementsService,
+    private alertController: AlertController
   ) { }
 
   onSearch() {
@@ -69,10 +75,15 @@ export class TransactionsPage implements OnInit {
     this.currencySub = this.currencyService.selected.subscribe(selected => {
       this.currency = selected;
     })
+    this.achievementsSub = this.achievementsService.achievements.subscribe(achievements => {
+      this.loadedAchievements = achievements;
+    })
     this.transactionsSub = this.transactionsService.transactions.subscribe(transactions => {
       this.loadedTransactions = transactions;
       this.relevantTransactions = transactions;
+
     });
+
     this.budgetService.selected.subscribe(selected => this.selectedBudget = selected);
     this.budgetService.selected.subscribe(budget => this.budget = budget);
 
@@ -80,6 +91,8 @@ export class TransactionsPage implements OnInit {
 
   ionViewWillEnter() {
     this.isLoading = true;
+    this.achievementsService.fetchAchievements().subscribe(() => {
+    });
     this.transactionsService.fetchTransactions().subscribe(() => {
       if (this.segment === 'deposit') {
         this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === 'deposit');
@@ -96,13 +109,12 @@ export class TransactionsPage implements OnInit {
         element.date = new Date(new Date(element.date).toDateString())
       });
       this.isLoading = false;
-      this.relevantTransactions.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-      this.relevantTransactions.reverse();
+      this.relevantTransactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       this.budgetFetch();
-
+      this.achievements();
     });
-
   }
+
   budgetFetch() {
     this.budgetService.budget.subscribe(budget => {
       let relevant = [];
@@ -118,9 +130,20 @@ export class TransactionsPage implements OnInit {
         else if (this.budget.period == 'year') {
           relevant = this.loadedTransactions.filter(transaction => new Date(transaction.date).getFullYear() === new Date().getFullYear() && transaction.type === 'expense');
         }
-        relevant.forEach(element => {
-          sum += element.amount;
-        });
+
+        if (!this.budget.categories || this.budget.categories.length == 0) {
+          relevant.forEach(element => {
+            sum += element.amount;
+          });
+        }
+        else if (this.budget.categories && this.budget.categories?.length > 0) {
+          relevant.forEach(element => {
+            if (this.budget.categories.includes(element.category)) {
+              sum += element.amount;
+            }
+          });
+        }
+
         if ((this.budget.baseAmount - sum) <= 0) {
           this.budgetSum = 0;
           this.budgetBar = 0;
@@ -150,6 +173,12 @@ export class TransactionsPage implements OnInit {
     }
     if (this.currencySub) {
       this.currencySub.unsubscribe();
+    }
+    if (this.currencySub) {
+      this.currencySub.unsubscribe();
+    }
+    if (this.achievementsSub) {
+      this.achievementsSub.unsubscribe();
     }
   }
 
@@ -192,8 +221,7 @@ export class TransactionsPage implements OnInit {
     }
     this.onSearch();
     this.summarize();
-    this.relevantTransactions.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-    this.relevantTransactions.reverse();
+    this.relevantTransactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   }
   async presentToast(transactionTitle: string) {
     const toast = await this.toastController.create({
@@ -204,4 +232,77 @@ export class TransactionsPage implements OnInit {
     });
     toast.present();
   }
+
+  async achievements() {
+    let transfersArray = ['achievementI',
+      'achievementJ',
+      'achievementK',
+      'achievementL']
+    if (this.loadedAchievements?.length > 0) {
+      this.loadedAchievements.forEach(achievement => {
+
+        if (achievement.title == 'achievementA' && achievement.obtained == false && this.loadedTransactions?.length >= 1) {
+          this.achievementsService.updateAchievement(achievement.id, new Date(), true).subscribe();
+        }
+
+        if (achievement.title == 'achievementB' && achievement.obtained == false && this.loadedTransactions.length >= 10 && this.loadedTransactions.length <= 20) {
+          this.achievementsService.updateAchievement(achievement.id, new Date(), true).subscribe();
+        }
+
+        if (achievement.title == 'achievementC' && achievement.obtained == false && this.loadedTransactions.length >= 20 && this.loadedTransactions.length <= 50) {
+          this.achievementsService.updateAchievement(achievement.id, new Date(), true).subscribe();
+        }
+
+        if (achievement.title == 'achievementD' && achievement.obtained == false && this.loadedTransactions.length >= 50 && this.loadedTransactions.length <= 100) {
+          this.achievementsService.updateAchievement(achievement.id, new Date(), true).subscribe();
+        }
+        if (achievement.title == 'achievementE' && achievement.obtained == false && this.loadedTransactions.length >= 100 && this.loadedTransactions.length <= 150) {
+          this.achievementsService.updateAchievement(achievement.id, new Date(), true).subscribe();
+        }
+        if (achievement.title == 'achievementF' && achievement.obtained == false && this.loadedTransactions.length >= 150 && this.loadedTransactions.length <= 200) {
+          this.achievementsService.updateAchievement(achievement.id, new Date(), true).subscribe();
+        }
+        if (achievement.title == 'achievementG' && achievement.obtained == false && this.loadedTransactions.length >= 200) {
+          this.achievementsService.updateAchievement(achievement.id, new Date(), true).subscribe();
+        }
+
+        if (achievement.title == 'achievementH' && achievement.obtained == false) {
+          for (let transaction of this.loadedTransactions) {
+            if (transaction.title == 'Transfer') {
+              this.achievementsService.updateAchievement(achievement.id, new Date(), true).subscribe();
+              break;
+            }
+          }
+        }
+        if (transfersArray.includes(achievement.title) && achievement.obtained == false) {
+          let transfers = [];
+          for (let transaction of this.loadedTransactions) {
+            if (transaction.title == 'Transfer') {
+              transfers.push(transaction)
+              if (transfers.length == 10 && achievement.title == 'achievementI' && achievement.obtained == false) {
+                console.log('why')
+                this.achievementsService.updateAchievement(achievement.id, new Date(), true).subscribe();
+              }
+              else if (transfers.length == 20  && achievement.title == 'achievementJ') {
+                this.achievementsService.updateAchievement(achievement.id, new Date(), true).subscribe();
+              }
+              else if (transfers.length == 50 && achievement.title == 'achievementK') {
+                this.achievementsService.updateAchievement(achievement.id, new Date(), true).subscribe();
+              }
+              else if (transfers.length == 100 && achievement.title == 'achievementL') {
+                this.achievementsService.updateAchievement(achievement.id, new Date(), true).subscribe();
+              }
+            }
+          }
+        }
+        if (achievement.title == 'achievementM' && achievement.obtained == false && this.budget != null) {
+          this.achievementsService.updateAchievement(achievement.id, new Date(), true).subscribe();
+        }
+
+      });
+
+    }
+
+  }
 }
+

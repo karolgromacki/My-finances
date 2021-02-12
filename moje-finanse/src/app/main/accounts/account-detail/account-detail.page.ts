@@ -77,8 +77,7 @@ export class AccountDetailPage implements OnInit {
   }
   ionViewWillEnter() {
     this.transactionsService.fetchTransactions().subscribe(()=>{
-      this.relevantTransactions.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-      this.relevantTransactions.reverse();
+      this.relevantTransactions?.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     });
   }
 

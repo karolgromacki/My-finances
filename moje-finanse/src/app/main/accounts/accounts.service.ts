@@ -23,7 +23,10 @@ export class AccountsService {
     get accounts() {
         return this._accounts.asObservable()
     }
-    constructor(private authService: AuthService, private http: HttpClient, private storage: Storage) { }
+    constructor(
+        private authService: AuthService,
+        private http: HttpClient,
+        private storage: Storage) { }
 
     fetchAccounts() {
         let fetchedUserId: string
@@ -64,12 +67,14 @@ export class AccountsService {
         return this.authService.token.pipe(take(1), switchMap(token => {
             return this.http
                 .get<AccountData>(`https://my-finances-b77a0.firebaseio.com/accounts/${id}.json?auth=${token}`)
-
-        }), map(accountData => {
-            return new Account(id, accountData.title, accountData.note, accountData.amount, accountData.baseAmount, accountData.userId);
-        })
-        );
+                .pipe(
+                    map(accountData => {
+                        return new Account(id, accountData.title, accountData.note, accountData.amount, accountData.baseAmount, accountData.userId);
+                    })
+                );
+        }));
     }
+    
     addAccount(
         title: string,
         note: string,

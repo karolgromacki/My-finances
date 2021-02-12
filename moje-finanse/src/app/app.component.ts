@@ -88,18 +88,14 @@ export class AppComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl('/auth');
       }
       this.previousAuthState = isAuth;
+      this.languages = this.languageService.getLanguages();
+      this.currencies = this.currencyService.getCurrencies();
+      this.budgetService.selected.subscribe(selected => this.selectedBudget = selected);
+      this.budgetService.budget.subscribe(budget => this.budget = budget);
+      this.languageService.selected.subscribe(selected => this.selectedLanguage = selected);
+      this.currencyService.selected.subscribe(selected => this.selectedCurrency = selected);
+      this.themeService.selected.subscribe(selected => this.selectedTheme = selected);
     });
-    this.languages = this.languageService.getLanguages();
-    this.currencies = this.currencyService.getCurrencies();
-    this.budgetService.selected.subscribe(selected => this.selectedBudget = selected);
-    this.budgetService.budget.subscribe(budget => {
-      this.budget = budget
-      console.log(this.budget)
-    });
-
-    this.languageService.selected.subscribe(selected => this.selectedLanguage = selected);
-    this.currencyService.selected.subscribe(selected => this.selectedCurrency = selected);
-    this.themeService.selected.subscribe(selected => this.selectedTheme = selected);
     Plugins.App.addListener('appStateChange', this.checkAuthOnResume.bind(this));
   }
 
@@ -211,7 +207,6 @@ export class AppComponent implements OnInit, OnDestroy {
       fields: ['Type', 'Title', 'Category', 'Account', 'Amount', 'Date', 'Note'],
       data: all
     });
-    // console.log('csv:', csv)
     if (this.platform.is('capacitor')) {
       this.file.writeFile(this.file.dataDirectory, 'My-Finances-Data.csv', csv, { replace: true }).then(res => {
         this.socialSharing.share(null, null, res.nativeURL, null);

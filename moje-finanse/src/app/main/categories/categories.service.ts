@@ -35,7 +35,7 @@ export class CategoriesService {
 
   fetchCategories() {
     let fetchedUserId: string;
-    return this.authService.userId.pipe(switchMap(userId => {
+    return this.authService.userId.pipe(take(1), switchMap(userId => {
       fetchedUserId = userId;
       return this.authService.token;
     }), take(1), switchMap(token => {

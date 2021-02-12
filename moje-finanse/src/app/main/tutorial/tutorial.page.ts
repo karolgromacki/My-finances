@@ -39,9 +39,9 @@ export class TutorialPage implements OnInit {
   @ViewChild('slides', { static: true }) slides: IonSlides;
 
   constructor(
-    public menu: MenuController,
-    public router: Router,
-    public storage: Storage,
+    private menu: MenuController,
+    private router: Router,
+    private storage: Storage,
     private renderer: Renderer2,
     private languageService: LanguageService,
     private currencyService: CurrencyService,

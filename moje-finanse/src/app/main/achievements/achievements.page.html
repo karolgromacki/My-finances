@@ -3,13 +3,32 @@
     <ion-buttons slot="start">
       <ion-back-button (click)="onClose()" defaultHref=""></ion-back-button>
     </ion-buttons>
-    <ion-title>Achivments</ion-title>
+    <ion-title>{{'achievements' | translate}}</ion-title>
     <ion-buttons slot="end">
-      <ion-button disabled="true"><ion-icon></ion-icon></ion-button>
+      <ion-button disabled="true">
+        <ion-icon></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-list>
+    <ion-item *ngFor="let achievement of loadedAchievements ">
+      <div *ngIf="achievement.obtained; then thenBlock; else elseBlock" slot="start"></div>
+      <ng-template #thenBlock>
+        <ion-avatar slot="start"><img src='assets/icon/{{achievement.image}}.png'>
+        </ion-avatar>
+        <ion-label>
+          {{achievement.title | translate}}
+        </ion-label>
+      </ng-template>
+      <ng-template #elseBlock>
+        <ion-avatar slot="start"><img src="/assets/icon/lock.png">
+        </ion-avatar>
+        <ion-skeleton-text style="width: 85%"></ion-skeleton-text>
+      </ng-template>
 
+    </ion-item>
+  </ion-list>
 </ion-content>

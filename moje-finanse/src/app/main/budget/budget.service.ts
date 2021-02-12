@@ -53,13 +53,13 @@ export class BudgetService {
   }
   addBudget(
     baseamount: number,
-    period: string) {
+    period: string, categories: string []) {
     if (this.selected.value == false) {
       this.budget.next(null);
       this.storage.set(BUDGET_KEY, null);
     }
     else {
-      let newBudget = new Budget(baseamount, period)
+      let newBudget = new Budget(baseamount, period, categories)
       this.budget.next(newBudget);
       this.storage.set(BUDGET_KEY, newBudget);
       this.setBudget(true);

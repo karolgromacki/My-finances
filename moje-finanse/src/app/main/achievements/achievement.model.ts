@@ -2,9 +2,11 @@ export class Achievement {
     constructor(
         public id: string,
         public title: string,
+        public description: string,
         public date: Date,
-        public points: number,
-        public obtained: boolean
+        public obtained: boolean,
+        public image: string,
+        public userId: string
     ) { }
 }
 //porównanie sum wydanych w kategorii z dwóch różnych miesięcy

@@ -12,7 +12,7 @@ import { Budget } from './budget.model';
 export class BudgetPage implements OnInit {
   form: FormGroup;
   budget: Budget;
-  constructor(private translateService: TranslateService, private budgetService: BudgetService) { }
+  constructor(private budgetService: BudgetService) { }
 
   ngOnInit() {
     this.budgetService.budget.subscribe(budget => {
@@ -20,8 +20,4 @@ export class BudgetPage implements OnInit {
       
     })
   }
-  onEditBudget() {
-
-  }
-
 }

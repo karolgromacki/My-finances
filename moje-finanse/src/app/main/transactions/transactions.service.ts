@@ -30,11 +30,11 @@ export class TransactionsService {
   get transactions() {
     return this._transactions.asObservable()
   }
-  constructor(private authService: AuthService, private http: HttpClient, private storage: Storage) { }
+  constructor(private authService: AuthService, private http: HttpClient ) { }
 
   fetchTransactions() {
     let fetchedUserId: string;
-    return this.authService.userId.pipe(switchMap(userId => {
+    return this.authService.userId.pipe(take(1), switchMap(userId => {
       fetchedUserId = userId;
       return this.authService.token;
     }), take(1),
