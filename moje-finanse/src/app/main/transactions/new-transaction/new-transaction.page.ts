@@ -177,17 +177,18 @@ export class NewTransactionPage implements OnInit {
     toast.present();
   }
   onImagePicked(imageData: string | File) {
-    let imageFile
+    let imageFile;
     if (typeof imageData === 'string') {
       try {
-        imageFile = base64toBlob(imageData.replace('data:image/jpeg;base64', ''), 'image/jpeg')
-      }
-      catch (error) {
+        imageFile = base64toBlob(
+          imageData.replace('data:image/jpeg;base64,', ''),
+          'image/jpeg'
+        );
+      } catch (error) {
         console.log(error);
         return;
       }
-    }
-    else {
+    } else {
       imageFile = imageData;
     }
     this.form.patchValue({ image: imageFile });

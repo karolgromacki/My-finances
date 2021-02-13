@@ -88,7 +88,9 @@ export class TransactionsService {
   uploadImage(image: File) {
     const uploadData = new FormData();
     uploadData.append('image', image);
-    return this.http.post<{ imageUrl: string, imagePath: string }>('https://us-central1-my-finances-b77a0.cloudfunctions.net/storeImage', uploadData);
+    return this.authService.token.pipe(switchMap(token => {
+      return this.http.post<{ imageUrl: string, imagePath: string }>('https://us-central1-my-finances-b77a0.cloudfunctions.net/storeImage', uploadData, {headers: {Authorization: 'Bearer '+ token}});
+    }))
   }
 
   addTransaction(

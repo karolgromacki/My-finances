@@ -5,7 +5,7 @@ const os = require('os');
 const path = require('path');
 const fs = require('fs');
 const uuid = require('uuid/v4');
-const fbAdmin = require('firebase-admin')
+const fbAdmin = require('firebase-admin');
 
 const { Storage } = require('@google-cloud/storage');
 
@@ -21,8 +21,11 @@ exports.storeImage = functions.https.onRequest((req, res) => {
       return res.status(500).json({ message: 'Not allowed.' });
     }
 
-    if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Unauthorized!' })
+    if (
+      !req.headers.authorization ||
+      !req.headers.authorization.startsWith('Bearer ')
+    ) {
+      return res.status(401).json({ error: 'Unauthorized!' });
     }
 
     let idToken;
@@ -48,21 +51,26 @@ exports.storeImage = functions.https.onRequest((req, res) => {
       if (oldImagePath) {
         imagePath = oldImagePath;
       }
-      return fbAdmin.auth().verifyIdToken(idToken).then(decodedToken => {
-        console.log(uploadData.type);
-        return storage
-          .bucket('my-finances-b77a0.appspot.com')
-          .upload(uploadData.filePath, {
-            uploadType: 'media',
-            destination: imagePath,
-            metadata: {
+
+      return fbAdmin
+        .auth()
+        .verifyIdToken(idToken)
+        .then(decodedToken => {
+          console.log(uploadData.type);
+          return storage
+            .bucket('my-finances-b77a0.appspot.com')
+            .upload(uploadData.filePath, {
+              uploadType: 'media',
+              destination: imagePath,
               metadata: {
-                contentType: uploadData.type,
-                firebaseStorageDownloadTokens: id
+                metadata: {
+                  contentType: uploadData.type,
+                  firebaseStorageDownloadTokens: id
+                }
               }
-            }
-          })
-      }).then(() => {
+            });
+        })
+        .then(() => {
           return res.status(201).json({
             imageUrl:
               'https://firebasestorage.googleapis.com/v0/b/' +
