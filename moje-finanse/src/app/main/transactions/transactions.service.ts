@@ -30,7 +30,7 @@ export class TransactionsService {
   get transactions() {
     return this._transactions.asObservable()
   }
-  constructor(private authService: AuthService, private http: HttpClient ) { }
+  constructor(private authService: AuthService, private http: HttpClient) { }
 
   fetchTransactions() {
     let fetchedUserId: string;
@@ -83,6 +83,12 @@ export class TransactionsService {
           })
         );
     }));
+  }
+
+  uploadImage(image: File) {
+    const uploadData = new FormData();
+    uploadData.append('image', image);
+    return this.http.post<{ imageUrl: string, imagePath: string }>('https://us-central1-my-finances-b77a0.cloudfunctions.net/storeImage', uploadData);
   }
 
   addTransaction(

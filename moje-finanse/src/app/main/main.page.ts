@@ -34,19 +34,20 @@ export class MainPage implements OnInit {
       this.loadedAchievements = achievements;
       if (this.loadedAchievements.length == 0) {
         let newAchievements = [
-          { title: 'achievementA', description: '', date: new Date(), image: 'transaction', obtained: false },
-          { title: 'achievementB', description: '', date: new Date(), image: 'transaction10', obtained: false },
-          { title: 'achievementC', description: '', date: new Date(), image: 'transaction20', obtained: false },
-          { title: 'achievementD', description: '', date: new Date(), image: 'transaction50', obtained: false },
-          { title: 'achievementE', description: '', date: new Date(), image: 'transaction100', obtained: false },
-          { title: 'achievementF', description: '', date: new Date(), image: 'transaction150', obtained: false },
-          { title: 'achievementG', description: '', date: new Date(), image: 'transaction200', obtained: false },
-          { title: 'achievementH', description: '', date: new Date(), image: 'transfer', obtained: false },
-          { title: 'achievementI', description: '', date: new Date(), image: 'transfer10', obtained: false },
-          { title: 'achievementJ', description: '', date: new Date(), image: 'transfer20', obtained: false },
-          { title: 'achievementK', description: '', date: new Date(), image: 'transfer50', obtained: false },
-          { title: 'achievementL', description: '', date: new Date(), image: 'transfer100', obtained: false },
-          { title: 'achievementM', description: '', date: new Date(), image: 'piggybank', obtained: false },
+          { title: 'achievementA', description: 'achievementAdescription', date: new Date(), image: 'transaction', obtained: true },
+          { title: 'achievementB', description: 'achievementBdescription', date: new Date(), image: 'transaction10', obtained: true },
+          { title: 'achievementC', description: 'achievementCdescription', date: new Date(), image: 'transaction20', obtained: true },
+          { title: 'achievementD', description: 'achievementDdescription', date: new Date(), image: 'transaction50', obtained: true },
+          { title: 'achievementE', description: 'achievementEdescription', date: new Date(), image: 'transaction100', obtained: true},
+          { title: 'achievementF', description: 'achievementFdescription', date: new Date(), image: 'transaction150', obtained: true },
+          { title: 'achievementG', description: 'achievementGdescription', date: new Date(), image: 'transaction200', obtained: true },
+          { title: 'achievementH', description: 'achievementHdescription', date: new Date(), image: 'transfer', obtained: true },
+          { title: 'achievementI', description: 'achievementIdescription', date: new Date(), image: 'transfer10', obtained: true },
+          { title: 'achievementJ', description: 'achievementJdescription', date: new Date(), image: 'transfer20', obtained: true },
+          { title: 'achievementK', description: 'achievementKdescription', date: new Date(), image: 'transfer50', obtained: true },
+          { title: 'achievementL', description: 'achievementLdescription', date: new Date(), image: 'transfer100', obtained: true },
+          { title: 'achievementM', description: 'achievementMdescription', date: new Date(), image: 'piggybank', obtained: true },
+          { title: 'achievementN', description: 'achievementNdescription', date: new Date(), image: 'medal', obtained: false },
         ]
         newAchievements.forEach(achievement => {
           this.achievementsService.addAchievement(achievement.title, achievement.description, achievement.date, achievement.image, achievement.obtained).subscribe();

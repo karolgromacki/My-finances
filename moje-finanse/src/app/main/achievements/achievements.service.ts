@@ -140,7 +140,7 @@ export class AchievementsService {
                         oldAchievement.description,
                         date,
                         obtained, oldAchievement.image, oldAchievement.userId);
-                        this.presentAlert(this.translate.instant(oldAchievement.title), oldAchievement.image);
+                    this.presentAlert(this.translate.instant(oldAchievement.title), oldAchievement.description, oldAchievement.image);
                     return this.http.put(`https://my-finances-b77a0.firebaseio.com/achievements/${achievementId}.json?auth=${token}`,
                         { ...updatedAchievements[updatedAchievementsIndex], id: null });
                 }),
@@ -150,12 +150,12 @@ export class AchievementsService {
             );
         }));
     }
-    async presentAlert(header: string, image: string) {
+    async presentAlert(header: string, description: string, image: string) {
         const alert = await this.alertController.create({
 
-            header: 'Achivemenet unlocked!',
+            header: this.translate.instant('achievementUnlocked'),
             subHeader: header,
-            message: `<div class="ion-text-center"><img src="assets/icon/${image}.png" alt="g-maps" style="border-radius: 2px"><div>`,
+            message: `<div class="ion-text-center"><img src="assets/icon/${image}.png" alt="g-maps" style="border-radius: 2px"><p>${this.translate.instant(description)}</p><div>`,
             buttons: ['OK!'],
             cssClass: 'custom-alert',
         });

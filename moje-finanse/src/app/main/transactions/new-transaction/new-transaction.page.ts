@@ -11,6 +11,7 @@ import { Category } from '../../categories/category.model';
 import { TranslateService } from '@ngx-translate/core';
 import { Storage } from '@ionic/storage';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+import { switchMap } from 'rxjs/operators';
 
 function base64toBlob(base64Data, contentType) {
   contentType = contentType || '';
@@ -123,14 +124,7 @@ export class NewTransactionPage implements OnInit {
 
 
   }
-  // onAdd() {
-  //   this.storage.set('FORM',this.form.value);
-  //   this.storage.get('FORM').then(val => {
-  //     if (val) {
-  //         console.log(val.type)
-  //     }
-  //   });
-  // }
+
   ionViewWillEnter() {
     this.accountsService.fetchAccounts().subscribe(() => {
     });
@@ -154,20 +148,23 @@ export class NewTransactionPage implements OnInit {
       message: this.translate.instant('creatingTransaction')
     }).then(loadingEl => {
       loadingEl.present();
-
-      this.transactionService.addTransaction(
-        this.form.value.type,
-        this.form.value.title,
-        this.form.value.note,
-        this.form.value.category,
-        this.form.value.account,
-        this.form.value.amount,
-        new Date(this.form.value.date), '', this.icon).subscribe(() => {
-          loadingEl.dismiss();
-          this.presentToast();
-          this.form.reset();
-          this.router.navigate(['/', 'main', 'tabs', 'transactions']);
-        });
+      this.transactionService.uploadImage(this.form.get('image').value).pipe(switchMap(uploadRes => {
+        return this.transactionService.addTransaction(
+          this.form.value.type,
+          this.form.value.title,
+          this.form.value.note,
+          this.form.value.category,
+          this.form.value.account,
+          this.form.value.amount,
+          new Date(this.form.value.date),
+          uploadRes.imageUrl,
+          this.icon)
+      })).subscribe(() => {
+        loadingEl.dismiss();
+        this.presentToast();
+        this.form.reset();
+        this.router.navigate(['/', 'main', 'tabs', 'transactions']);
+      });
     });
   }
   async presentToast() {

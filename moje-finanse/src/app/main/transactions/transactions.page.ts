@@ -234,6 +234,7 @@ export class TransactionsPage implements OnInit {
   }
 
   async achievements() {
+    let checkAchievements = 0;
     let transfersArray = ['achievementI',
       'achievementJ',
       'achievementK',
@@ -283,7 +284,7 @@ export class TransactionsPage implements OnInit {
                 console.log('why')
                 this.achievementsService.updateAchievement(achievement.id, new Date(), true).subscribe();
               }
-              else if (transfers.length == 20  && achievement.title == 'achievementJ') {
+              else if (transfers.length == 20 && achievement.title == 'achievementJ') {
                 this.achievementsService.updateAchievement(achievement.id, new Date(), true).subscribe();
               }
               else if (transfers.length == 50 && achievement.title == 'achievementK') {
@@ -296,6 +297,12 @@ export class TransactionsPage implements OnInit {
           }
         }
         if (achievement.title == 'achievementM' && achievement.obtained == false && this.budget != null) {
+          this.achievementsService.updateAchievement(achievement.id, new Date(), true).subscribe();
+        }
+        if (achievement.obtained == true) {
+          checkAchievements += 1;
+        }
+        if (achievement.title == 'achievementN' && achievement.obtained == false && checkAchievements == 13) {
           this.achievementsService.updateAchievement(achievement.id, new Date(), true).subscribe();
         }
 

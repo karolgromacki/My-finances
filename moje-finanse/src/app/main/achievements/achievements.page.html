@@ -20,8 +20,11 @@
         <ion-avatar slot="start"><img src='assets/icon/{{achievement.image}}.png'>
         </ion-avatar>
         <ion-label>
-          {{achievement.title | translate}}
+          <ion-text>{{achievement.title | translate}}</ion-text>
+          <p>{{achievement.date | date: "dd/MM/yyyy"}}</p>
+
         </ion-label>
+
       </ng-template>
       <ng-template #elseBlock>
         <ion-avatar slot="start"><img src="/assets/icon/lock.png">
