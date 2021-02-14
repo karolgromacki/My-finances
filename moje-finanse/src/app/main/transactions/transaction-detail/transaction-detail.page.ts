@@ -15,6 +15,11 @@ import { TransactionsService } from '../transactions.service';
 export class TransactionDetailPage implements OnInit {
   transaction: Transaction;
   private transactionSub: Subscription;
+  sliderOpts={
+    zoom:{
+      maxRatio: 2
+    }
+  }
   constructor(private translate: TranslateService, private toastController: ToastController, private route: ActivatedRoute, private navCtrl: NavController, private transactionsService: TransactionsService, private loadingCtrl: LoadingController) { }
 
   ngOnInit() {
