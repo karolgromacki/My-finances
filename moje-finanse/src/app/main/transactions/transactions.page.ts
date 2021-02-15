@@ -63,8 +63,8 @@ export class TransactionsPage implements OnInit {
           transaction.title.toLowerCase().includes(this.title.toLowerCase()) || transaction.amount.toString().toLowerCase().includes(this.amount.toLowerCase()) :
           true;
       }
-    }
-    );
+    });
+
   }
   ngOnInit() {
     this.storage.get('DID_TUTORIAL').then(res => {
@@ -79,9 +79,8 @@ export class TransactionsPage implements OnInit {
       this.loadedAchievements = achievements;
     })
     this.transactionsSub = this.transactionsService.transactions.subscribe(transactions => {
-      this.loadedTransactions = transactions;
+      this.loadedTransactions = transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());;
       this.relevantTransactions = transactions;
-
     });
 
     this.budgetService.selected.subscribe(selected => this.selectedBudget = selected);
@@ -105,11 +104,11 @@ export class TransactionsPage implements OnInit {
       }
       this.summarize();
       this.onSearch();
-      this.loadedTransactions.forEach(element => {
+      this.relevantTransactions.forEach(element => {
         element.date = new Date(new Date(element.date).toDateString())
       });
       this.isLoading = false;
-      this.relevantTransactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+
       this.budgetFetch();
       this.achievements();
     });
@@ -219,9 +218,9 @@ export class TransactionsPage implements OnInit {
       this.segment = 'all';
       this.relevantTransactions = this.loadedTransactions;
     }
+
     this.onSearch();
     this.summarize();
-    this.relevantTransactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   }
   async presentToast(transactionTitle: string) {
     const toast = await this.toastController.create({
@@ -281,7 +280,6 @@ export class TransactionsPage implements OnInit {
             if (transaction.title == 'Transfer') {
               transfers.push(transaction)
               if (transfers.length == 10 && achievement.title == 'achievementI' && achievement.obtained == false) {
-                console.log('why')
                 this.achievementsService.updateAchievement(achievement.id, new Date(), true).subscribe();
               }
               else if (transfers.length == 20 && achievement.title == 'achievementJ') {

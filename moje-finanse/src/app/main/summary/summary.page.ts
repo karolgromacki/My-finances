@@ -119,13 +119,13 @@ export class SummaryPage implements OnInit {
         this.dateTo = new Date(new Date().getTime())
       }
       else {
-        this.dateTo = new Date(new Date().getTime() + ((7 - (new Date().getDay())) * 24 * 60 * 60 * 1000))
+        this.dateTo = new Date(new Date(new Date().getTime() + ((7 - (new Date().getDay())) * 24 * 60 * 60 * 1000)).toDateString())
         // 21 {dzisiejsza data do milisekund} + (7 {ilość dni w tyg} - 1 {dzisiejszy dzień tyg do milisekund}  
       }
-
+      console.log(this.dateTo)
       this.dateFrom = new Date(this.dateTo.getTime() - (6 * 24 * 60 * 60 * 1000))
       this.relevantTransactions = this.loadedTransactions.filter(transaction => new Date(transaction.date).getTime() >= this.dateFrom.getTime() && new Date(transaction.date).getTime() <= this.dateTo.getTime());
-
+      console.log(this.dateFrom)
     }
     else if (this.segment === 'month') {
       this.segment = 'month';

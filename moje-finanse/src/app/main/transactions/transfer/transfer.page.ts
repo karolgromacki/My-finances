@@ -38,7 +38,7 @@ export class TransferPage implements OnInit {
         note: new FormControl(null, { updateOn: 'blur' }),
         accountTo: new FormControl(null, { updateOn: 'change', validators: [Validators.required] }),
         accountFrom: new FormControl(null, { updateOn: 'change', validators: [Validators.required] }),
-        date: new FormControl(new Date().toDateString(), { updateOn: 'change', validators: [Validators.required] })
+        date: new FormControl(new Date().toISOString(), { updateOn: 'change', validators: [Validators.required] })
       });
       this.loadedAccounts = account;
 
@@ -66,7 +66,7 @@ export class TransferPage implements OnInit {
         'Transfer',
         this.form.value.accountFrom,
         this.form.value.amount,
-        new Date(this.form.value.date), '', 'swap-horizontal').subscribe(() => {
+        this.form.value.date, '', 'swap-horizontal').subscribe(() => {
         });
       this.transactionService.addTransaction(
         'deposit',

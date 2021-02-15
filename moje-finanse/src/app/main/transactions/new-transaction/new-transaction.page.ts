@@ -136,6 +136,7 @@ export class NewTransactionPage implements OnInit {
     if (!this.form.valid) {
       return;
     }
+
     else if (this.form.value.type === 'deposit') {
       this.form.value.category = 'Deposit';
       this.icon = 'card';
@@ -143,29 +144,58 @@ export class NewTransactionPage implements OnInit {
     else if (this.form.value.type === 'expense') {
       this.icon = this.loadedCategories.find(category => category.title === this.form.value.category).icon;
     }
-    console.log(this.form.value);
-    this.loadingCtrl.create({
-      message: this.translate.instant('creatingTransaction')
-    }).then(loadingEl => {
-      loadingEl.present();
-      this.transactionService.uploadImage(this.form.get('image').value).pipe(switchMap(uploadRes => {
-        return this.transactionService.addTransaction(
+    if (this.form.value.image != null) {
+      this.loadingCtrl.create({
+        message: this.translate.instant('creatingTransaction')
+      }).then(loadingEl => {
+        loadingEl.present();
+
+        this.transactionService.uploadImage(this.form.get('image').value).pipe(switchMap(uploadRes => {
+          return this.transactionService.addTransaction(
+            this.form.value.type,
+            this.form.value.title,
+            this.form.value.note,
+            this.form.value.category,
+            this.form.value.account,
+            this.form.value.amount,
+            this.form.value.date,
+            uploadRes.imageUrl,
+            this.icon)
+        })).subscribe(() => {
+          loadingEl.dismiss();
+          this.presentToast();
+          this.form.reset();
+          this.router.navigate(['/', 'main', 'tabs', 'transactions']);
+        });
+      });
+    }
+    else {
+      this.loadingCtrl.create({
+        message: this.translate.instant('creatingTransaction')
+      }).then(loadingEl => {
+        loadingEl.present();
+        this.transactionService.addTransaction(
           this.form.value.type,
           this.form.value.title,
           this.form.value.note,
           this.form.value.category,
           this.form.value.account,
           this.form.value.amount,
-          new Date(this.form.value.date),
-          uploadRes.imageUrl,
-          this.icon)
-      })).subscribe(() => {
-        loadingEl.dismiss();
-        this.presentToast();
-        this.form.reset();
-        this.router.navigate(['/', 'main', 'tabs', 'transactions']);
+          this.form.value.date,
+          '',
+          this.icon).subscribe(() => {
+            loadingEl.dismiss();
+            this.presentToast();
+            this.form.reset();
+            this.router.navigate(['/', 'main', 'tabs', 'transactions']);
+          });
+
       });
-    });
+
+    }
+
+
+
   }
   async presentToast() {
     const toast = await this.toastController.create({
