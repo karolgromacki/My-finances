@@ -57,7 +57,7 @@
         </ion-item>
       </ion-col>
     </ion-row>
-    <ion-row>
+    <ion-row *ngIf="transaction?.imageUrl!=''">
       <ion-col size-sm="6" offset-sm="3">
         <ion-item>
           <ion-img class="ion-padding" [src]="transaction?.imageUrl"></ion-img>

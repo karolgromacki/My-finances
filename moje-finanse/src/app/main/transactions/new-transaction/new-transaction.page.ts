@@ -144,32 +144,32 @@ export class NewTransactionPage implements OnInit {
     else if (this.form.value.type === 'expense') {
       this.icon = this.loadedCategories.find(category => category.title === this.form.value.category).icon;
     }
-    if (this.form.value.image != null) {
-      this.loadingCtrl.create({
-        message: this.translate.instant('creatingTransaction')
-      }).then(loadingEl => {
-        loadingEl.present();
+    // if (this.form.value.image != null) {
+    //   this.loadingCtrl.create({
+    //     message: this.translate.instant('creatingTransaction')
+    //   }).then(loadingEl => {
+    //     loadingEl.present();
 
-        this.transactionService.uploadImage(this.form.get('image').value).pipe(switchMap(uploadRes => {
-          return this.transactionService.addTransaction(
-            this.form.value.type,
-            this.form.value.title,
-            this.form.value.note,
-            this.form.value.category,
-            this.form.value.account,
-            this.form.value.amount,
-            this.form.value.date,
-            uploadRes.imageUrl,
-            this.icon)
-        })).subscribe(() => {
-          loadingEl.dismiss();
-          this.presentToast();
-          this.form.reset();
-          this.router.navigate(['/', 'main', 'tabs', 'transactions']);
-        });
-      });
-    }
-    else {
+    //     this.transactionService.uploadImage(this.form.get('image').value).pipe(switchMap(uploadRes => {
+    //       return this.transactionService.addTransaction(
+    //         this.form.value.type,
+    //         this.form.value.title,
+    //         this.form.value.note,
+    //         this.form.value.category,
+    //         this.form.value.account,
+    //         this.form.value.amount,
+    //         this.form.value.date,
+    //         uploadRes.imageUrl,
+    //         this.icon)
+    //     })).subscribe(() => {
+    //       loadingEl.dismiss();
+    //       this.presentToast();
+    //       this.form.reset();
+    //       this.router.navigate(['/', 'main', 'tabs', 'transactions']);
+    //     });
+    //   });
+    // }
+    // else {
       this.loadingCtrl.create({
         message: this.translate.instant('creatingTransaction')
       }).then(loadingEl => {
@@ -192,7 +192,7 @@ export class NewTransactionPage implements OnInit {
 
       });
 
-    }
+    // }
 
 
 

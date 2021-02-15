@@ -42,10 +42,13 @@
     "ts2": " application",
     "ts3": "This application is still a 'work in progress' project.",
     "ts4": "I hope you'll like it.",
-    "ts5": "Create and monitor your expenses and deposits.",
+    "ts5": "Create accounts to execute transactions and monitor your balance.",
     "ts6": "Create your own categories of your expenses.",
-    "ts7": "Create accounts to execute transactions and monitor your balance.",
-    "ts8": "Find out where your money goes with simple charts.",
+    "ts7": "Create and monitor your expenses and deposits.",
+    "ts8": "Transfer your funds between accounts.",
+    "ts9": "Create a budget and spend money more wisely.",
+    "ts10": "Scan invoice QR codes and enter data faster.",
+    "ts11": "Find out where your money goes with simple charts.",
     "rdts": "Ready to start?",
     "continue": "Continue",
     "skip": "Skip",
@@ -75,6 +78,7 @@
     "selectIcon": "Select the category icon",
     "sum": "Sum",
     "none": "None",
+    "transfer": "Transfer",
     "transferFrom": "Transafer from",
     "transferTo": "Transfer to",
     "noAccounts": "No accounts found!\nPlease create one first.",
@@ -148,5 +152,6 @@
     "picture": "Take picture",
     "showLegend": "Show legend",
     "hideLegend": "Hide legend",
-    "budget": "Budget"
+    "budget": "Budget",
+    "budgetInfo": "The budget will be displayed in the Transactions tab."
 }
