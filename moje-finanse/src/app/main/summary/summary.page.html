@@ -44,8 +44,8 @@
         <ion-item *ngIf="relevantTransactions.length != 0" class="ion-text-center">
           <ion-label *ngIf="segment == 'day'">{{dateFrom | date: "dd.MM.yy"}}</ion-label>
           <ion-label *ngIf="segment == 'week' || segment == 'month'">{{dateFrom | date:
-            "d.M.yy"}} - {{dateTo | date:
-            "d.M.yy"}}</ion-label>
+            "dd.MM.yy"}} - {{dateTo | date:
+            "dd.MM.yy"}}</ion-label>
           <ion-label *ngIf="segment == 'year'">{{dateFrom | date:"yyyy"}}</ion-label>
         </ion-item>
       </ion-col>

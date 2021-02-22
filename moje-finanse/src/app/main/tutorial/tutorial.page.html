@@ -7,7 +7,7 @@
 </ion-header>
 
 <ion-content fullscreen="true">
-  <ion-slides #slides (ionSlideWillChange)="onSlideChangeStart($event)" pager="true">
+  <ion-slides #slides (ionSlideWillChange)="onSlideChangeStart($event)">
     <ion-slide *ngIf="firstSlide">
       <img src="" class="slide-image" />
       <h2 class="slide-title">

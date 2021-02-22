@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoadingController, Platform, ToastController } from '@ionic/angular';
+import { AlertController, LoadingController, Platform, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { AccountsService } from '../../accounts/accounts.service';
 import { TransactionsService } from '../transactions.service';
@@ -12,6 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Storage } from '@ionic/storage';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { switchMap } from 'rxjs/operators';
+import { Capacitor } from '@capacitor/core';
 
 function base64toBlob(base64Data, contentType) {
   contentType = contentType || '';
@@ -59,7 +60,7 @@ export class NewTransactionPage implements OnInit {
     private accountsService: AccountsService,
     private categoriesService: CategoriesService,
     private BarcodeScanner: BarcodeScanner,
-    private platform: Platform
+    private alertCtrl: AlertController
   ) { }
 
   ngOnInit() {
@@ -120,9 +121,24 @@ export class NewTransactionPage implements OnInit {
         this.form.get('title').setValue(tab[4]);
         this.form.get('note').setValue(tab[5]);
       }
-    })
-
-
+    }).catch(() => {
+      this.alertCtrl
+        .create({
+          header: this.translate.instant('error'),
+          message: this.translate.instant('errorScanner'),
+          buttons: [
+            {
+              text: 'Okay',
+              handler: () => {
+                return;
+              }
+            }
+          ]
+        })
+        .then(alertEl => {
+          alertEl.present();
+        });
+    });
   }
 
   ionViewWillEnter() {
@@ -144,32 +160,32 @@ export class NewTransactionPage implements OnInit {
     else if (this.form.value.type === 'expense') {
       this.icon = this.loadedCategories.find(category => category.title === this.form.value.category).icon;
     }
-    // if (this.form.value.image != null) {
-    //   this.loadingCtrl.create({
-    //     message: this.translate.instant('creatingTransaction')
-    //   }).then(loadingEl => {
-    //     loadingEl.present();
+    if (this.form.value.image != null) {
+      this.loadingCtrl.create({
+        message: this.translate.instant('creatingTransaction')
+      }).then(loadingEl => {
+        loadingEl.present();
 
-    //     this.transactionService.uploadImage(this.form.get('image').value).pipe(switchMap(uploadRes => {
-    //       return this.transactionService.addTransaction(
-    //         this.form.value.type,
-    //         this.form.value.title,
-    //         this.form.value.note,
-    //         this.form.value.category,
-    //         this.form.value.account,
-    //         this.form.value.amount,
-    //         this.form.value.date,
-    //         uploadRes.imageUrl,
-    //         this.icon)
-    //     })).subscribe(() => {
-    //       loadingEl.dismiss();
-    //       this.presentToast();
-    //       this.form.reset();
-    //       this.router.navigate(['/', 'main', 'tabs', 'transactions']);
-    //     });
-    //   });
-    // }
-    // else {
+        this.transactionService.uploadImage(this.form.get('image').value).pipe(switchMap(uploadRes => {
+          return this.transactionService.addTransaction(
+            this.form.value.type,
+            this.form.value.title,
+            this.form.value.note,
+            this.form.value.category,
+            this.form.value.account,
+            this.form.value.amount,
+            this.form.value.date,
+            uploadRes.imageUrl,
+            this.icon)
+        })).subscribe(() => {
+          loadingEl.dismiss();
+          this.presentToast();
+          this.form.reset();
+          this.router.navigate(['/', 'main', 'tabs', 'transactions']);
+        });
+      });
+    }
+    else {
       this.loadingCtrl.create({
         message: this.translate.instant('creatingTransaction')
       }).then(loadingEl => {
@@ -192,11 +208,9 @@ export class NewTransactionPage implements OnInit {
 
       });
 
-    // }
-
-
-
+    }
   }
+  
   async presentToast() {
     const toast = await this.toastController.create({
       message: this.translate.instant('createdTransaction') + `'${this.form.value.title}' <ion-icon name="checkmark"></ion-icon>`,

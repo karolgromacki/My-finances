@@ -95,6 +95,7 @@ export class AuthService implements OnDestroy {
     this._user.next(null);
     Plugins.Storage.remove({ key: 'authData' });
   }
+  
   private setUserData(userData: AuthResponseData) {
     const expirationTime = new Date(
       new Date().getTime() + +userData.expiresIn * 1000

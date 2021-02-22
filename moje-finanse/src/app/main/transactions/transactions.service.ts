@@ -136,6 +136,7 @@ export class TransactionsService {
     category: string,
     account: string,
     amount: number,
+    imageUrl: string,
     date: Date,
     icon: string) {
     let updatedTransactions: Transaction[];
@@ -157,7 +158,7 @@ export class TransactionsService {
           const oldTransaction = updatedTransactions[updatedTransactionsIndex]
           updatedTransactions[updatedTransactionsIndex] = new Transaction(
             oldTransaction.id, type, title, note,
-            category, account, amount, date, oldTransaction.imageUrl, icon, oldTransaction.userId);
+            category, account, amount, date, imageUrl, icon, oldTransaction.userId);
           return this.http.put(`https://my-finances-b77a0.firebaseio.com/transactions/${transactionId}.json?auth=${token}`,
             { ...updatedTransactions[updatedTransactionsIndex], id: null });
         }),

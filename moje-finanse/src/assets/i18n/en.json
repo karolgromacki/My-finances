@@ -153,5 +153,7 @@
     "showLegend": "Show legend",
     "hideLegend": "Hide legend",
     "budget": "Budget",
-    "budgetInfo": "The budget will be displayed in the Transactions tab."
+    "budgetInfo": "The budget will be displayed in the Transactions tab.",
+    "error": "An error occurred!",
+    "errorScanner": "Scanner is unavailable."
 }
