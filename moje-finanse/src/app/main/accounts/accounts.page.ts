@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonItemSliding, LoadingController, ToastController } from '@ionic/angular';
+import { AlertController, IonItemSliding, LoadingController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { AccountsService } from './accounts.service';
 import { Account } from './account.model';
@@ -27,7 +27,8 @@ export class AccountsPage implements OnInit {
     private accountsService: AccountsService,
     private router: Router,
     private loadingCtrl: LoadingController,
-    private transactionsService: TransactionsService
+    private transactionsService: TransactionsService,
+    private alertCtrl: AlertController
     // private modalCtrl: ModalController
   ) { }
 
@@ -46,7 +47,7 @@ export class AccountsPage implements OnInit {
     this.accountsService.fetchAccounts().subscribe(() => {
       this.isLoading = false;
     });
-    this.accountsSub = this.accountsService.accounts.subscribe(accounts => { 
+    this.accountsSub = this.accountsService.accounts.subscribe(accounts => {
       this.transactionsSub = this.transactionsService.transactions.subscribe(transactions => {
         let sum = 0;
         this.sum = 0;
@@ -82,16 +83,35 @@ export class AccountsPage implements OnInit {
     this.router.navigate(['/', 'main', 'tabs', 'accounts', 'edit', accountId]);
   }
   onDelete(accountId: string, accountTitle: string, slidingItem: IonItemSliding) {
-    slidingItem.close();
-    this.loadingCtrl.create({
-      message: this.translate.instant('deletingAccount'),
-    }).then(loadingEl => {
-      loadingEl.present();
-      this.accountsService.deleteAccount(accountId).subscribe(() => {
-        loadingEl.dismiss();
-        this.presentToast(accountTitle);
-      });
+    this.alertCtrl.create({
+      header: this.translate.instant('deleteDataTitle'),
+      message: this.translate.instant('deleteData'),
+      buttons: [
+        {
+          text: this.translate.instant('delete'),
+          handler: () => {
+            slidingItem.close();
+            this.loadingCtrl.create({
+              message: this.translate.instant('deletingAccount'),
+            }).then(loadingEl => {
+              loadingEl.present();
+              this.accountsService.deleteAccount(accountId).subscribe(() => {
+                loadingEl.dismiss();
+                this.presentToast(accountTitle);
+              });
+            });
+          }
+        },
+        {
+          text: this.translate.instant('cancel'),
+          role: 'cancel',
+        },
+      ]
+    }).then(alertEl => {
+      alertEl.present();
     });
+
+
   }
   async presentToast(accountTitle) {
     const toast = await this.toastController.create({

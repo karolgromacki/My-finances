@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IonItemSliding, LoadingController, ModalController, NavController, ToastController } from '@ionic/angular';
+import { AlertController, IonItemSliding, LoadingController, ModalController, NavController, ToastController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { EditTransactionPage } from '../edit-transaction/edit-transaction.page';
@@ -15,12 +15,12 @@ import { TransactionsService } from '../transactions.service';
 export class TransactionDetailPage implements OnInit {
   transaction: Transaction;
   private transactionSub: Subscription;
-  sliderOpts={
-    zoom:{
+  sliderOpts = {
+    zoom: {
       maxRatio: 2
     }
   }
-  constructor(private translate: TranslateService, private toastController: ToastController, private route: ActivatedRoute, private navCtrl: NavController, private transactionsService: TransactionsService, private loadingCtrl: LoadingController) { }
+  constructor(private alertCtrl: AlertController, private translate: TranslateService, private toastController: ToastController, private route: ActivatedRoute, private navCtrl: NavController, private transactionsService: TransactionsService, private loadingCtrl: LoadingController) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
@@ -37,15 +37,33 @@ export class TransactionDetailPage implements OnInit {
     }
   }
   onDelete(transactionId: string) {
-    this.loadingCtrl.create({
-      message: this.translate.instant('deletingTransaction'),
-    }).then(loadingEl => {
-      loadingEl.present();
-      this.transactionsService.deleteTransaction(transactionId).subscribe(() => {
-        loadingEl.dismiss();
-        this.presentToast();
-      });
+    this.alertCtrl.create({
+      header: this.translate.instant('deleteDataTitle'),
+      message: this.translate.instant('deleteData'),
+      buttons: [
+        {
+          text: this.translate.instant('delete'),
+          handler: () => {
+            this.loadingCtrl.create({
+              message: this.translate.instant('deletingTransaction'),
+            }).then(loadingEl => {
+              loadingEl.present();
+              this.transactionsService.deleteTransaction(transactionId).subscribe(() => {
+                loadingEl.dismiss();
+                this.presentToast();
+              });
+            });
+          }
+        },
+        {
+          text: this.translate.instant('cancel'),
+          role: 'cancel',
+        },
+      ]
+    }).then(alertEl => {
+      alertEl.present();
     });
+
   }
   async presentToast() {
     const toast = await this.toastController.create({

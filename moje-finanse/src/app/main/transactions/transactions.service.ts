@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Transaction } from './transaction.model';
-import * as moment from 'moment';
-import { BehaviorSubject, from, of } from 'rxjs';
-import { take, map, tap, delay, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, of } from 'rxjs';
+import { take, map, tap, switchMap } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { HttpClient } from '@angular/common/http';
-import { Storage } from '@ionic/storage';
 
 interface TransactionData {
   id: string;

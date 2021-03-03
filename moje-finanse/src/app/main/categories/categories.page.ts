@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ActionSheetController, IonItemSliding, LoadingController } from '@ionic/angular';
+import { ActionSheetController, AlertController, IonItemSliding, LoadingController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { ChartDataSets, ChartType } from 'chart.js';
@@ -24,11 +24,9 @@ export class CategoriesPage implements OnInit {
   constructor(
     private categoriesService: CategoriesService,
     private router: Router,
-    private loadingCtrl: LoadingController,
     private actionSheetCtrl: ActionSheetController,
-    private transactionsService: TransactionsService,
     private translate: TranslateService,
-    private storage: Storage
+    private alertCtrl: AlertController
   ) { }
 
 
@@ -83,8 +81,26 @@ export class CategoriesPage implements OnInit {
 
 
   onDelete(categoryId: string) {
-    this.categoriesService.deleteCategory(categoryId).subscribe(() => {
+    this.alertCtrl.create({
+      header: this.translate.instant('deleteDataTitle'),
+      message: this.translate.instant('deleteData'),
+      buttons: [
+        {
+          text: this.translate.instant('delete'),
+          handler: () => {
+            this.categoriesService.deleteCategory(categoryId).subscribe(() => {
+            });
+          }
+        },
+        {
+          text: this.translate.instant('cancel'),
+          role: 'cancel',
+        },
+      ]
+    }).then(alertEl => {
+      alertEl.present();
     });
+
   }
 
   ngOnDestroy() {

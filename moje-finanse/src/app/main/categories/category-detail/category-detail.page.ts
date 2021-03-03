@@ -85,26 +85,43 @@ export class CategoryDetailPage implements OnInit {
     });
   }
   ionViewWillEnter() {
-    this.transactionsService.fetchTransactions().subscribe(()=>{
+    this.transactionsService.fetchTransactions().subscribe(() => {
       this.relevantTransactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     });
-    
+
   }
   onEdit(transactionId: string, slidingItem: IonItemSliding) {
     slidingItem.close();
     this.router.navigate(['/', 'main', 'tabs', 'transactions', 'edit', transactionId]);
   }
-  onDelete(transactionId: string, slidingItem: IonItemSliding) {
-    slidingItem.close();
-    this.loadingCtrl.create({
-      message: this.translate.instant('deletingCategory'),
-    }).then(loadingEl => {
-      loadingEl.present();
-      this.transactionsService.deleteTransaction(transactionId).subscribe(() => {
-        loadingEl.dismiss();
-        this.presentToast()
-      });
+  onDelete(transactionId: string) {
+    this.alertCtrl.create({
+      header: this.translate.instant('deleteDataTitle'),
+      message: this.translate.instant('deleteData'),
+      buttons: [
+        {
+          text: this.translate.instant('delete'),
+          handler: () => {
+            this.loadingCtrl.create({
+              message: this.translate.instant('deletingTransaction'),
+            }).then(loadingEl => {
+              loadingEl.present();
+              this.transactionsService.deleteTransaction(transactionId).subscribe(() => {
+                loadingEl.dismiss();
+                this.presentToast()
+              });
+            });
+          }
+        },
+        {
+          text: this.translate.instant('cancel'),
+          role: 'cancel',
+        },
+      ]
+    }).then(alertEl => {
+      alertEl.present();
     });
+
   }
   async presentToast() {
     const toast = await this.toastController.create({

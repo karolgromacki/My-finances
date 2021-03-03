@@ -48,7 +48,7 @@ export class TransactionsPage implements OnInit {
     private budgetService: BudgetService,
     private storage: Storage,
     private achievementsService: AchievementsService,
-    private alertController: AlertController
+    private alertCtrl: AlertController
   ) { }
 
   onSearch() {
@@ -187,20 +187,39 @@ export class TransactionsPage implements OnInit {
   }
 
   onDelete(transactionId: string, transactionTitle: string, slidingItem: IonItemSliding) {
-    slidingItem.close();
-    this.loadingCtrl.create({
-      message: this.translate.instant('deletingTransaction')
-    }).then(loadingEl => {
-      loadingEl.present();
-      this.transactionsService.deleteTransaction(transactionId).subscribe(() => {
-        if (this.segment !== 'all')
-          this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === this.segment);
-        this.summarize();
-        this.budgetFetch();
-        loadingEl.dismiss();
-        this.presentToast(transactionTitle);
-      });
+    this.alertCtrl.create({
+      header: this.translate.instant('deleteDataTitle'),
+      message: this.translate.instant('deleteData'),
+      buttons: [
+        {
+          text: this.translate.instant('delete'),
+          handler: () => {
+            slidingItem.close();
+            this.loadingCtrl.create({
+              message: this.translate.instant('deletingTransaction')
+            }).then(loadingEl => {
+              loadingEl.present();
+              this.transactionsService.deleteTransaction(transactionId).subscribe(() => {
+                if (this.segment !== 'all')
+                  this.relevantTransactions = this.loadedTransactions.filter(transaction => transaction.type === this.segment);
+                this.summarize();
+                this.budgetFetch();
+                loadingEl.dismiss();
+                this.presentToast(transactionTitle);
+              });
+            });
+          }
+        },
+        {
+          text: this.translate.instant('cancel'),
+          role: 'cancel',
+        },
+      ]
+    }).then(alertEl => {
+      alertEl.present();
     });
+
+
 
   }
 

@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { Plugins, Capacitor, AppState } from '@capacitor/core';
 import { AlertController, LoadingController, MenuController, ModalController, Platform } from '@ionic/angular';
-// import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-// import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AccountsService } from './main/accounts/accounts.service';
 import { TransactionsService } from './main/transactions/transactions.service';
 import { CategoriesService } from './main/categories/categories.service';
@@ -43,7 +41,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private storage: Storage,
     private translate: TranslateService,
     private platform: Platform,
     private modalCtrl: ModalController,

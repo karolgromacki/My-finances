@@ -98,15 +98,33 @@ export class AccountDetailPage implements OnInit {
   }
 
   onDelete(accountId: string, accountTitle: string) {
-    this.loadingCtrl.create({
-      message: this.translate.instant('deletingAccount'),
-    }).then(loadingEl => {
-      loadingEl.present();
-      this.accountsService.deleteAccount(accountId).subscribe(() => {
-        loadingEl.dismiss();
-        this.presentToast(accountTitle);
-      });
+    this.alertCtrl.create({
+      header: this.translate.instant('deleteDataTitle'),
+      message: this.translate.instant('deleteData'),
+      buttons: [
+        {
+          text: this.translate.instant('delete'),
+          handler: () => {
+            this.loadingCtrl.create({
+              message: this.translate.instant('deletingAccount'),
+            }).then(loadingEl => {
+              loadingEl.present();
+              this.accountsService.deleteAccount(accountId).subscribe(() => {
+                loadingEl.dismiss();
+                this.presentToast(accountTitle);
+              });
+            });
+          }
+        },
+        {
+          text: this.translate.instant('cancel'),
+          role: 'cancel',
+        },
+      ]
+    }).then(alertEl => {
+      alertEl.present();
     });
+  
   }
   async presentToast(accountTitle) {
     const toast = await this.toastController.create({
