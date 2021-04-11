@@ -149,7 +149,7 @@ export class NewTransactionPage implements OnInit {
   }
 
   onCreateTransaction() {
-    if (!this.form.valid) {
+    if (!this.form.valid || !this.form.valid && this.form.value.image == null) {
       return;
     }
 
